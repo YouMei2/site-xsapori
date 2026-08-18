@@ -1,322 +1,344 @@
-# X-Sapori Savona — форма бронирования столиков
+# X-Sapori Savona — Table Booking Form
 
-Бэкенд формы на `prenota.html`: приём заявок, запись в MySQL, уведомление
-персонала по email.
+Backend for the form on `prenota.html`: accepting requests, writing to
+MySQL, notifying staff by email.
 
-Чистый PHP 8.1+ и MySQL. Без Composer, без фреймворков, без внешних
-библиотек в JS — всё рассчитано на обычный шаред-хостинг, где есть
-только PHP и база.
-
----
-
-## Содержание
-
-1. [Куда приходят данные](#1-куда-приходят-данные)
-2. [Карта файлов](#2-карта-файлов)
-3. [Локальный запуск](#3-локальный-запуск)
-4. [Как смотреть заявки](#4-как-смотреть-заявки)
-5. [Развёртывание на хостинге](#5-развёртывание-на-хостинге)
-6. [Настройка почты](#6-настройка-почты)
-7. [Проверка после заливки](#7-проверка-после-заливки)
-8. [Если не работает](#8-если-не-работает)
-9. [Что нужно доделать вручную](#9-что-нужно-доделать-вручную)
-10. [Обслуживание](#10-обслуживание)
+Plain PHP 8.1+ and MySQL. No Composer, no frameworks, no external JS
+libraries — everything is designed for ordinary shared hosting where
+only PHP and a database are available.
 
 ---
 
-## 1. Куда приходят данные
+## Contents
 
-Заявка уходит **в два места**, и это важно не путать.
-
-### Место первое: база данных — основное
-
-Таблица `bookings` в MySQL. **Это единственное надёжное хранилище.**
-Запись происходит первой, и пока она не удалась, гость не получит
-подтверждения.
-
-### Место второе: email — уведомление
-
-После успешной записи в базу персоналу уходит письмо со всеми
-деталями брони.
-
-**Письмо — только уведомление, а не хранилище.** Если почта отвалилась,
-заявка всё равно в базе, а гость всё равно видит «Richiesta inviata».
-Так сделано намеренно: бронь уже принята, и терять её из-за проблем
-с почтой нельзя.
-
-При сбое отправки в лог сервера ложится строка, по которой бронь
-восстанавливается руками:
-
-```
-[notify] ПИСЬМО НЕ ОТПРАВЛЕНО, бронь #12: 2026-09-15 20:00, 6 чел., Niccolò Rossi, тел. +390192213138
-```
-
-### Чего НЕ происходит
-
-- Данные **никуда больше не уходят**: ни в Telegram, ни в аналитику,
-  ни на сторонние сервисы.
-- **IP не сохраняется.** В поле `ip_hash` лежит SHA-256 от IP с солью —
-  по нему нельзя восстановить адрес, но можно отличить повторные заявки
-  для анти-спама.
-
-### Почему локально письмо не приходит
-
-В локальном `config.php` стоит `'enabled' => false` в секции `mail`.
-Отправлять почту с домашней машины некуда: нет почтового сервера.
-Локально проверяется база, на хостинге — база и письмо.
+1. [Where the data goes](#1-where-the-data-goes)
+2. [File map](#2-file-map)
+3. [Running locally](#3-running-locally)
+4. [Viewing bookings](#4-viewing-bookings)
+5. [Deploying to hosting](#5-deploying-to-hosting)
+6. [Email setup](#6-email-setup)
+7. [Post-deployment checks](#7-post-deployment-checks)
+8. [Troubleshooting](#8-troubleshooting)
+9. [What must be completed manually](#9-what-must-be-completed-manually)
+10. [Maintenance](#10-maintenance)
 
 ---
 
-## 2. Карта файлов
+## 1. Where the data goes
+
+A booking request goes to **two places**, and it is important not to
+confuse them.
+
+### First place: the database — the primary one
+
+The `bookings` table in MySQL. **This is the only reliable storage.**
+The write happens first, and until it succeeds the guest gets no
+confirmation.
+
+### Second place: email — a notification
+
+After the database write succeeds, staff receive an email with all the
+booking details.
+
+**The email is only a notification, not storage.** If mail delivery
+fails, the request is still in the database and the guest still sees
+«Richiesta inviata». This is deliberate: the booking has already been
+accepted, and losing it because of a mail problem is unacceptable.
+
+When sending fails, a line is written to the server log from which the
+booking can be recovered by hand:
 
 ```
-Sito ristorante completo/        <- это содержимое уходит в public_html
-├── index.html                   страницы сайта
+[notify] EMAIL NOT SENT, booking #12: 2026-09-15 20:00, 6 people, Niccolò Rossi, tel. +39 019 XXX XXXX
+```
+
+### What does NOT happen
+
+- The data **goes nowhere else**: not to Telegram, not to analytics,
+  not to any third-party service.
+- **The IP is not stored.** The `ip_hash` field holds a salted SHA-256
+  of the IP — the address cannot be recovered from it, but repeat
+  requests can still be detected for anti-spam purposes.
+
+### Why no email arrives locally
+
+The local `config.php` has `'enabled' => false` in the `mail` section.
+There is nowhere to send mail from a home machine: there is no mail
+server. Locally you test the database; on hosting, the database and
+the email.
+
+---
+
+## 2. File map
+
+```
+Sito ristorante completo/        <- these contents go into public_html
+├── index.html                   site pages
 ├── menu.html
-├── prenota.html                 ← форма бронирования
+├── prenota.html                 ← booking form
 ├── chi-siamo.html
 ├── contatti.html
-├── privacy.html                 ← информативa privacy (ТРЕБУЕТ ДОРАБОТКИ, см. §9)
+├── privacy.html                 ← privacy notice (NEEDS WORK, see §9)
 ├── styles.css
 ├── js/
-│   └── booking.js               клиентская валидация и отправка
+│   └── booking.js               client-side validation and submission
 ├── api/
-│   ├── booking.php              ← приём заявки, валидация, запись в БД
-│   └── notify.php               сборка и отправка письма
-├── .htaccess                    закрывает служебные файлы от скачивания
+│   ├── booking.php              ← receives request, validates, writes to DB
+│   └── notify.php               builds and sends the email
+├── .htaccess                    blocks service files from being downloaded
 ├── .gitignore
-├── schema.sql                   ← НЕ заливать на хостинг (см. §5)
-├── config.example.php           образец конфига, без паролей
-└── README.md                    этот файл
+├── schema.sql                   ← do NOT upload to hosting (see §5)
+├── config.example.php           config template, no passwords
+└── README.md                    this file
 
-config.php                       ← ВЫШЕ public_html, не в git, с паролями
+config.php                       ← ABOVE public_html, not in git, holds passwords
 ```
 
-### Как это работает
+### How it works
 
 ```
-Гость заполняет форму на prenota.html
+Guest fills in the form on prenota.html
         │
         ▼
-js/booking.js  — проверяет поля, показывает ошибки рядом с полями,
-                 блокирует кнопку, отправляет JSON через fetch
+js/booking.js  — checks fields, shows errors next to them,
+                 disables the button, sends JSON via fetch
         │
         ▼
-api/booking.php — ПОВТОРЯЕТ всю валидацию (клиенту доверять нельзя),
-                  проверяет honeypot и лимит заявок,
-                  пишет строку в bookings
+api/booking.php — REPEATS all validation (the client cannot be trusted),
+                  checks the honeypot and the rate limit,
+                  writes a row into bookings
         │
-        ├──► ответ гостю: {"ok":true,"id":13}
+        ├──► response to the guest: {"ok":true,"id":13}
         │
         ▼
-api/notify.php — собирает письмо и отправляет персоналу
-                 (уже ПОСЛЕ ответа гостю, чтобы он не ждал)
+api/notify.php — builds the email and sends it to staff
+                 (AFTER the guest's response, so they don't wait)
 ```
 
-Валидация продублирована в двух местах намеренно. Клиентская нужна
-для удобства — ошибка видна сразу, без запроса на сервер. Серверная
-нужна для безопасности: любую клиентскую проверку обходят через
-консоль браузера за пять секунд. **Единственный источник правды —
-`api/booking.php`.**
+Validation is duplicated in two places on purpose. The client-side
+check is for convenience — the error appears instantly, without a
+round trip. The server-side check is for security: any client-side
+check can be bypassed through the browser console in five seconds.
+**The single source of truth is `api/booking.php`.**
 
-При изменении правил (часы работы, лимит гостей, список формул)
-правьте в трёх местах:
+When changing rules (opening hours, guest limits, the list of set
+menus), edit in three places:
 
-| Что | Где |
+| What | Where |
 |---|---|
-| Реальные ограничения | `config.php` |
-| Дубль для подсказок гостю | `js/booking.js`, блок констант вверху |
-| Допустимые значения в БД | `schema.sql`, определения `ENUM` |
+| The real constraints | `config.php` |
+| Duplicate for guest-facing hints | `js/booking.js`, constants block at the top |
+| Allowed values in the DB | `schema.sql`, the `ENUM` definitions |
 
 ---
 
-## 3. Локальный запуск
+## 3. Running locally
 
-### Что уже установлено на этой машине
+> **Paths in the examples are placeholders.** Substitute your own:
+> `%PHP_DIR%` — folder containing `php.exe`, `%MYSQL_DIR%` — folder
+> containing `mysql.exe`, `%PROJECT_DIR%` — the project folder,
+> `%PROJECT_PARENT%` — the folder one level above the project, where
+> `config.php` lives.
 
-| Компонент | Версия | Где |
+### What you need installed
+
+| Component | Version tested | Where |
 |---|---|---|
-| PHP | 8.4.24 | `C:\Users\azoze\AppData\Local\Microsoft\WinGet\Packages\PHP.PHP.8.4_Microsoft.Winget.Source_8wekyb3d8bbwe\php.exe` |
-| MySQL | 8.0.45 | `C:\Program Files\MySQL\MySQL Server 8.0\bin\` |
-| Конфиг | — | `C:\Users\azoze\Music\claude code\config.php` |
+| PHP | 8.4.24 | `%PHP_DIR%\php.exe` |
+| MySQL | 8.0.45 | `%MYSQL_DIR%` |
+| Config | — | `%PROJECT_PARENT%\config.php` |
 
-MySQL работает службой `MySQL80` и запускается вместе с Windows —
-отдельно стартовать не нужно.
+MySQL runs as the `MySQL80` service and starts with Windows — no need
+to start it separately.
 
-### Пароли локальной базы
+### Local database users
 
-Локальная база называется `xsapori_test`. Пользователей два.
+The local database is called `xsapori_test`. There are two users.
 
-| Пользователь | Пароль | Права | Зачем |
-|---|---|---|---|
-| `xsapori_web` | `LocalTestPwd_2026!` | SELECT, INSERT, UPDATE | им работает сайт |
-| `xsapori_clean` | `LocalCleanPwd_2026!` | + DELETE | только для очистки при тестах |
-
-У `xsapori_web` **намеренно нет права DELETE** — ровно как будет
-на хостинге. Если код когда-нибудь попытается удалить запись, тест
-это покажет, а не пропустит.
-
-Пароль **root** от MySQL здесь не нужен и нигде не используется.
-Он требовался один раз, чтобы создать базу.
-
-> Эти пароли — только для локальной отладки на этой машине.
-> На хостинге будут свои, случайные. См. §5.
-
-### Запустить сервер
-
-```powershell
-cd "C:\Users\azoze\Music\claude code\Sito ristorante completo"
-& "C:\Users\azoze\AppData\Local\Microsoft\WinGet\Packages\PHP.PHP.8.4_Microsoft.Winget.Source_8wekyb3d8bbwe\php.exe" -S localhost:8080 -t .
-```
-
-Открыть: **http://localhost:8080/prenota.html**
-
-Остановить — `Ctrl+C` в том же окне. Сервер живёт, пока окно открыто.
-
-> **Только `localhost:8080`.** Другой порт или адрес — форма получит
-> **403**. В `config.php` в `allowed_origins` прописаны ровно
-> `http://localhost:8080` и `http://127.0.0.1:8080`. Это та же защита,
-> которая на хостинге будет пускать только с `xsapori.it`.
-
-### Что стоит потыкать
-
-| Действие | Ожидаемый результат |
-|---|---|
-| Выбрать понедельник | «Il lunedì siamo chiusi» |
-| Время 16:00 | «A quell'ora la cucina è chiusa» |
-| Время 23:00 | Отказ: последняя посадка 22:45 |
-| Снять галочку согласия | Форма не отправится |
-| 41 гость | «tra 1 e 40» |
-| 4 брони подряд | Четвёртая → «Attendete 10 minuti» (лимит 3 за 10 минут) |
-
-Сбросить лимит:
-
-```powershell
-& "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -h 127.0.0.1 -u xsapori_clean -p"LocalCleanPwd_2026!" -D xsapori_test -e "DELETE FROM bookings;"
-```
-
-### Чем локальный запуск отличается от хостинга
-
-| | Локально | Хостинг |
+| User | Privileges | Purpose |
 |---|---|---|
-| Веб-сервер | `php -S` | Apache / LiteSpeed |
-| `.htaccess` | **игнорируется** | работает |
-| `config.php` | `claude code\config.php` | выше `public_html` |
-| `fastcgi_finish_request` | нет, запасной `flush()` | обычно есть |
-| Почта | выключена | SMTP ящика домена |
+| `xsapori_web` | SELECT, INSERT, UPDATE | the site runs as this user |
+| `xsapori_clean` | + DELETE | only for clearing data during tests |
 
-Логика формы, валидация и работа с базой локально ведут себя один
-в один как на хостинге. Отличается только обвязка сервера.
+`xsapori_web` **deliberately has no DELETE privilege** — exactly as it
+will be on hosting. If the code ever tries to delete a row, the test
+will surface it rather than let it pass.
 
----
+Passwords are set when the users are created and are kept **only** in
+the local `config.php`, which is not committed to git. In the commands
+below, the `-p` flag carries no value — mysql will prompt for the
+password interactively.
 
-## 4. Как смотреть заявки
+The MySQL **root** password is not used anywhere. It was needed once,
+to create the database.
 
-### Все брони, свежие сверху
-
-```powershell
-& "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -h 127.0.0.1 -u xsapori_web -p"LocalTestPwd_2026!" -D xsapori_test --default-character-set=utf8mb4 -e "SELECT id, booking_date, booking_time, guests, formula, occasion, first_name, last_name, phone, email, status, created_at FROM bookings ORDER BY id DESC;"
-```
-
-`--default-character-set=utf8mb4` обязателен, иначе итальянские
-диакритики и любые не-латинские символы в консоли превратятся
-в «кракозябры».
-
-### Одна заявка целиком, включая заметки
-
-`\G` вместо `;` выводит запись столбиком — читать удобнее:
-
-```powershell
-& "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -h 127.0.0.1 -u xsapori_web -p"LocalTestPwd_2026!" -D xsapori_test --default-character-set=utf8mb4 -e "SELECT * FROM bookings ORDER BY id DESC LIMIT 1\G"
-```
-
-### Полезные выборки
+Create the users (once, as root):
 
 ```sql
--- Необработанные заявки
+CREATE USER 'xsapori_web'@'localhost'   IDENTIFIED BY 'random_password';
+CREATE USER 'xsapori_clean'@'localhost' IDENTIFIED BY 'another_random_password';
+GRANT SELECT, INSERT, UPDATE         ON xsapori_test.bookings TO 'xsapori_web'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON xsapori_test.bookings TO 'xsapori_clean'@'localhost';
+```
+
+### Start the server
+
+```powershell
+cd "%PROJECT_DIR%"
+& "%PHP_DIR%\php.exe" -S localhost:8080 -t .
+```
+
+Open: **http://localhost:8080/prenota.html**
+
+Stop with `Ctrl+C` in the same window. The server lives as long as the
+window stays open.
+
+> **Only `localhost:8080`.** Any other port or address and the form
+> gets a **403**. `config.php` lists exactly `http://localhost:8080`
+> and `http://127.0.0.1:8080` in `allowed_origins`. This is the same
+> protection that on hosting will only allow `xsapori.it`.
+
+### Worth trying
+
+| Action | Expected result |
+|---|---|
+| Pick a Monday | «Il lunedì siamo chiusi» |
+| Time 16:00 | «A quell'ora la cucina è chiusa» |
+| Time 23:00 | Rejected: last seating is 22:45 |
+| Uncheck the consent box | Form will not submit |
+| 41 guests | «tra 1 e 40» |
+| 4 bookings in a row | The fourth → «Attendete 10 minuti» (limit: 3 per 10 minutes) |
+
+Reset the rate limit:
+
+```powershell
+& "%MYSQL_DIR%\mysql.exe" -h 127.0.0.1 -u xsapori_clean -p -D xsapori_test -e "DELETE FROM bookings;"
+```
+
+### How local differs from hosting
+
+| | Local | Hosting |
+|---|---|---|
+| Web server | `php -S` | Apache / LiteSpeed |
+| `.htaccess` | **ignored** | active |
+| `config.php` | `%PROJECT_PARENT%\config.php` | above `public_html` |
+| `fastcgi_finish_request` | absent, `flush()` fallback | usually available |
+| Email | disabled | domain mailbox SMTP |
+
+Form logic, validation and database work behave identically locally
+and on hosting. Only the server wrapper differs.
+
+---
+
+## 4. Viewing bookings
+
+### All bookings, newest first
+
+```powershell
+& "%MYSQL_DIR%\mysql.exe" -h 127.0.0.1 -u xsapori_web -p -D xsapori_test --default-character-set=utf8mb4 -e "SELECT id, booking_date, booking_time, guests, formula, occasion, first_name, last_name, phone, email, status, created_at FROM bookings ORDER BY id DESC;"
+```
+
+`--default-character-set=utf8mb4` is mandatory, otherwise Italian
+diacritics and any non-Latin characters turn into mojibake in the
+console.
+
+### A single booking in full, including notes
+
+`\G` instead of `;` prints the record as a column — easier to read:
+
+```powershell
+& "%MYSQL_DIR%\mysql.exe" -h 127.0.0.1 -u xsapori_web -p -D xsapori_test --default-character-set=utf8mb4 -e "SELECT * FROM bookings ORDER BY id DESC LIMIT 1\G"
+```
+
+### Useful queries
+
+```sql
+-- Unprocessed requests
 SELECT * FROM bookings WHERE status = 'new' ORDER BY booking_date, booking_time;
 
--- Кто придёт завтра
+-- Who is coming tomorrow
 SELECT booking_time, guests, first_name, last_name, phone, notes
   FROM bookings
  WHERE booking_date = CURDATE() + INTERVAL 1 DAY
    AND status <> 'cancelled'
  ORDER BY booking_time;
 
--- Все, у кого указаны аллергии или пожелания
+-- Everyone who listed allergies or requests
 SELECT booking_date, booking_time, first_name, last_name, notes
   FROM bookings
  WHERE notes IS NOT NULL AND notes <> ''
    AND booking_date >= CURDATE();
 
--- Сколько гостей ожидается по дням
+-- Expected guests per day
 SELECT booking_date, COUNT(*) AS prenotazioni, SUM(guests) AS ospiti
   FROM bookings
  WHERE status <> 'cancelled' AND booking_date >= CURDATE()
  GROUP BY booking_date ORDER BY booking_date;
 ```
 
-### Сменить статус брони
+### Change a booking's status
 
-Персонал перезвонил и подтвердил:
+Staff called back and confirmed:
 
 ```sql
 UPDATE bookings SET status = 'confirmed' WHERE id = 13;
 UPDATE bookings SET status = 'cancelled' WHERE id = 13;
 ```
 
-Поле `updated_at` проставится само — по нему видно, когда статус меняли.
+`updated_at` is set automatically — it shows when the status was last
+changed.
 
-### На хостинге
+### On hosting
 
-То же самое, но через **phpMyAdmin** в панели управления: вкладка SQL,
-вставить запрос, выполнить. Или вкладка «Обзор» у таблицы `bookings`
-для простого просмотра.
+The same, but through **phpMyAdmin** in the control panel: the SQL
+tab, paste the query, run it. Or the Browse tab on the `bookings`
+table for simple viewing.
 
 ---
 
-## 5. Развёртывание на хостинге
+## 5. Deploying to hosting
 
-### Шаг 1. Создать базу и пользователя
+### Step 1. Create the database and user
 
-В панели управления хостингом (раздел «MySQL» / «Database»):
+In the hosting control panel (the «MySQL» / «Database» section):
 
-1. Создать базу, кодировка **utf8mb4**, сортировка **utf8mb4_unicode_ci**.
-2. Создать пользователя со **случайным паролем не короче 24 символов**.
-   Сгенерировать можно так:
+1. Create the database with character set **utf8mb4** and collation
+   **utf8mb4_unicode_ci**.
+2. Create a user with a **random password of at least 24 characters**.
+   Generate one like this:
 
    ```powershell
-   & "путь\к\php.exe" -r "echo bin2hex(random_bytes(16));"
+   & "%PHP_DIR%\php.exe" -r "echo bin2hex(random_bytes(16));"
    ```
 
-3. Выдать пользователю права **только** `SELECT`, `INSERT`, `UPDATE`.
-   Снять галочки со всего остального.
+3. Grant the user **only** `SELECT`, `INSERT`, `UPDATE`. Uncheck
+   everything else.
 
-> `DELETE` и `DROP` не выдаются намеренно. Даже при полной утечке
-> `config.php` атакующий не сможет стереть накопленные брони.
-> `UPDATE` нужен только чтобы персонал менял `status`.
+> `DELETE` and `DROP` are withheld deliberately. Even if `config.php`
+> leaks completely, an attacker cannot wipe the accumulated bookings.
+> `UPDATE` is needed only so staff can change `status`.
 
-Если хостинг даёт консоль MySQL — команды есть в конце `schema.sql`
-закомментированным блоком.
+If the host provides a MySQL console, the commands are at the end of
+`schema.sql` as a commented-out block.
 
-### Шаг 2. Импортировать схему
+### Step 2. Import the schema
 
-phpMyAdmin → выбрать базу → вкладка **Импорт** → загрузить `schema.sql`
-→ Выполнить.
+phpMyAdmin → select the database → **Import** tab → upload
+`schema.sql` → Go.
 
-Проверка: в базе появилась таблица `bookings` с 16 полями и четырьмя
-индексами.
+Check: the database now contains a `bookings` table with 16 columns
+and four indexes.
 
-### Шаг 3. Разложить файлы
+### Step 3. Lay out the files
 
 ```
-/home/ваш_аккаунт/
-├── config.php               ← ВЫШЕ public_html
+/home/your_account/
+├── config.php               ← ABOVE public_html
 └── public_html/
     ├── index.html
     ├── prenota.html
     ├── privacy.html
-    ├── ... остальные страницы
+    ├── ... the other pages
     ├── styles.css
     ├── .htaccess
     ├── js/booking.js
@@ -325,67 +347,69 @@ phpMyAdmin → выбрать базу → вкладка **Импорт** → �
         └── notify.php
 ```
 
-**НЕ заливать в `public_html`:** `schema.sql`, `README.md`,
-`config.example.php`, `.gitignore`. Они нужны только при развёртывании.
+**Do NOT upload to `public_html`:** `schema.sql`, `README.md`,
+`config.example.php`, `.gitignore`. They are only needed during
+deployment.
 
-#### Почему `config.php` обязан лежать выше `public_html`
+#### Why `config.php` must live above `public_html`
 
-В нём пароль от базы и пароль от почтового ящика.
+It holds the database password and the mailbox password.
 
-Всё внутри `public_html` доступно по прямой ссылке. Пока PHP исправен,
-запрос к `config.php` вернёт пустую страницу — файл выполнится, и
-`return [...]` ничего не выведет. Но если обработчик PHP отвалится —
-кривой `.htaccess`, обновление хостинга, ошибка в конфиге сервера, —
-файл начнёт отдаваться **как текст**, со всеми паролями. Это не
-теория, а типовой сценарий утечки.
+Everything inside `public_html` is reachable by direct URL. While PHP
+is working, a request to `config.php` returns a blank page — the file
+executes and `return [...]` outputs nothing. But if the PHP handler
+breaks — a bad `.htaccess`, a hosting update, a server config error —
+the file starts being served **as plain text**, passwords and all.
+This is not theoretical; it is a textbook leak scenario.
 
-Файл выше корня сайта веб-сервер отдать не может физически, при любой
-поломке PHP.
+A file above the site root cannot be served by the web server at all,
+no matter how badly PHP breaks.
 
-`booking.php` ищет конфиг по нескольким путям и берёт первый найденный:
+`booking.php` looks for the config in several locations and takes the
+first one found:
 
-1. `../../config.php` относительно `api/` — то есть рядом с `public_html`
-2. `../../../config.php` — если структура глубже
-3. `../config.php` — для локальной разработки
+1. `../../config.php` relative to `api/` — i.e. next to `public_html`
+2. `../../../config.php` — if the structure is deeper
+3. `../config.php` — for local development
 
-Если конфиг не найден, форма отдаёт 500 и пишет в лог, где искала.
-Молча работать без конфига она не будет.
+If no config is found, the form returns 500 and logs where it looked.
+It will not silently run without a config.
 
-### Шаг 4. Заполнить `config.php`
+### Step 4. Fill in `config.php`
 
-Скопировать `config.example.php` в `config.php`, положить выше
-`public_html` и заполнить:
+Copy `config.example.php` to `config.php`, place it above
+`public_html` and fill in:
 
-| Параметр | Что вписать |
+| Setting | What to put |
 |---|---|
-| `db.host` | Обычно `localhost`. У Aruba бывает отдельный хост из панели |
-| `db.name` | Имя базы из шага 1 |
-| `db.user` / `db.pass` | Пользователь и пароль из шага 1 |
-| `ip_salt` | **Случайная строка 64 символа**, см. ниже |
-| `allowed_origins` | Все адреса сайта: с `www` и без, обязательно `https://` |
-| `mail.to` | Реальные ящики персонала |
-| `mail.from` | Адрес **на вашем домене** |
+| `db.host` | Usually `localhost`. Aruba sometimes gives a separate host in the panel |
+| `db.name` | The database name from step 1 |
+| `db.user` / `db.pass` | The user and password from step 1 |
+| `ip_salt` | **A random 64-character string**, see below |
+| `allowed_origins` | Every address the site answers on: with and without `www`, always `https://` |
+| `mail.to` | The real staff mailboxes |
+| `mail.from` | An address **on your own domain** |
 
-Соль для хеширования IP:
+Salt for IP hashing:
 
 ```powershell
-& "путь\к\php.exe" -r "echo bin2hex(random_bytes(32));"
+& "%PHP_DIR%\php.exe" -r "echo bin2hex(random_bytes(32));"
 ```
 
-> Соль генерируется **один раз и больше не меняется.** Её смена
-> обнулит все накопленные `ip_hash` и сломает анти-спам на 10 минут.
+> The salt is generated **once and never changed.** Changing it voids
+> every stored `ip_hash` and breaks anti-spam for 10 minutes.
 
-Часы работы, лимит гостей и список формул уже заполнены по данным
-сайта — менять только если реально изменилось расписание. Тогда
-не забыть про `js/booking.js` и тексты на страницах.
+Opening hours, the guest limit and the list of set menus are already
+filled in from the site's own data — change them only if the schedule
+genuinely changed. If so, remember `js/booking.js` and the page text.
 
-### Шаг 5. Проверить `.htaccess`
+### Step 5. Check `.htaccess`
 
-Файл нужен: без него `schema.sql` и прочие служебные файлы качаются
-по прямой ссылке. Проверено — качаются.
+The file is necessary: without it, `schema.sql` and other service
+files can be downloaded by direct URL. Verified — they can.
 
-**Если хостинг на nginx**, `.htaccess` не читается вообще. Правила
-придётся перенести в конфиг сервера или попросить поддержку:
+**If the host runs nginx**, `.htaccess` is not read at all. The rules
+have to move into the server config, or you ask support:
 
 ```nginx
 location ~* \.(sql|md|log|bak|old|orig|save|swp|dist|example)$ { deny all; }
@@ -396,341 +420,351 @@ location = /api/notify.php { deny all; }
 
 ---
 
-## 6. Настройка почты
+## 6. Email setup
 
-Два транспорта на выбор, переключаются полем `mail.transport`.
+Two transports to choose from, switched via `mail.transport`.
 
-### Вариант A: `'transport' => 'mail'`
+### Option A: `'transport' => 'mail'`
 
-Встроенная функция PHP. Настраивать нечего.
+PHP's built-in function. Nothing to configure.
 
-**Минус, о котором надо знать заранее:** на шаред-хостинге письма
-регулярно уходят в спам, а иногда `mail()` просто отключена. Причина
-в том, что письмо отправляется от имени системного пользователя вида
-`www-data@srv123.hosting.it`, и проверка SPF у получателя проваливается.
+**The downside to know upfront:** on shared hosting, messages
+regularly land in spam, and sometimes `mail()` is simply disabled.
+The reason is that the message is sent as a system user such as
+`www-data@srv123.hosting.it`, so the recipient's SPF check fails.
 
-Флаг `envelope_sender => true` это частично лечит: передаёт `-f`
-в sendmail, подставляя ваш адрес. Некоторые хостинги `-f` запрещают —
-тогда флаг надо выключить, иначе письма перестанут уходить совсем.
+The `envelope_sender => true` flag partially fixes this: it passes
+`-f` to sendmail, substituting your address. Some hosts forbid `-f` —
+then the flag must be turned off, or mail stops going out entirely.
 
-### Вариант B: `'transport' => 'smtp'` — рекомендуется
+### Option B: `'transport' => 'smtp'` — recommended
 
-Прямое подключение к почтовому ящику домена. Письмо уходит через
-настоящий сервер вашего домена, подписывается его SPF/DKIM и доходит
-в инбокс, а не в спам.
+A direct connection to your domain's mailbox. The message goes through
+your domain's real server, is signed by its SPF/DKIM, and lands in the
+inbox rather than in spam.
 
-1. Создать в панели хостинга ящик, например `no-reply@xsapori.it`.
-2. Найти параметры SMTP — те же, что вводятся в почтовый клиент
-   на телефоне.
-3. Заполнить:
+1. Create a mailbox in the hosting panel, e.g. `no-reply@xsapori.it`.
+2. Find the SMTP settings — the same ones you would enter into a phone
+   mail client.
+3. Fill in:
 
 ```php
 'transport' => 'smtp',
 'smtp' => [
-    'host'   => 'smtps.aruba.it',      // из панели хостинга
-    'port'   => 587,                    // 587 для STARTTLS, 465 для SSL
-    'secure' => 'tls',                  // 'tls' для 587, 'ssl' для 465
-    'user'   => 'no-reply@xsapori.it',  // обычно полный адрес
-    'pass'   => 'пароль ящика',
+    'host'   => 'smtps.aruba.it',      // from the hosting panel
+    'port'   => 587,                    // 587 for STARTTLS, 465 for SSL
+    'secure' => 'tls',                  // 'tls' for 587, 'ssl' for 465
+    'user'   => 'no-reply@xsapori.it',  // usually the full address
+    'pass'   => 'mailbox password',
     'timeout' => 8,
     'verify_peer' => true,
 ],
 ```
 
-> `verify_peer` выключать нельзя, кроме случая заведомо самоподписанного
-> сертификата у хостинга. Без проверки шифрование не защищает
-> от подмены сервера.
+> `verify_peer` must not be disabled, except where the host is known
+> to use a self-signed certificate. Without verification, encryption
+> does not protect against server impersonation.
 
-Задержка на отправку — пара секунд, но она **за пределами ответа
-гостю**: страница показывает подтверждение сразу, письмо уходит после.
+The sending delay is a couple of seconds, but it falls **outside the
+guest's response**: the page shows confirmation immediately, the email
+goes out afterwards.
 
-### Что приходит персоналу
+### What staff receive
 
-Тема:
+Subject:
 
 ```
 Prenotazione #42 — 15/09/2026 20:00 · 6 persone · Anna Maria Rossi
 ```
 
-В теле — дата прописью по-итальянски, время, число гостей, формула,
-повод, имя, **телефон ссылкой `tel:`** (со смартфона звонок в одно
-касание), email и отдельным жёлтым блоком примечания с аллергиями.
+The body has the date written out in Italian, the time, the number of
+guests, the set menu, the occasion, the name, the **phone as a `tel:`
+link** (one-tap calling from a smartphone), the email, and any notes
+about allergies in a separate yellow block.
 
-`Reply-To` подставлен на адрес гостя: кнопка «Ответить» пишет
-клиенту напрямую. Отключается флагом `reply_to_guest`.
+`Reply-To` is set to the guest's address: hitting «Reply» writes
+straight to the customer. Switched off via `reply_to_guest`.
 
-Письмо уходит **каждому получателю отдельно** — адреса персонала
-не видны друг другу, и отказ одного ящика не топит остальные.
+Each recipient gets **their own separate message** — staff addresses
+are not visible to one another, and one failing mailbox does not sink
+the rest.
 
 ---
 
-## 7. Проверка после заливки
+## 7. Post-deployment checks
 
-По порядку. Каждый пункт занимает секунды.
+In order. Each item takes seconds.
 
-### 7.1. PHP нужной версии
+### 7.1. Correct PHP version
 
-Временно положить в `public_html` файл `info.php`:
+Temporarily place `info.php` in `public_html`:
 
 ```php
 <?php phpinfo();
 ```
 
-Открыть `https://xsapori.it/info.php`, проверить:
+Open `https://xsapori.it/info.php` and check:
 
-- **PHP Version** — 8.1 или выше
-- **Server API** — `FPM/FastCGI` (значит `fastcgi_finish_request` работает
-  и гость не ждёт отправки письма)
-- В разделе PDO есть **pdo_mysql**
-- Загружены **mbstring** и **openssl**
+- **PHP Version** — 8.1 or higher
+- **Server API** — `FPM/FastCGI` (meaning `fastcgi_finish_request`
+  works and the guest does not wait for the email)
+- **pdo_mysql** present in the PDO section
+- **mbstring** and **openssl** loaded
 
-**Сразу удалить `info.php`** — он раскрывает пути, версии и настройки.
+**Delete `info.php` immediately** — it exposes paths, versions and
+settings.
 
-### 7.2. Служебные файлы закрыты
+### 7.2. Service files are blocked
 
 ```
-https://xsapori.it/schema.sql          → должно быть 403 или 404
-https://xsapori.it/config.php          → 403 или 404
-https://xsapori.it/README.md           → 403 или 404
+https://xsapori.it/schema.sql          → must be 403 or 404
+https://xsapori.it/config.php          → 403 or 404
+https://xsapori.it/README.md           → 403 or 404
 https://xsapori.it/api/notify.php      → 403
 ```
 
-Если `schema.sql` **скачивается** — `.htaccess` не работает.
-Либо хостинг на nginx (см. §5), либо `AllowOverride` выключен.
-До исправления просто удалите `schema.sql` с сервера.
+If `schema.sql` **downloads**, `.htaccess` is not working. Either the
+host runs nginx (see §5) or `AllowOverride` is off. Until it is fixed,
+simply delete `schema.sql` from the server.
 
-### 7.3. API отвечает
+### 7.3. The API responds
 
-Открыть `https://xsapori.it/api/booking.php` в браузере. Обычный GET.
+Open `https://xsapori.it/api/booking.php` in a browser. A plain GET.
 
-Ожидается:
+Expected:
 
 ```json
 {"ok":false,"errors":[{"field":null,"message":"Metodo non consentito."}]}
 ```
 
-Это **правильный ответ** — endpoint жив и не принимает GET.
+This is the **correct** response — the endpoint is alive and rejects
+GET.
 
-- Пустая белая страница → PHP упал, смотрите лог
-- Исходный код PHP на экране → **PHP не обрабатывается, критично**
-- 500 → чаще всего не найден или неверен `config.php`
+- A blank white page → PHP crashed, check the log
+- PHP source code on screen → **PHP is not being processed, critical**
+- 500 → most often `config.php` is missing or wrong
 
-### 7.4. Бронь целиком
+### 7.4. A complete booking
 
-Заполнить форму на `prenota.html` настоящими данными и отправить.
+Fill in the form on `prenota.html` with real data and submit.
 
-Должно произойти три вещи:
+Three things must happen:
 
-1. На странице — зелёный блок «Richiesta inviata»
-2. В phpMyAdmin в таблице `bookings` — новая строка
-3. На ящик из `mail.to` — письмо
+1. A green «Richiesta inviata» block on the page
+2. A new row in the `bookings` table in phpMyAdmin
+3. An email to the address in `mail.to`
 
-Если 1 и 2 есть, а письма нет — проблема только в почте, бронь принята.
-Смотрите §8.
+If 1 and 2 happen but no email arrives, the problem is only with mail —
+the booking was accepted. See §8.
 
-### 7.5. Защита работает
+### 7.5. Protections work
 
-| Проверка | Ожидание |
+| Check | Expectation |
 |---|---|
-| Понедельник в поле даты | «Il lunedì siamo chiusi» |
-| Время 16:00 | «A quell'ora la cucina è chiusa» |
-| Без галочки согласия | Форма не отправляется |
-| 4 брони подряд | Четвёртая → «Attendete 10 minuti» |
+| A Monday in the date field | «Il lunedì siamo chiusi» |
+| Time 16:00 | «A quell'ora la cucina è chiusa» |
+| Without the consent checkbox | Form does not submit |
+| 4 bookings in a row | The fourth → «Attendete 10 minuti» |
 
 ### 7.6. HTTPS
 
-Форма обязана работать по `https://`. В `allowed_origins` должны быть
-**https-адреса**. Если сайт открывается и с `www`, и без — вписать оба,
-иначе с одного из них форма получит 403.
+The form must work over `https://`. `allowed_origins` must contain
+**https addresses**. If the site opens both with and without `www`,
+list both, otherwise one of them will get a 403.
 
 ---
 
-## 8. Если не работает
+## 8. Troubleshooting
 
-### Где искать лог ошибок
+### Where to find the error log
 
-Это первое, куда смотреть. Все технические подробности пишутся туда,
-а гостю отдаётся общее сообщение без деталей — намеренно.
+This is the first place to look. All technical detail goes there,
+while the guest gets a generic message without specifics — by design.
 
-- Панель управления → «Логи» / «Error log»
-- Файл `error_log` в корне сайта или в `api/`
-- Иногда `/home/аккаунт/logs/error_log`
+- Control panel → «Logs» / «Error log»
+- An `error_log` file in the site root or in `api/`
+- Sometimes `/home/account/logs/error_log`
 
-Все наши записи начинаются с `[booking]` или `[notify]`.
+All of our entries start with `[booking]` or `[notify]`.
 
-### Ошибки, которые встречались на практике
+### Errors seen in practice
 
-| Симптом | Причина | Что делать |
+| Symptom | Cause | What to do |
 |---|---|---|
-| 500 на любую отправку | `config.php` не найден | В логе есть строка «config.php не найден» со списком путей, где искали |
-| `Access denied for user` | Неверный пароль или хост БД | Сверить `db.*` с панелью хостинга |
-| Форма отдаёт **403** | Origin не в списке | Добавить в `allowed_origins` адрес с `www` и без, обязательно `https://` |
-| Бронь есть, письма нет | Почта | См. ниже |
-| `mail() вернула false` | `mail()` отключена или блокирует `-f` | Выключить `envelope_sender`, а лучше перейти на SMTP |
-| `SMTP: не удалось поднять TLS` | Сертификат или порт | Проверить: 587 → `secure=tls`, 465 → `secure=ssl` |
-| `SMTP: проверка пароля` в логе | Неверный пароль ящика | Проверить в почтовом клиенте теми же данными |
-| `не удалось подключиться` к SMTP | Хостинг блокирует исходящий порт | Спросить поддержку, разрешён ли 587 наружу |
-| Кракозябры вместо `à è ò` | Кодировка соединения | Убедиться, что в базе `utf8mb4` и в DSN `charset=utf8mb4` |
-| Гость видит форму, но ничего не происходит | JS не загрузился | Консоль браузера (F12), проверить путь `js/booking.js` |
-| В браузере виден код PHP | PHP не обрабатывается | Вопрос к хостингу, критично |
+| 500 on every submission | `config.php` not found | The log has a «config.php not found» line listing the paths searched |
+| `Access denied for user` | Wrong DB password or host | Compare `db.*` with the hosting panel |
+| Form returns **403** | Origin not in the list | Add the address to `allowed_origins`, with and without `www`, always `https://` |
+| Booking saved, no email | Mail | See below |
+| `mail() returned false` | `mail()` disabled or `-f` blocked | Turn off `envelope_sender`, better still switch to SMTP |
+| `SMTP: could not start TLS` | Certificate or port | Check: 587 → `secure=tls`, 465 → `secure=ssl` |
+| `SMTP: password check` in the log | Wrong mailbox password | Verify with the same credentials in a mail client |
+| `could not connect` to SMTP | Host blocks the outbound port | Ask support whether 587 is open outbound |
+| Mojibake instead of `à è ò` | Connection charset | Make sure the DB is `utf8mb4` and the DSN has `charset=utf8mb4` |
+| Guest sees the form but nothing happens | JS did not load | Browser console (F12), check the `js/booking.js` path |
+| PHP code visible in the browser | PHP is not being processed | A question for the host, critical |
 
-### Письмо не приходит — по шагам
+### No email arrives — step by step
 
-1. **Проверить лог.** Есть ли строка `[notify]`? Если её нет вообще —
-   `notify.php` не подключился, проверьте, что файл залит.
-2. **Есть `ПИСЬМО НЕ ОТПРАВЛЕНО`?** Значит отправка сорвалась,
-   рядом в логе будет причина. Бронь при этом в базе.
-3. **Есть бронь, лога нет, письма нет?** Проверьте `mail.enabled => true`
-   и что `mail.to` заполнен.
-4. **Всё чисто, а письма нет?** Значит письмо ушло, но не дошло:
-   смотрите папку «Спам», проверяйте SPF домена. Переходите на SMTP.
+1. **Check the log.** Is there a `[notify]` line? If there is none at
+   all, `notify.php` was not included — verify the file was uploaded.
+2. **Is there `EMAIL NOT SENT`?** Sending failed; the reason is next
+   to it in the log. The booking is in the database regardless.
+3. **Booking present, no log, no email?** Check `mail.enabled => true`
+   and that `mail.to` is filled in.
+4. **Everything clean but still no email?** The message was sent but
+   not delivered: check the Spam folder, check the domain's SPF.
+   Switch to SMTP.
 
-### Ничего не помогло
+### Nothing helped
 
-Включить в `config.php`:
+Enable in `config.php`:
 
 ```php
 'debug' => true,
 ```
 
-Технические детали начнут попадать в JSON-ответ. **Сразу вернуть
-в `false`** после диагностики: с `true` наружу утекают внутренности
-базы.
+Technical detail will start appearing in the JSON response. **Set it
+back to `false`** immediately after diagnosing: with `true`, database
+internals leak to the outside.
 
 ---
 
-## 9. Что нужно доделать вручную
+## 9. What must be completed manually
 
-Эти пункты код закрыть не может — нужно решение владельца.
+Code cannot close these items — they need an owner's decision.
 
-### 9.1. `privacy.html` — обязательно
+### 9.1. `privacy.html` — mandatory
 
-Страница написана по структуре ст. 13 GDPR, но это **заготовка,
-а не готовый юридический документ.**
+The page follows the structure of GDPR art. 13, but it is a
+**template, not a finished legal document.**
 
-По тексту расставлены метки `[DA COMPLETARE]`:
+`[DA COMPLETARE]` markers are placed throughout:
 
-- Ragione sociale и P. IVA ресторана
-- Название провайдера хостинга
-- Дата последнего обновления
+- The restaurant's *ragione sociale* and *P. IVA*
+- The hosting provider's name
+- The date of last update
 
-Наверху страницы — красный блок-предупреждение. **Его нужно удалить**
-после заполнения.
+There is a red warning block at the top of the page. **It must be
+removed** once the gaps are filled.
 
-Два места требуют внимания юриста или commercialista:
+Two points need a lawyer or a *commercialista*:
 
-- **Аллергии в поле «note» — это данные о здоровье по ст. 9 GDPR**,
-  особая категория. Формально для них нужно отдельное явное согласие,
-  а не общая галочка. В тексте это оформлено как «согласие, выраженное
-  добровольным заполнением поля» — формулировка распространённая,
-  но спорная.
-- **Адрес `privacy@xsapori.it`** должен существовать и читаться.
-  По GDPR на запрос надо ответить в течение месяца.
+- **Allergies in the «note» field are health data under GDPR art. 9**,
+  a special category. Strictly, they require separate explicit consent
+  rather than the general checkbox. The text frames this as «consent
+  expressed by voluntarily filling in the field» — a common wording,
+  but a debatable one.
+- **The address `privacy@xsapori.it`** must exist and be monitored.
+  Under GDPR, a request must be answered within a month.
 
-### 9.2. Ящик для уведомлений
+### 9.2. The notification mailbox
 
-`mail.to` сейчас указывает на `prenotazioni@xsapori.it`. Ящик должен
-существовать и регулярно проверяться. Лучше указать два адреса —
-если один переполнится, второй сработает.
+`mail.to` currently points at `prenotazioni@xsapori.it`. The mailbox
+must exist and be checked regularly. Two addresses are better — if one
+fills up, the other still works.
 
-### 9.3. Формула не сверяется со временем
+### 9.3. Set menu is not cross-checked against the time
 
-Гость может выбрать «Cena · 24,90 €» и время 12:00. Сервер это
-пропустит: формула и время проверяются независимо.
+A guest can pick «Cena · 24,90 €» and a time of 12:00. The server lets
+it through: menu and time are validated independently.
 
-Оставлено сознательно — тарифы зависят ещё и от дня недели
-(Weekend действует в субботу и воскресенье), и жёсткая привязка
-начала бы отклонять законные брони. Персонал уточняет тариф
-при подтверждающем звонке.
+Deliberate — pricing also depends on the day of the week (Weekend
+applies on Saturday and Sunday), and a hard link would start rejecting
+legitimate bookings. Staff clarify the rate during the confirmation
+call.
 
-Если хотите строгую сверку — скажите, добавлю.
+If you want strict cross-checking, say so and it can be added.
 
-### 9.4. Гость не получает подтверждения на почту
+### 9.4. The guest gets no email confirmation
 
-Сейчас письмо уходит только персоналу. Гость видит подтверждение
-на странице, но письма не получает.
+Right now the email goes only to staff. The guest sees confirmation on
+the page but receives no message.
 
-Стоит добавить: снимает часть звонков «вы получили мою заявку?».
-Поле email необязательное, так что слать только тем, кто его указал.
+Worth adding: it removes a share of the «did you get my request?»
+calls. The email field is optional, so send only to those who provided
+one.
 
 ---
 
-## 10. Обслуживание
+## 10. Maintenance
 
-### Хранение данных
+### Data retention
 
-По GDPR персональные данные нельзя хранить дольше необходимого.
-Разумный срок для броней — **24 месяца**.
+Under GDPR, personal data must not be kept longer than necessary.
+A reasonable retention period for bookings is **24 months**.
 
-Раз в год выполнять под административным пользователем БД
-(у пользователя сайта нет прав `DELETE`):
+Run once a year as an administrative DB user (the site's user has no
+`DELETE` privilege):
 
 ```sql
 DELETE FROM bookings WHERE created_at < DATE_SUB(NOW(), INTERVAL 24 MONTH);
 ```
 
-Запрос закомментирован в конце `schema.sql`.
+The query is commented out at the end of `schema.sql`.
 
-### Резервные копии
+### Backups
 
-Заявки живут только в базе. Настройте автоматический бэкап в панели
-хостинга — большинство делают это ежедневно, но проверьте, что опция
-включена.
+Bookings live only in the database. Set up automatic backups in the
+hosting panel — most hosts do this daily, but verify the option is on.
 
-Ручная выгрузка через phpMyAdmin: выбрать базу → Экспорт → Формат SQL.
+Manual export via phpMyAdmin: select the database → Export → SQL
+format.
 
-### Смена расписания
+### Changing the schedule
 
-Если ресторан изменит часы или выходной день, править в трёх местах:
+If the restaurant changes its hours or closing day, edit in three
+places:
 
-1. `config.php`, секция `hours` — реальная проверка
-2. `js/booking.js`, константа `HOURS` — подсказки гостю
-3. Тексты: `prenota.html` (блок `aside-card` и подпись под формулой),
-   футеры всех страниц, `openingHoursSpecification` в JSON-LD
-   на `index.html` и `prenota.html`
+1. `config.php`, the `hours` section — the actual validation
+2. `js/booking.js`, the `HOURS` constant — guest-facing hints
+3. Text: `prenota.html` (the `aside-card` block and the caption under
+   the set menu), the footers of every page, and
+   `openingHoursSpecification` in the JSON-LD on `index.html` and
+   `prenota.html`
 
-Разовые закрытия (отпуск, праздники) — только в `config.php`:
+One-off closures (holidays, vacation) go in `config.php` only:
 
 ```php
 'closed_dates' => ['2026-12-25', '2026-12-26', '2027-01-01'],
 ```
 
-### Смена цен
+### Changing prices
 
-Цены встречаются в `prenota.html` (подписи `<option>`), `index.html`
-(блок тарифов) и в `api/notify.php` (функция `xs_formula_label`,
-подписи в письме персоналу).
+Prices appear in `prenota.html` (`<option>` labels), `index.html` (the
+pricing block) and in `api/notify.php` (the `xs_formula_label`
+function, labels in the staff email).
 
 ---
 
-## Приложение: что и как проверено
+## Appendix: what was tested and how
 
-Бэкенд прогонялся на PHP 8.4.24 и MySQL 8.0.45 живыми HTTP-запросами.
+The backend was exercised against PHP 8.4.24 and MySQL 8.0.45 with
+live HTTP requests.
 
-**Прошло:**
+**Passed:**
 
-- `GET` → 405 с заголовком `Allow`; чужой Origin → 403; битый JSON → 422;
-  тело 30 КБ → 422 до разбора
-- Вся валидация: даты (включая `2027-02-31`, до которой браузер
-  не добирается), часы работы, оба окна, выходной день, лимиты гостей,
-  белые списки формул и поводов, длины имён, телефон, email, согласие
-- Honeypot: ответ 200 без записи в базу
-- Rate limit: 3 брони проходят, четвёртая → 429 с `Retry-After: 600`
-- SQL-инъекция `Rossi'); DROP TABLE bookings;--` записана обычным
-  текстом, таблица цела
-- Заметки в 1500 символов обрезаны ровно до 1000; `Niccolò` и `李小龙`
-  сохранены корректно; телефон нормализован
-- Письмо: тема в RFC 2047, `multipart/alternative`, dot-stuffing
-  (строка, начинающаяся с точки, не обрывает письмо), STARTTLS с TLS 1.3,
-  `AUTH LOGIN`
-- `verify_peer => true` действительно отвергает самоподписанный
-  сертификат
-- Отказ почты не ломает бронь: гость получает 200, в лог ложится
-  строка восстановления
+- `GET` → 405 with an `Allow` header; foreign Origin → 403; malformed
+  JSON → 422; a 30 KB body → 422 before parsing
+- All validation: dates (including `2027-02-31`, which the browser
+  never reaches), opening hours, both service windows, the closing
+  day, guest limits, allow-lists for set menus and occasions, name
+  lengths, phone, email, consent
+- Honeypot: 200 response with no database write
+- Rate limit: 3 bookings pass, the fourth → 429 with `Retry-After: 600`
+- SQL injection `Rossi'); DROP TABLE bookings;--` stored as plain
+  text, table intact
+- A 1500-character note truncated to exactly 1000; `Niccolò` and
+  `李小龙` preserved correctly; phone normalised
+- Email: RFC 2047 subject, `multipart/alternative`, dot-stuffing (a
+  line starting with a period does not truncate the message), STARTTLS
+  with TLS 1.3, `AUTH LOGIN`
+- `verify_peer => true` does reject a self-signed certificate
+- A mail failure does not break the booking: the guest gets a 200 and
+  a recovery line is written to the log
 
-**Не проверено, требует боевого сервера:**
+**Not tested, requires a live server:**
 
-- `.htaccess` — встроенный сервер PHP его игнорирует
-- `fastcgi_finish_request()` — на `php -S` отсутствует, работал
-  запасной путь
-- Реальная доставляемость писем — зависит от SPF/DKIM домена
+- `.htaccess` — the built-in PHP server ignores it
+- `fastcgi_finish_request()` — absent under `php -S`, the fallback
+  path was used
+- Real-world deliverability — depends on the domain's SPF/DKIM
