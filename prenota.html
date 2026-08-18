@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prenota un tavolo · X-Sapori Savona</title>
+<meta name="description" content="Prenota il tuo tavolo da X-Sapori, ristorante cinese all you can eat a Savona. Modulo di prenotazione online per famiglie, gruppi e compleanni, oppure chiama 019 221 3138.">
+<link rel="canonical" href="prenota.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Prenota un tavolo · X-Sapori Savona">
+<meta property="og:description" content="Prenotazione tavolo al ristorante cinese di Savona: scegli data, orario e numero di persone.">
+<meta property="og:url" content="prenota.html">
+<meta property="og:image" content="https://source.unsplash.com/1200x630/?restaurant,table-setting">
+<meta property="og:locale" content="it_IT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Prenota un tavolo · X-Sapori Savona">
+<meta name="twitter:description" content="Data, orario, numero di persone: il tavolo è vostro in un minuto.">
+<meta name="twitter:image" content="https://source.unsplash.com/1200x630/?restaurant,table-setting">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥢</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Jost:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "X-Sapori",
+  "description": "Prenotazione tavolo al ristorante cinese all you can eat X-Sapori di Savona.",
+  "url": "prenota.html",
+  "telephone": "+390192213138",
+  "acceptsReservations": "True",
+  "potentialAction": {
+    "@type": "ReserveAction",
+    "target": { "@type": "EntryPoint", "urlTemplate": "prenota.html", "inLanguage": "it-IT" },
+    "result": { "@type": "FoodEstablishmentReservation", "name": "Prenotazione tavolo X-Sapori" }
+  },
+  "servesCuisine": ["Cinese", "Sushi", "Asiatica"],
+  "priceRange": "€€",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Via Luigi Pirandello, 2r",
+    "addressLocality": "Savona",
+    "addressRegion": "SV",
+    "postalCode": "17100",
+    "addressCountry": "IT"
+  }
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Vai al contenuto principale</a>
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="index.html">X<span>·</span>Sapori <small>Savona</small></a>
+    <nav class="nav" aria-label="Navigazione principale">
+      <a href="index.html">Home</a>
+      <a href="menu.html">Menu</a>
+      <a href="prenota.html" aria-current="page">Prenota</a>
+      <a href="chi-siamo.html">Chi siamo</a>
+      <a href="contatti.html">Contatti</a>
+    </nav>
+    <a class="btn btn--gold header-cta" href="tel:+390192213138">019 221 3138</a>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-head">
+    <div class="wrap">
+      <p class="breadcrumb"><a href="index.html">Home</a> · Prenota un tavolo</p>
+      <h1>Il vostro tavolo, riservato in un minuto</h1>
+      <p class="lead">Compilate il modulo: vi richiamiamo per confermare entro poche ore, negli orari di apertura. Per gruppi oltre 12 persone o per un compleanno con torta, una telefonata è ancora più rapida.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap booking">
+
+      <!--
+        action/method оставлены как есть на случай отключённого JS:
+        booking.php умеет принимать обычную form-data. Основной путь —
+        перехват в js/booking.js и отправка JSON через fetch.
+        novalidate: сообщения об ошибках рисует наш JS, чтобы они были
+        на итальянском и в стиле сайта, а не браузерными подсказками.
+      -->
+      <form class="form" id="booking-form" action="api/booking.php" method="post" novalidate>
+
+        <!-- Honeypot: скрыт от людей, виден ботам. Имя совпадает с
+             honeypot_field в config.php. Не aria-hidden на самом input,
+             а вынос за экран — часть ботов проверяет display:none. -->
+        <div class="hp" aria-hidden="true">
+          <label for="indirizzo_web">Non compilare questo campo</label>
+          <input type="text" id="indirizzo_web" name="indirizzo_web" tabindex="-1" autocomplete="off">
+        </div>
+
+        <fieldset>
+          <legend>Quando volete venire</legend>
+          <div class="field-grid field-grid--3">
+            <p class="field">
+              <label for="data">Data <span class="req" aria-hidden="true">*</span></label>
+              <!-- min/max проставляет booking.js: сегодня и +6 месяцев -->
+              <input type="date" id="data" name="data" autocomplete="off" required>
+            </p>
+            <p class="field">
+              <label for="orario">Orario <span class="req" aria-hidden="true">*</span></label>
+              <input type="time" id="orario" name="orario" min="12:00" max="23:30" step="900" required>
+            </p>
+            <p class="field">
+              <label for="persone">Persone <span class="req" aria-hidden="true">*</span></label>
+              <input type="number" id="persone" name="persone" min="1" max="40" step="1" value="2" inputmode="numeric" required>
+            </p>
+          </div>
+          <p class="field" style="margin-top:var(--sp-4)">
+            <label for="formula">Formula</label>
+            <select id="formula" name="formula">
+              <option value="pranzo">Pranzo · 14,90 € (mar – ven)</option>
+              <option value="cena" selected>Cena · 24,90 € (mar – ven)</option>
+              <option value="weekend">Weekend · 27,90 € (sab, dom e festivi)</option>
+            </select>
+            <span class="hint">Il prezzo è a persona, bevande escluse. Aperti da martedì a domenica, 12:00–14:30 e 19:00–23:30. Lunedì chiuso.</span>
+          </p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Come vi contattiamo</legend>
+          <div class="field-grid field-grid--2">
+            <p class="field">
+              <label for="nome">Nome <span class="req" aria-hidden="true">*</span></label>
+              <input type="text" id="nome" name="nome" autocomplete="given-name" maxlength="60" placeholder="Es. Giulia" required>
+            </p>
+            <p class="field">
+              <label for="cognome">Cognome <span class="req" aria-hidden="true">*</span></label>
+              <input type="text" id="cognome" name="cognome" autocomplete="family-name" maxlength="60" placeholder="Es. Rossi" required>
+            </p>
+          </div>
+          <div class="field-grid field-grid--2" style="margin-top:var(--sp-4)">
+            <p class="field">
+              <label for="telefono">Telefono <span class="req" aria-hidden="true">*</span></label>
+              <input type="tel" id="telefono" name="telefono" autocomplete="tel" inputmode="tel" maxlength="24" placeholder="Es. 019 221 3138" required>
+              <span class="hint">Serve solo per confermare il tavolo.</span>
+            </p>
+            <p class="field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" autocomplete="email" inputmode="email" maxlength="190" placeholder="Es. giulia.rossi@email.it">
+              <span class="hint">Facoltativa: la conferma arriva per telefono.</span>
+            </p>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Qualcosa che dobbiamo sapere</legend>
+          <p class="field">
+            <label for="occasione">Occasione</label>
+            <select id="occasione" name="occasione">
+              <option value="nessuna">Cena normale</option>
+              <option value="compleanno">Compleanno (con torta e candeline)</option>
+              <option value="gruppo">Cena di gruppo o aziendale</option>
+              <option value="famiglia">Famiglia con bambini (serve seggiolone)</option>
+              <option value="altro">Altro (spiegate nelle note)</option>
+            </select>
+          </p>
+          <p class="field" style="margin-top:var(--sp-4)">
+            <label for="note">Allergie, intolleranze o note</label>
+            <textarea id="note" name="note" maxlength="1000" placeholder="Es. un celiaco al tavolo, due bambini piccoli, preferiamo un tavolo tranquillo"></textarea>
+            <span class="hint">Prepariamo alternative senza glutine, senza crostacei e senza frutta a guscio.</span>
+          </p>
+          <p class="checkbox" style="margin-top:var(--sp-4)">
+            <input type="checkbox" id="privacy" name="privacy" value="1" required>
+            <label for="privacy" style="text-transform:none;letter-spacing:0;font-size:.92rem;color:var(--c-text-muted)">Ho letto l'<a href="privacy.html">informativa privacy</a> e acconsento al trattamento dei miei dati per la gestione della prenotazione. <span class="req" aria-hidden="true">*</span></label>
+          </p>
+        </fieldset>
+
+        <!-- Сюда booking.js пишет общий результат: успех, 429, сбой сети.
+             role="status" + aria-live: скринридер прочитает без переноса фокуса. -->
+        <p class="form-msg" id="form-msg" role="status" aria-live="polite" hidden></p>
+
+        <div class="form__actions">
+          <button class="btn btn--gold" type="submit" id="booking-submit">Invia la richiesta</button>
+          <button class="btn btn--ghost" type="reset">Svuota il modulo</button>
+          <span class="hint">I campi con <span class="req">*</span> sono obbligatori.</span>
+        </div>
+      </form>
+
+      <aside class="aside-card" aria-label="Informazioni utili sulla prenotazione">
+        <h3>Prima di prenotare</h3>
+        <ul class="info-list">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <span><strong>Orari</strong>Martedì – domenica, 12:00–14:30 e 19:00–23:30. Lunedì chiuso.</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/></svg>
+            <span><strong>Gruppi e compleanni</strong>Fino a 40 persone in sala riservata, con preavviso di 48 ore.</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 4h12v16l-6-3-6 3z"/></svg>
+            <span><strong>Solo in sala</strong>Non facciamo delivery né asporto: l'all you can eat si vive al tavolo.</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 005 5L15 13l5 2v4a2 2 0 01-2.2 2A16 16 0 013 6.2 2 2 0 015 4z"/></svg>
+            <span><strong>Preferite la voce?</strong><a href="tel:+390192213138">+39 019 221 3138</a></span>
+          </li>
+        </ul>
+        <figure class="ph ph--wide" style="margin:0">
+          <span class="ph__label" role="img" aria-label="Sala del ristorante apparecchiata con sedie blu petrolio"><em>Foto da inserire</em>Sala del ristorante apparecchiata con sedie blu petrolio</span>
+            <!-- foto suggerita: https://source.unsplash.com/600x380/?restaurant,dining-room,elegant -->
+        </figure>
+      </aside>
+
+    </div>
+  </section>
+
+  <section class="section section--marble" aria-labelledby="faq">
+    <div class="wrap wrap-narrow">
+      <p class="eyebrow">Domande frequenti</p>
+      <h2 id="faq">Le risposte che ci chiedono al telefono</h2>
+      <div class="faq">
+        <details>
+          <summary>Serve prenotare anche in settimana?</summary>
+          <p>A pranzo di solito troviamo posto anche senza preavviso. Dal venerdì alla domenica la sala si riempie quasi sempre: meglio prenotare, soprattutto per tavoli da sei persone in su.</p>
+        </details>
+        <details>
+          <summary>Quanto tempo possiamo restare al tavolo?</summary>
+          <p>A cena il tavolo è vostro per tutta la serata. A pranzo lo teniamo per 90 minuti, così anche chi ha poco tempo trova posto.</p>
+        </details>
+        <details>
+          <summary>Come funziona il prezzo per i bambini?</summary>
+          <p>Fino a 3 anni compiuti non paga nulla, dai 4 ai 10 anni paga metà della formula scelta. Seggioloni disponibili, basta segnalarlo nel modulo.</p>
+        </details>
+        <details>
+          <summary>Gestite allergie e intolleranze?</summary>
+          <p>Sì. Indicatele nelle note: prepariamo piatti senza glutine, senza crostacei e senza frutta a guscio in postazione separata. Per i celiaci vi chiediamo di avvisare almeno il giorno prima.</p>
+        </details>
+        <details>
+          <summary>Si può festeggiare un compleanno?</summary>
+          <p>Certo. Selezionate «Compleanno» nel modulo: portiamo il dolce con le candeline a fine cena. Per tavolate oltre le 20 persone prepariamo la sala riservata.</p>
+        </details>
+        <details>
+          <summary>Fate consegne a domicilio?</summary>
+          <p>No. X-Sapori è solo ristorante: nessun delivery, nessun asporto. La formula all you can eat funziona con i piatti serviti caldi al tavolo, appena usciti dalla cucina.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="js/booking.js" defer></script>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html">X<span>·</span>Sapori <small>Savona</small></a>
+        <p style="margin-top:var(--sp-3);max-width:38ch">Ristorante cinese all you can eat a Savona. Buffet servito al tavolo, sushi e cucina asiatica. Solo servizio in sala: non effettuiamo delivery.</p>
+      </div>
+      <div>
+        <h4>Link rapidi</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="prenota.html">Prenota un tavolo</a></li>
+          <li><a href="chi-siamo.html">Chi siamo</a></li>
+          <li><a href="contatti.html">Contatti</a></li>
+          <li><a href="privacy.html">Informativa privacy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Dove siamo</h4>
+        <ul>
+          <li>Via Luigi Pirandello, 2r<br>17100 Savona (SV)</li>
+          <li><a href="tel:+390192213138">+39 019 221 3138</a></li>
+          <li>Mar – Dom · 12:00–14:30 · 19:00–23:30<br>Lunedì chiuso</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 X-Sapori · Via Luigi Pirandello, 2r, 17100 Savona (SV)</span>
+      <span>P. IVA 00000000000</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
