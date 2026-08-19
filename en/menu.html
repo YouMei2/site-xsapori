@@ -137,8 +137,10 @@
 
       <div class="filters" role="group" aria-label="Filter the dishes">
         <span class="filters__label" id="filtri-label">Filter</span>
-        <button class="chip" type="button" data-filter="veg" aria-pressed="false">Vegetarian</button>
         <button class="chip" type="button" data-filter="vegano" aria-pressed="false">Vegan</button>
+        <button class="chip" type="button" data-filter="veg" aria-pressed="false">Vegetarian</button>
+        <button class="chip" type="button" data-filter="pesce" aria-pressed="false">Fish</button>
+        <button class="chip" type="button" data-filter="carne" aria-pressed="false">Meat</button>
         <button class="chip" type="button" data-filter="piccante" aria-pressed="false">Spicy</button>
 
         <label class="search">
@@ -155,6 +157,23 @@
   <p class="visually-hidden" role="status" aria-live="polite" id="menu-status"></p>
 
   <div class="wrap">
+    <p class="conteggio" id="menu-conteggio" aria-hidden="true">67 dishes · 8 sections · 4 kitchens</p>
+  </div>
+
+  <div class="wrap">
+
+    <aside class="avviso-allergeni" aria-labelledby="allergeni-t">
+      <h2 id="allergeni-t">Allergies and intolerances</h2>
+      <p>
+        We prepare gluten-free, shellfish-free and nut-free dishes at a separate
+        station. For coeliac guests we ask for at least one day of notice.
+      </p>
+      <p>
+        The list of allergens in each dish is available: ask the staff in the
+        dining room, or mention the allergy in the notes when you
+        <a href="book.html">book a table</a>.
+      </p>
+    </aside>
 
     <section class="menu-course" id="antipasti" aria-labelledby="antipasti-t">
       <div class="menu-course__head">
@@ -164,13 +183,13 @@
       <p class="lead" style="margin-top:var(--sp-3)">Crisp fried bites and small cold plates to share. Order them in two rounds: the first to break the ice, the second while the sushi arrives.</p>
       <div class="dish-list">
         <div class="dish"><div><span class="dish__name">Spring rolls</span><span class="dish__desc">Crisp vegetables, thin pastry, sweet and sour sauce.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Battered prawns</span><span class="dish__desc">Whole prawns, light batter, sesame mayonnaise.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Prawn crackers</span><span class="dish__desc">Puffed prawn crisps, served warm.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Battered prawns</span><span class="dish__desc">Whole prawns, light batter, sesame mayonnaise.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Prawn crackers</span><span class="dish__desc">Puffed prawn crisps, served warm.</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Wakame seaweed</span><span class="dish__desc">Marinated seaweed salad with sesame.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegan</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Salted edamame</span><span class="dish__desc">Blanched soy beans with sea salt.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegan</span></div></div>
-        <div class="dish"><div><span class="dish__name">Octopus salad</span><span class="dish__desc">Octopus, celery and chilli oil.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Octopus salad</span><span class="dish__desc">Octopus, celery and chilli oil.</span></div></div>
         <div class="dish"><div><span class="dish__name">Fried sweet potato</span><span class="dish__desc">Sweet potato sticks with honey.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Crispy sesame chicken</span><span class="dish__desc">Battered bites, sweet and sour sauce, sesame seeds.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Crispy sesame chicken</span><span class="dish__desc">Battered bites, sweet and sour sauce, sesame seeds.</span></div></div>
       </div>
     </section>
 
@@ -184,7 +203,7 @@
         <div class="dish" data-tags="veg"><div><span class="dish__name">Ricotta and spinach ravioli</span><span class="dish__desc">In a cream and Parmesan sauce.</span></div><div class="dish__tags"><span class="tag tag--veg">Veg</span></div></div>
         <div class="dish" data-tags="veg"><div><span class="dish__name">Caprese</span><span class="dish__desc">Mozzarella, sliced tomato, oregano and olive oil.</span></div><div class="dish__tags"><span class="tag tag--veg">Veg</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Mixed seasonal salad</span><span class="dish__desc">Lettuce, tomato, cucumber, carrot and red onion.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegan</span></div></div>
-        <div class="dish"><div><span class="dish__name">Grilled chicken salad</span><span class="dish__desc">Griddled chicken breast, peppers, green beans and onion.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Grilled chicken salad</span><span class="dish__desc">Griddled chicken breast, peppers, green beans and onion.</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Penne with tomato and basil</span><span class="dish__desc">Fresh sauce, cooked to order.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegan</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Chips</span><span class="dish__desc">The children’s number one request.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegan</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Grilled vegetables</span><span class="dish__desc">Courgette, aubergine and peppers with oil and parsley.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegan</span></div></div>
@@ -194,17 +213,17 @@
 
     <section class="menu-course" id="vapore" aria-labelledby="vapore-t">
       <div class="menu-course__head">
-        <p class="eyebrow">From the basket</p>
+        <p class="eyebrow eyebrow--cina">From the basket</p>
         <h2 id="vapore-t">Steamed</h2>
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">The most traditional part of the Chinese table. Dumplings leave the bamboo basket when you order them, never before.</p>
       <div class="dish-list">
-        <div class="dish"><div><span class="dish__name">Steamed pork dumplings</span><span class="dish__desc">Classic filling with ginger and spring onion.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Prawn dumplings (har gow)</span><span class="dish__desc">Translucent wrapper, whole prawn.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Steamed pork dumplings</span><span class="dish__desc">Classic filling with ginger and spring onion.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Prawn dumplings (har gow)</span><span class="dish__desc">Translucent wrapper, whole prawn.</span></div></div>
         <div class="dish" data-tags="veg"><div><span class="dish__name">Vegetable dumplings</span><span class="dish__desc">Cabbage, shiitake mushrooms and carrot.</span></div><div class="dish__tags"><span class="tag tag--veg">Veg</span></div></div>
         <div class="dish"><div><span class="dish__name">Pan-fried dumplings</span><span class="dish__desc">Steamed, then seared on the griddle.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Char siu bao</span><span class="dish__desc">Soft steamed bun filled with char siu pork.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Siu mai</span><span class="dish__desc">Open dumplings of pork and prawn.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Char siu bao</span><span class="dish__desc">Soft steamed bun filled with char siu pork.</span></div></div>
+        <div class="dish" data-tags="carne pesce"><div><span class="dish__name">Siu mai</span><span class="dish__desc">Open dumplings of pork and prawn.</span></div></div>
       </div>
     </section>
 
@@ -215,36 +234,36 @@
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">Rice prepared several times during service, fish portioned in front of you at the counter.</p>
       <div class="dish-list">
-        <div class="dish"><div><span class="dish__name">Salmon nigiri</span><span class="dish__desc">Two pieces, warm rice and fresh salmon.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Tuna nigiri</span><span class="dish__desc">Two pieces, yellowfin tuna.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Sea bass and lemon nigiri</span><span class="dish__desc">Lemon zest and flaked salt.</span></div></div>
-        <div class="dish"><div><span class="dish__name">California uramaki</span><span class="dish__desc">Surimi, avocado, mayonnaise and tobiko.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Salmon and cream cheese uramaki</span><span class="dish__desc">Eight pieces, toasted sesame.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Salmon nigiri</span><span class="dish__desc">Two pieces, warm rice and fresh salmon.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Tuna nigiri</span><span class="dish__desc">Two pieces, yellowfin tuna.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Sea bass and lemon nigiri</span><span class="dish__desc">Lemon zest and flaked salt.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">California uramaki</span><span class="dish__desc">Surimi, avocado, mayonnaise and tobiko.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Salmon and cream cheese uramaki</span><span class="dish__desc">Eight pieces, toasted sesame.</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Cucumber hosomaki</span><span class="dish__desc">Six pieces, crisp nori.</span></div><div class="dish__tags"><span class="tag tag--veg">Veg</span></div></div>
-        <div class="dish"><div><span class="dish__name">Salmon tartare</span><span class="dish__desc">Hand-cut salmon, sesame oil and toasted seeds.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Tuna tartare</span><span class="dish__desc">Served in a bowl with soy sauce and black sesame.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Salmon sashimi</span><span class="dish__desc">Thick cuts, portioned in front of you at the counter.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Mixed sashimi</span><span class="dish__desc">Three cuts of the day, wasabi and ginger.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Prawn temaki</span><span class="dish__desc">Seaweed cone with tempura prawn.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Salmon tartare</span><span class="dish__desc">Hand-cut salmon, sesame oil and toasted seeds.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Tuna tartare</span><span class="dish__desc">Served in a bowl with soy sauce and black sesame.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Salmon sashimi</span><span class="dish__desc">Thick cuts, portioned in front of you at the counter.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Mixed sashimi</span><span class="dish__desc">Three cuts of the day, wasabi and ginger.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Prawn temaki</span><span class="dish__desc">Seaweed cone with tempura prawn.</span></div></div>
         <div class="dish"><div><span class="dish__name">Flamed uramaki</span><span class="dish__desc">Torched and finished with teriyaki sauce.</span></div><div class="dish__tags"><span class="tag">Hot</span></div></div>
       </div>
     </section>
 
     <section class="menu-course" id="wok" aria-labelledby="wok-t">
       <div class="menu-course__head">
-        <p class="eyebrow">High flame</p>
+        <p class="eyebrow eyebrow--cina">High flame</p>
         <h2 id="wok-t">Wok and noodles</h2>
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">Rice and noodles tossed over a high flame in seconds. We suggest them halfway through, once the table has tried everything else.</p>
       <div class="dish-list">
-        <div class="dish"><div><span class="dish__name">Cantonese fried rice</span><span class="dish__desc">Ham, peas and egg.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Prawn fried rice</span><span class="dish__desc">Prawns, spring onion and egg.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Cantonese fried rice</span><span class="dish__desc">Ham, peas and egg.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Prawn fried rice</span><span class="dish__desc">Prawns, spring onion and egg.</span></div></div>
         <div class="dish" data-tags="veg"><div><span class="dish__name">Stir-fried glass noodles</span><span class="dish__desc">Crisp vegetables and light soy sauce.</span></div><div class="dish__tags"><span class="tag tag--veg">Veg</span></div></div>
-        <div class="dish"><div><span class="dish__name">Rice noodles with chicken</span><span class="dish__desc">Marinated chicken, bean sprouts and carrot.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Beef udon</span><span class="dish__desc">Thick noodles, beef and caramelised onion.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Rice noodles with chicken</span><span class="dish__desc">Marinated chicken, bean sprouts and carrot.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Beef udon</span><span class="dish__desc">Thick noodles, beef and caramelised onion.</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Wok vegetables</span><span class="dish__desc">Bok choy, mushrooms and bamboo shoots.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegan</span></div></div>
-        <div class="dish" data-tags="veg vegano piccante"><div><span class="dish__name">Spicy stir-fried tofu</span><span class="dish__desc">Tofu, chilli and black bean sauce.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegan</span><span class="tag">Spicy</span></div></div>
-        <div class="dish" data-tags="piccante"><div><span class="dish__name">Hot and sour soup</span><span class="dish__desc">Mushrooms, bamboo, egg and rice vinegar.</span></div><div class="dish__tags"><span class="tag">Spicy</span></div></div>
+        <div class="dish" data-tags="veg vegano piccante"><div><span class="dish__name">Spicy stir-fried tofu</span><span class="dish__desc">Tofu, chilli and black bean sauce.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegan</span><span class="tag tag--piccante">Spicy</span></div></div>
+        <div class="dish" data-tags="piccante"><div><span class="dish__name">Hot and sour soup</span><span class="dish__desc">Mushrooms, bamboo, egg and rice vinegar.</span></div><div class="dish__tags"><span class="tag tag--piccante">Spicy</span></div></div>
       </div>
     </section>
 
@@ -255,15 +274,15 @@
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">Meat from the spit and the grill, carved to order and served in small portions. Available at lunch and dinner, in every set menu.</p>
       <div class="dish-list">
-        <div class="dish"><div><span class="dish__name">Grilled picanha</span><span class="dish__desc">Beef rump cap with its fat cap, coarse salt, carved to order.</span></div><div class="dish__tags"><span class="tag">The classic</span></div></div>
-        <div class="dish"><div><span class="dish__name">Chicken skewers</span><span class="dish__desc">Spice-marinated and cooked on the spit.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Linguiça</span><span class="dish__desc">Lightly smoked Brazilian sausage.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Honey-glazed pork fillet</span><span class="dish__desc">Slowly glazed, with sesame.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Grilled king prawns</span><span class="dish__desc">Garlic, parsley and butter.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Teriyaki salmon</span><span class="dish__desc">Seared fillet, sweet and savoury glaze.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Pork ribs</span><span class="dish__desc">Marinated 12 hours, oven-cooked, finished on the griddle.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Gratinated scallops</span><span class="dish__desc">Burro all'aglio e pane croccante.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Crispy duck</span><span class="dish__desc">With thin pancakes, cucumber and hoisin sauce.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Grilled picanha</span><span class="dish__desc">Beef rump cap with its fat cap, coarse salt, carved to order.</span></div><div class="dish__tags"><span class="tag">The classic</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Chicken skewers</span><span class="dish__desc">Spice-marinated and cooked on the spit.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Linguiça</span><span class="dish__desc">Lightly smoked Brazilian sausage.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Honey-glazed pork fillet</span><span class="dish__desc">Slowly glazed, with sesame.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Grilled king prawns</span><span class="dish__desc">Garlic, parsley and butter.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Teriyaki salmon</span><span class="dish__desc">Seared fillet, sweet and savoury glaze.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Pork ribs</span><span class="dish__desc">Marinated 12 hours, oven-cooked, finished on the griddle.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Gratinated scallops</span><span class="dish__desc">Burro all'aglio e pane croccante.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Crispy duck</span><span class="dish__desc">With thin pancakes, cucumber and hoisin sauce.</span></div></div>
       </div>
     </section>
 

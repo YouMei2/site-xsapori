@@ -66,6 +66,54 @@
   }
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Do I need to book on weekdays?",
+      "acceptedAnswer": { "@type": "Answer", "text": "At lunch there is usually a table without notice. From Friday to Sunday the room nearly always fills up: better to book, especially for tables of six or more." }
+    },
+    {
+      "@type": "Question",
+      "name": "How long can we stay at the table?",
+      "acceptedAnswer": { "@type": "Answer", "text": "At dinner the table is yours for the whole evening: we do not run two sittings. At lunch we hold it for 90 minutes, so people in a hurry can find a seat too." }
+    },
+    {
+      "@type": "Question",
+      "name": "How does pricing work for children?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Children under 120 cm pay €9.90 at lunch and €12.90 at dinner, every day. High chairs are available: just mention it in the booking form." }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you handle allergies and intolerances?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Write them in the booking notes: we prepare gluten-free, shellfish-free and nut-free dishes at a separate station. For coeliac guests we ask for at least one day of notice." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can we celebrate a birthday?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Of course. Select \"Birthday\" in the form: we bring the cake with candles at the end of the meal. For large groups we set up the private room, up to 40 people with 48 hours of notice." }
+    },
+    {
+      "@type": "Question",
+      "name": "How can we pay?",
+      "acceptedAnswer": { "@type": "Answer", "text": "We accept credit cards, debit cards and phone payments. Paper meal vouchers at lunch only, up to two per person." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there room for pushchairs and wheelchairs?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. The entrance is at street level, the whole room is on the ground floor and the aisles are wide. Tell us when you book and we will give you a table near the entrance." }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you deliver or do takeaway?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Neither. The format only works with dishes served hot at the table, straight out of the kitchen." }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -140,6 +188,11 @@
         <a class="btn btn--ghost" href="menu.html">Browse the menu</a>
       </div>
 
+      <p class="hero__prezzo enter" style="--d:540ms">
+        <span>Lunch from <b>€14.90</b></span>
+        <span>Dinner from <b>€22.90</b></span>
+        <span>drinks excluded</span>
+      </p>
       <p class="hero__meta enter" style="--d:600ms">
         <span>Via Luigi Pirandello, 2r — Savona</span>
         <span>Every day · 12:00–15:00 · 19:00–23:00</span>
@@ -172,6 +225,7 @@
       <div class="section__head reveal">
         <p class="eyebrow">How it works</p>
         <h2 id="come-t">You order from the menu, you never queue</h2>
+        <p class="dato-varieta">67 dishes · 8 sections · 4 kitchens</p>
         <p class="lead">
           All you can eat here works like an à la carte restaurant: you choose from the menu,
           the kitchen cooks to order, and dishes arrive in small portions, in the right order.
@@ -199,6 +253,12 @@
       </ol>
 
       <p class="lead reveal" style="margin-top:var(--sp-5)">
+        <strong>How long it lasts:</strong> at dinner the table is yours for the whole evening,
+        we do not run two sittings. At lunch we hold it for 90 minutes, so people in a hurry
+        can find a seat too.
+      </p>
+
+      <p class="lead reveal" style="margin-top:var(--sp-3)">
         <strong>One rule only:</strong> order what you eat. Dishes left untouched are charged,
         so nothing ends up in the bin.
       </p>
@@ -305,6 +365,24 @@
         </div>
       </dl>
 
+      <div class="incluso reveal">
+        <div>
+          <h3>Included in the price</h3>
+          <ul>
+            <li>Every dish from the eight sections of the menu</li>
+            <li>Unlimited rounds, no surcharge on courses</li>
+            <li>Desserts, included like everything else</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Paid separately</h3>
+          <ul>
+            <li>Drinks, ordered à la carte</li>
+            <li>Dishes ordered and left untouched</li>
+          </ul>
+        </div>
+      </div>
+
       <div class="reveal" style="margin-top:var(--sp-5);display:flex;flex-wrap:wrap;gap:var(--sp-4);align-items:center;justify-content:space-between">
         <p class="lead" style="margin:0">
           <strong style="color:var(--ottone-30)">Children under 120 cm:</strong>
@@ -398,7 +476,9 @@
               <p style="margin-inline:auto">
                 <button class="btn btn--primary" type="button" id="mappa-load">Load the map</button>
               </p>
-              <p><a href="https://www.google.com/maps/search/?api=1&amp;query=Via+Luigi+Pirandello+2r+Savona" target="_blank" rel="noopener">Or open Google Maps in a new tab</a></p>
+              <p style="margin-inline:auto">
+                <a class="btn btn--ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=Via+Luigi+Pirandello+2r,+17100+Savona" target="_blank" rel="noopener">Directions</a>
+              </p>
             </div>
           </div>
         </div>
@@ -466,6 +546,11 @@
   </section>
 
 </main>
+
+<nav class="barra-fissa" id="barra-fissa" aria-label="Quick actions">
+  <a class="btn btn--primary" href="book.html">Book</a>
+  <a class="btn btn--ghost" href="tel:+390192213138">Call</a>
+</nav>
 
 <footer class="site-footer">
   <div class="wrap">

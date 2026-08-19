@@ -1,5 +1,29 @@
 # Cosa serve da te per finire il sito
 
+> **In cima alla lista, aggiornato al 20 agosto 2026.** Tutto il resto del sito
+> è stato completato: filtri pesce e carne, contatori adulti/bambini, fasce
+> orarie, totale stimato, barra fissa su mobile, blocco incluso/escluso, dati
+> strutturati FAQ. Restano **undici cose che solo tu puoi dirmi**, elencate qui
+> sotto in ordine di urgenza.
+>
+> 1. **Dominio definitivo** — oggi c'è il segnaposto `www.x-sapori.it`
+> 2. **Ragione sociale, P. IVA, provider di hosting, email privacy**
+> 3. **Bambini: altezza o età?** — il sito dice «sotto i 120 cm», le vecchie FAQ
+>    dicevano «gratis fino a 3 anni». Ne può restare una sola
+> 4. **Allergeni** — compila `ALLERGENI-DA-COMPILARE.md`: è già pronto con tutti
+>    i 67 piatti e i 14 allergeni di legge, basta mettere le X
+> 5. **Cinque piatti di composizione ignota** (in fondo allo stesso file)
+> 6. **Quanto costa un piatto ordinato e lasciato intero** — oggi il sito dice
+>    che «viene conteggiato» ma non dice quanto
+> 7. **Parcheggio e distanze** — dove si parcheggia, quanti minuti a piedi dal
+>    centro e dal porto
+> 8. **Tre risposte**: si può portare la torta da casa? Cosa succede se si
+>    arriva in ritardo? Il conto si può dividere?
+> 9. **Il menu cambia?** Stagionale, piatti del giorno, pesce secondo il mercato
+> 10. **Link a Google Business e social**, se attivi
+> 11. **Foto e video**, quando li hai
+
+
 Aggiornato al 19 agosto 2026. Ogni voce dice **dove finisce** nel sito e **che
 requisiti tecnici** ha. Le voci marcate 🔴 bloccano la pubblicazione.
 

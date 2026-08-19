@@ -47,6 +47,39 @@
     update();
   }
 
+  /* --- Barra fissa su mobile ------------------------------ */
+  // Appare quando l'hero è uscito dallo schermo e si ritira quando entra
+  // il footer, così non copre mai indirizzo e telefono in fondo.
+  var barra = document.getElementById('barra-fissa');
+  if (barra) {
+    var heroBarra = document.querySelector('.hero');
+    var piede = document.querySelector('.site-footer');
+    var attesa = false;
+
+    var valuta = function () {
+      var oltreHero = heroBarra
+        ? window.scrollY > heroBarra.offsetHeight - 120
+        : window.scrollY > 400;
+
+      var piedeVicino = false;
+      if (piede) {
+        var r = piede.getBoundingClientRect();
+        piedeVicino = r.top < window.innerHeight - 40;
+      }
+
+      barra.dataset.visibile = (oltreHero && !piedeVicino) ? 'true' : 'false';
+      attesa = false;
+    };
+
+    window.addEventListener('scroll', function () {
+      if (attesa) return;
+      attesa = true;
+      window.requestAnimationFrame(valuta);
+    }, { passive: true });
+    window.addEventListener('resize', valuta, { passive: true });
+    valuta();
+  }
+
   /* --- Menu mobile ---------------------------------------- */
   var toggle = document.getElementById('nav-toggle');
   var drawer = document.getElementById('drawer');

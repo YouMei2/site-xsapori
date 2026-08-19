@@ -10,19 +10,29 @@
   if (!dishes.length) return;
 
   var EN = (document.documentElement.lang || 'it').toLowerCase().indexOf('en') === 0;
+  var SEZIONI = document.querySelectorAll('.menu-course').length;
+
   var T = EN ? {
     completo: function (n) { return 'Full menu, ' + n + ' dishes.'; },
     nessuno: 'No dish matches the filters.',
-    trovati: function (n) { return n + (n === 1 ? ' dish found.' : ' dishes found.'); }
+    trovati: function (n) { return n + (n === 1 ? ' dish found.' : ' dishes found.'); },
+    // Contatore a schermo: senza filtri racconta la varietà, con i filtri conta.
+    vetrina: function (n) { return n + ' dishes · ' + SEZIONI + ' sections · 4 kitchens'; },
+    parziale: function (v, t) { return v + ' of ' + t + ' dishes'; },
+    vuoto: 'No dish matches'
   } : {
     completo: function (n) { return 'Menu completo, ' + n + ' piatti.'; },
     nessuno: 'Nessun piatto corrisponde ai filtri.',
-    trovati: function (n) { return n + (n === 1 ? ' piatto trovato.' : ' piatti trovati.'); }
+    trovati: function (n) { return n + (n === 1 ? ' piatto trovato.' : ' piatti trovati.'); },
+    vetrina: function (n) { return n + ' piatti · ' + SEZIONI + ' sezioni · 4 cucine'; },
+    parziale: function (v, t) { return v + ' piatti su ' + t; },
+    vuoto: 'Nessun piatto corrisponde'
   };
 
   var chips = Array.prototype.slice.call(document.querySelectorAll('.chip[data-filter]'));
   var search = document.getElementById('menu-search');
   var status = document.getElementById('menu-status');
+  var conteggio = document.getElementById('menu-conteggio');
   var noResults = document.getElementById('no-results');
   var reset = document.getElementById('reset-filters');
   var courses = Array.prototype.slice.call(document.querySelectorAll('.menu-course'));
@@ -61,10 +71,21 @@
 
     if (noResults) noResults.hidden = visibili !== 0;
 
+    var senzaFiltri = !attivi.length && !query;
+
     if (status) {
-      if (!attivi.length && !query) status.textContent = T.completo(dishes.length);
+      if (senzaFiltri) status.textContent = T.completo(dishes.length);
       else if (visibili === 0) status.textContent = T.nessuno;
       else status.textContent = T.trovati(visibili);
+    }
+
+    // Il contatore a schermo è aria-hidden: lo stato sopra lo annuncia già,
+    // ripeterlo farebbe leggere due volte la stessa cosa.
+    if (conteggio) {
+      if (senzaFiltri) conteggio.textContent = T.vetrina(dishes.length);
+      else if (visibili === 0) conteggio.textContent = T.vuoto;
+      else conteggio.textContent = T.parziale(visibili, dishes.length);
+      conteggio.dataset.filtrato = senzaFiltri ? 'false' : 'true';
     }
   };
 

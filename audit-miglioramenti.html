@@ -1,0 +1,796 @@
+<title>X-Sapori: cosa migliorare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Familjen+Grotesk:wght@400..700&family=DM+Mono:wght@400;500&display=swap">
+
+<style>
+:root{
+  --bg:#FBF9F5;
+  --surface:#FFFFFF;
+  --surface-2:#F3EFE8;
+  --text:#14191C;
+  --dim:#5A6468;
+  --rule:rgba(20,25,28,.13);
+  --rule-soft:rgba(20,25,28,.07);
+  --accent:#17627A;
+  --gold:#82632B;
+  --green:#1E6B4F;
+  --red:#B23A22;
+  --chip-fatto-bg:#E9F4EE;
+  --chip-fare-bg:#F7EFDF;
+  --chip-obiezione-bg:#FBEDEB;
+  --chip-conferma-bg:#EFEDE9;
+
+  --f-display:"Fraunces",Georgia,serif;
+  --f-body:"Familjen Grotesk",system-ui,-apple-system,sans-serif;
+  --f-data:"DM Mono",ui-monospace,Consolas,monospace;
+  --measure:70ch;
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1417;
+    --surface:#171F24;
+    --surface-2:#1D262B;
+    --text:#E7EDEF;
+    --dim:#A9B6BC;
+    --rule:rgba(231,237,239,.16);
+    --rule-soft:rgba(231,237,239,.08);
+    --accent:#8FD0E2;
+    --gold:#DCC38C;
+    --green:#7FD6AE;
+    --red:#F0937C;
+    --chip-fatto-bg:rgba(127,214,174,.14);
+    --chip-fare-bg:rgba(220,195,140,.14);
+    --chip-obiezione-bg:rgba(240,147,124,.14);
+    --chip-conferma-bg:rgba(231,237,239,.09);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1417;
+  --surface:#171F24;
+  --surface-2:#1D262B;
+  --text:#E7EDEF;
+  --dim:#A9B6BC;
+  --rule:rgba(231,237,239,.16);
+  --rule-soft:rgba(231,237,239,.08);
+  --accent:#8FD0E2;
+  --gold:#DCC38C;
+  --green:#7FD6AE;
+  --red:#F0937C;
+  --chip-fatto-bg:rgba(127,214,174,.14);
+  --chip-fare-bg:rgba(220,195,140,.14);
+  --chip-obiezione-bg:rgba(240,147,124,.14);
+  --chip-conferma-bg:rgba(231,237,239,.09);
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+body{
+  margin:0;padding:clamp(1.5rem,5vw,4rem) clamp(1.25rem,5vw,3rem) 6rem;
+  background:var(--bg);color:var(--text);
+  font-family:var(--f-body);font-size:1.0625rem;line-height:1.65;
+  -webkit-font-smoothing:antialiased;text-wrap:pretty;
+}
+.doc{max-width:var(--measure);margin-inline:auto;}
+
+h1,h2,h3{font-family:var(--f-display);font-weight:500;line-height:1.1;
+  letter-spacing:-.02em;text-wrap:balance;margin:0;}
+h1{font-size:clamp(2.1rem,5.5vw,3.2rem);}
+h2{font-size:clamp(1.5rem,3.4vw,2rem);margin-top:3.5rem;padding-top:1.5rem;
+  border-top:2px solid var(--rule);}
+h3{font-size:1.2rem;font-family:var(--f-body);font-weight:600;
+  letter-spacing:-.005em;margin-top:2rem;}
+p{margin:.9rem 0 0;}
+ul{margin:.7rem 0 0;padding-left:1.15rem;}
+li{margin-top:.4rem;}
+strong{font-weight:600;}
+a{color:var(--accent);text-underline-offset:.2em;}
+code{font-family:var(--f-data);font-size:.88em;background:var(--surface-2);
+  padding:.12em .38em;border-radius:3px;}
+
+.occhiello{
+  font-family:var(--f-data);font-size:.7rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold);margin:0 0 .6rem;
+}
+.sommario{font-size:1.15rem;color:var(--dim);margin-top:1rem;max-width:60ch;}
+
+/* Le pastiglie di stato sono il dispositivo strutturale del documento:
+   ogni voce dichiara se è già in produzione, da fare, o contestata. */
+.stato{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-family:var(--f-data);font-size:.64rem;letter-spacing:.14em;
+  text-transform:uppercase;padding:.22rem .55rem;border-radius:3px;
+  white-space:nowrap;vertical-align:.15em;margin-right:.5rem;
+  border:1px solid currentColor;
+}
+.stato--fatto{color:var(--green);background:var(--chip-fatto-bg);}
+.stato--fare{color:var(--gold);background:var(--chip-fare-bg);}
+.stato--obiezione{color:var(--red);background:var(--chip-obiezione-bg);}
+.stato--conferma{color:var(--dim);background:var(--chip-conferma-bg);}
+
+.voce{margin-top:1.6rem;padding-left:1rem;border-left:2px solid var(--rule);}
+.voce > p:first-child{margin-top:0;}
+.perche{color:var(--dim);font-size:.97rem;}
+.perche::before{content:"Perché ";font-weight:600;color:var(--text);}
+
+.riquadro{
+  background:var(--surface);border:1px solid var(--rule);border-radius:6px;
+  padding:1.25rem 1.4rem;margin-top:1.5rem;
+}
+.riquadro--allerta{border-color:var(--red);background:var(--chip-obiezione-bg);}
+.riquadro h3{margin-top:0;}
+
+.tabella{width:100%;overflow-x:auto;margin-top:1.2rem;}
+table{border-collapse:collapse;width:100%;min-width:32rem;font-size:.94rem;}
+th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--rule-soft);
+  vertical-align:top;}
+th{font-family:var(--f-data);font-size:.68rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);border-bottom-color:var(--rule);}
+td.num{font-family:var(--f-data);font-variant-numeric:tabular-nums;text-align:right;}
+
+.palette{display:grid;gap:.6rem;margin-top:1.2rem;
+  grid-template-columns:repeat(auto-fill,minmax(8.5rem,1fr));}
+.tinta{border:1px solid var(--rule);border-radius:5px;overflow:hidden;background:var(--surface);}
+.tinta__campo{height:3.6rem;}
+.tinta__dati{padding:.5rem .6rem;font-family:var(--f-data);font-size:.68rem;line-height:1.5;}
+.tinta__dati b{display:block;font-family:var(--f-body);font-size:.82rem;font-weight:600;
+  letter-spacing:0;margin-bottom:.15rem;}
+.tinta__dati span{color:var(--dim);}
+
+.nota{font-size:.92rem;color:var(--dim);border-left:2px solid var(--gold);
+  padding-left:.9rem;margin-top:1.2rem;}
+
+hr{border:0;border-top:1px solid var(--rule);margin:3rem 0 0;}
+.chiusura{margin-top:3rem;padding-top:1.5rem;border-top:2px solid var(--rule);
+  font-size:.95rem;color:var(--dim);}
+</style>
+
+<div class="doc">
+
+<p class="occhiello">Audit · 20 agosto 2026</p>
+<h1>X-Sapori: cosa tenere, cosa cambiare</h1>
+<p class="sommario">
+  Analisi sezione per sezione del sito così com'è oggi, non di un sito generico.
+  Ogni voce dichiara se è già in produzione, se manca, o se non sono d'accordo.
+</p>
+
+<div class="riquadro riquadro--allerta">
+  <h3>Due premesse che cambiano il resto</h3>
+
+  <p><strong>1. Non è un ristorante cinese.</strong> Il sito comunica
+  <strong>quattro cucine</strong>: italiana, brasiliana, cinese e giapponese.
+  È il vostro vantaggio competitivo a Savona e va difeso. Trattarlo come
+  «ristorante cinese» restringe il posizionamento e contraddice la home.
+  Sul piano SEO le due cose non si escludono — «ristorante cinese Savona» resta
+  una chiave da presidiare, ma come <em>porta d'ingresso</em>, non come identità.</p>
+
+  <p><strong>2. Il menu non è in PDF.</strong> È già HTML nativo: 67 piatti in
+  8 sezioni, con ricerca, filtri, indice sticky e foglio di stampa dedicato.
+  Il lavoro che chiedete su questo punto è in buona parte fatto; quello che
+  manca è diverso e più importante — gli allergeni.</p>
+</div>
+
+<div class="riquadro" style="border-color:var(--green)">
+  <h3 style="color:var(--green)">Aggiornamento del 20 agosto: implementato</h3>
+  <p>Dopo la stesura di questo audit ho realizzato tutto quello che non
+  dipendeva da informazioni vostre. Le pastiglie qui sotto sono aggiornate.
+  In sintesi:</p>
+  <ul>
+    <li>prezzo nella prima schermata e barra fissa su mobile;</li>
+    <li>durata del tavolo dichiarata dove si spiega il funzionamento, più il
+      dato «67 piatti · 8 sezioni · 4 cucine»;</li>
+    <li>blocco «nel prezzo c'è / si paga a parte»;</li>
+    <li>filtri <strong>pesce</strong> e <strong>carne</strong> con 49 piatti su
+      67 etichettati, contatore visibile, avviso allergeni in cima al menu;</li>
+    <li>prenotazione: fasce orarie a pulsanti, contatori adulti e bambini,
+      totale stimato in tempo reale;</li>
+    <li>dati strutturati <code>FAQPage</code> e pulsante indicazioni stradali;</li>
+    <li>rosso dei sigilli <code>#B23A22</code> applicato ai tre punti previsti.</li>
+  </ul>
+  <p>Il modulo di prenotazione è stato arricchito <strong>senza toccare il
+  backend</strong>: i campi originali restano quelli inviati, e senza JavaScript
+  la prenotazione funziona esattamente come prima.</p>
+</div>
+
+<!-- ===================================================== -->
+<h2>1 · Prima schermata (mobile)</h2>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto</span>
+  <strong>Orari calcolati in tempo reale</strong> — la pagina mostra «Aperto ora,
+  si chiude alle 15:00» oppure «Chiuso, riapre alle 19:00», calcolato sull'ora
+  di Roma indipendentemente dal fuso del visitatore.</p>
+  <p class="perche">chi cerca un ristorante da telefono vuole sapere se può venire
+  <em>adesso</em>. Un orario statico costringe a fare il conto.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto</span>
+  Indirizzo, telefono cliccabile, due CTA e le quattro cucine sono tutti sopra
+  la piega. Su schermo alto la barra delle cucine entra completamente; su un
+  portatile da 720 px resta tagliata di 27 px, di proposito, come invito a scorrere.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto ora</span>
+  <strong>Il prezzo nella prima schermata.</strong> Oggi le fasce compaiono solo
+  dopo due sezioni. Per un all-you-can-eat il prezzo è la prima domanda in
+  assoluto, prima ancora del menu.</p>
+  <p>Come: una riga sotto le CTA, in caratteri mono, del tipo
+  <code>Da 14,90 € a pranzo · 22,90 € a cena · bevande escluse</code>.
+  Una riga sola, non una tabella: la tabella completa resta più giù.</p>
+  <p class="perche">nascondere il prezzo su un AYCE genera diffidenza e telefonate
+  inutili al ristorante. Dichiararlo subito filtra i clienti giusti.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto ora</span>
+  <strong>Barra fissa su mobile.</strong> Non c'è.</p>
+  <p>Specifiche: compare solo sotto i 900 px e solo dopo che l'hero è uscito
+  dallo schermo; altezza 56 px più <code>env(safe-area-inset-bottom)</code>;
+  due azioni affiancate, <em>Prenota</em> pieno e <em>Chiama</em> in contorno;
+  si nasconde quando entra il footer, per non coprirlo; rispetta
+  <code>prefers-reduced-motion</code> entrando in dissolvenza invece che scivolando.</p>
+  <p class="perche">metà delle prenotazioni di un ristorante arriva da telefono,
+  spesso mentre la persona è già in strada. Costringerla a risalire in cima per
+  trovare il pulsante è la perdita di conversione più banale che esista.</p>
+</div>
+
+<!-- ===================================================== -->
+<h2>2 · «Come funziona»</h2>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto</span>
+  La sezione esiste già in home: quattro passi numerati — ci si siede, si segna
+  la comanda, la cucina parte, si ricomincia. La numerazione è giustificata
+  perché è una sequenza vera.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto ora</span>
+  <strong>Il limite di tempo va dichiarato qui, non solo nelle FAQ.</strong>
+  Oggi «90 minuti a pranzo» compare unicamente nella nona domanda frequente.</p>
+  <p>Aggiungete una riga sotto i quattro passi:
+  <em>«A cena il tavolo è vostro per tutta la serata. A pranzo lo teniamo 90 minuti.»</em>
+  Detto così è un servizio, non una restrizione.</p>
+  <p class="perche">è la seconda causa di recensioni negative nei buffet, dopo il
+  cibo: il cliente si sente cacciato perché nessuno gliel'aveva detto prima.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto</span>
+  <span class="stato stato--fare">Da rifinire</span>
+  <strong>La regola sullo spreco</strong> c'è già: «ordinate quello che mangiate,
+  i piatti lasciati interi vengono conteggiati».</p>
+  <p>Da rifinire: manca la <strong>cifra</strong>. «Vengono conteggiati» non dice
+  quanto. Se esiste un importo — poniamo 3 € a piatto — va scritto. Se non
+  esiste ed è una valutazione del personale, va detto anche quello.</p>
+  <p class="perche">una penale non quantificata sembra arbitraria e spaventa più
+  di una penale dichiarata. Chi la legge e trova un numero ragionevole si fida.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto ora</span>
+  <strong>La varietà come dato, non come aggettivo.</strong>
+  Una riga in mono sotto il titolo: <code>67 piatti · 8 sezioni · 4 cucine</code>.</p>
+  <p class="perche">«ampia scelta» non dice nulla ed è quello che scrivono tutti.
+  Un numero verificabile è un argomento. Il conteggio si aggiorna da solo se
+  qualcuno lo lega alla lunghezza del menu invece di scriverlo a mano.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--conferma">Da confermare</span>
+  <strong>La rotazione del menu.</strong> Se il menu cambia (stagionale, piatti
+  del giorno, pesce a seconda del mercato), è un argomento forte e oggi non è
+  detto da nessuna parte. Se non cambia mai, non inventiamolo.</p>
+</div>
+
+<!-- ===================================================== -->
+<h2>3 · Prezzi e formule</h2>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto</span>
+  Quattro fasce (pranzo e cena, feriale e festivo) in cifre tabulari, con la più
+  richiesta evidenziata, più la tariffa bambini. La formula giusta si calcola da
+  sola nel modulo di prenotazione a partire da data e ora, festivi inclusi —
+  Pasqua e Lunedì dell'Angelo compresi, calcolati con l'algoritmo corretto.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--obiezione">Contraddizione</span>
+  <strong>Bambini: altezza o età?</strong> Il sito dice «sotto i 120 cm»; le
+  vecchie FAQ dicevano «gratis fino a 3 anni, metà prezzo da 4 a 10». Ho tenuto
+  la regola dell'altezza e tolto l'altra, ma va confermata quella vera.</p>
+  <p class="perche">due regole diverse sullo stesso sito sono un reclamo al
+  momento del conto.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto ora</span>
+  <strong>Un blocco «incluso / non incluso».</strong> Oggi «bevande escluse»
+  compare in quattro punti diversi, sempre come inciso.</p>
+  <p>Due colonne, sei righe in tutto. Incluso: tutti i piatti delle otto sezioni,
+  dolci, giri illimitati. Non incluso: bevande, coperto se c'è, supplementi
+  eventuali.</p>
+  <p class="perche">è la struttura che il cliente sta già costruendo in testa.
+  Dargliela pronta riduce le domande al telefono e le sorprese al conto.</p>
+</div>
+
+<!-- ===================================================== -->
+<h2>4 · Menu</h2>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto</span>
+  HTML nativo, non PDF. Indice delle sezioni sticky con evidenziazione della
+  sezione corrente, ricerca istantanea che ignora gli accenti («te verde» trova
+  «Tè verde»), filtri combinabili, sezioni vuote che spariscono, conteggio
+  annunciato agli screen reader, foglio di stampa dedicato.</p>
+</div>
+
+<div class="riquadro">
+  <h3>Copertura attuale delle etichette</h3>
+  <div class="tabella">
+    <table>
+      <thead><tr><th>Sezione</th><th class="num">Piatti</th><th class="num">Con etichetta</th><th>Nota</th></tr></thead>
+      <tbody>
+        <tr><td>Antipasti</td><td class="num">8</td><td class="num">2</td><td>—</td></tr>
+        <tr><td>Italiano</td><td class="num">8</td><td class="num">7</td><td>ben coperta</td></tr>
+        <tr><td>Al vapore</td><td class="num">6</td><td class="num">1</td><td>—</td></tr>
+        <tr><td>Sushi</td><td class="num">12</td><td class="num">1</td><td>tutta da etichettare</td></tr>
+        <tr><td>Wok</td><td class="num">8</td><td class="num">4</td><td>—</td></tr>
+        <tr><td>Brace</td><td class="num">9</td><td class="num">0</td><td>nessuna</td></tr>
+        <tr><td>Dessert</td><td class="num">8</td><td class="num">2</td><td>—</td></tr>
+        <tr><td>Bevande</td><td class="num">8</td><td class="num">0</td><td>non serve</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="nota">I filtri funzionano già; è il dato per piatto che è incompleto.
+  Aggiungere filtri senza prima completare le etichette produce risultati
+  sbagliati, che è peggio di non avere il filtro.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fare">Serve il dato dalla cucina</span>
+  <strong>Allergeni.</strong> Non è un miglioramento estetico: il Regolamento UE
+  1169/2011 impone che le informazioni sui 14 allergeni siano disponibili per
+  ogni piatto somministrato. Un menu online che li omette è incompleto sul piano
+  formale, e per un buffet con sushi, crostacei, frutta a guscio, glutine, soia,
+  sesamo e uova la questione è concreta.</p>
+  <p>Implementazione: un attributo per piatto con i codici degli allergeni
+  presenti, resi come piccole sigle accanto al nome più una legenda in cima
+  alla pagina. Lo stesso attributo alimenta un filtro «senza glutine», «senza
+  crostacei», «senza frutta a guscio».</p>
+  <p class="perche">oltre all'obbligo, è quello che porta al vostro tavolo i
+  gruppi con un celiaco dentro — che oggi scelgono il ristorante in base a chi
+  dà loro una risposta chiara prima di uscire di casa.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto ora</span>
+  <strong>Filtri pesce e carne</strong>, come chiedete. Stessa struttura dei
+  filtri esistenti, ma vanno prima etichettati tutti e 67 i piatti.
+  Ordine consigliato dei filtri: <em>Senza glutine · Vegetariano · Vegano ·
+  Pesce · Carne · Piccante</em>. I vincoli veri prima delle preferenze.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto ora</span>
+  <strong>Rendere visibile il contatore.</strong> Oggi «10 piatti trovati» esiste
+  ma solo per gli screen reader. Va mostrato anche a schermo, accanto ai filtri.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--obiezione">Sconsigliato</span>
+  <strong>Le schede piatto.</strong> Le chiedete, ma su 67 voci senza fotografie
+  una scheda per piatto significa 67 pagine con dentro due righe di descrizione:
+  peggiora la navigazione, diluisce il valore SEO su decine di pagine deboli e
+  raddoppia la manutenzione.</p>
+  <p>L'alternativa che consiglio: restare sulla riga singola — nome, descrizione,
+  sigle allergeni — e aprire un pannello solo per i piatti che meritano un
+  racconto, quando ci saranno le foto. Cinque schede vere valgono più di 67 vuote.</p>
+</div>
+
+<!-- ===================================================== -->
+<h2>5 · Identità visiva e riferimenti culturali</h2>
+
+<div class="riquadro riquadro--allerta">
+  <h3>Sul rosso, oro e lacca nera: non sono d'accordo</h3>
+  <p>Chiedete di rafforzare l'estetica cinese con rosso, oro e lacca nera
+  «senza cadere nel cliché anni 2000». Il problema è che rosso, oro e lacca nera
+  <em>sono</em> quel cliché: è la palette di ogni ristorante cinese di provincia
+  degli ultimi trent'anni, ed è esattamente ciò che il cliente associa a
+  «buffet economico».</p>
+  <p>C'è una ragione più forte: <strong>la vostra sala non è così.</strong>
+  Nella fotografia si vedono pareti in marmo grigio scuro, un soffitto
+  attraversato da lamelle blu petrolio, tavoli in marmo chiaro con profili in
+  ottone e luce calda bassa. È una sala contemporanea, e costa. Vestire il sito
+  di rosso e oro significa promettere una cosa e farne trovare un'altra —
+  al ribasso.</p>
+  <p>La palette attuale del sito è ricavata da quella foto. Non è una scelta
+  estetica astratta: è il vostro locale.</p>
+</div>
+
+<h3>La palette in produzione, e dove sta il riferimento cinese</h3>
+
+<div class="palette">
+  <div class="tinta"><div class="tinta__campo" style="background:#0E1417"></div>
+    <div class="tinta__dati"><b>Sala</b>#0E1417 <span>fondi scuri, footer</span></div></div>
+  <div class="tinta"><div class="tinta__campo" style="background:#FBF9F5"></div>
+    <div class="tinta__dati"><b>Marmo</b>#FBF9F5 <span>superficie principale</span></div></div>
+  <div class="tinta"><div class="tinta__campo" style="background:#17627A"></div>
+    <div class="tinta__dati"><b>Petrolio</b>#17627A <span>azioni · 6,5:1</span></div></div>
+  <div class="tinta"><div class="tinta__campo" style="background:#8FD0E2"></div>
+    <div class="tinta__dati"><b>Petrolio chiaro</b>#8FD0E2 <span>accenti su scuro</span></div></div>
+  <div class="tinta"><div class="tinta__campo" style="background:#B98D4A"></div>
+    <div class="tinta__dati"><b>Ottone</b>#B98D4A <span>solo filetti</span></div></div>
+  <div class="tinta"><div class="tinta__campo" style="background:#82632B"></div>
+    <div class="tinta__dati"><b>Ottone testo</b>#82632B <span>occhielli · 4,9:1</span></div></div>
+</div>
+
+<p>Il riferimento cinese lo introdurrei con <strong>un solo colore, usato poco e
+in punti precisi</strong>: il rosso dei sigilli, quello dell'inchiostro
+cinabro dei timbri d'artista. Non il rosso lacca, che è denso e decorativo:
+un rosso terroso, più vicino al mattone che al semaforo.</p>
+
+<div class="palette">
+  <div class="tinta"><div class="tinta__campo" style="background:#B23A22"></div>
+    <div class="tinta__dati"><b>Sigillo</b>#B23A22 <span>consigliato · 5,7:1 su marmo</span></div></div>
+  <div class="tinta"><div class="tinta__campo" style="background:#A8331F"></div>
+    <div class="tinta__dati"><b>Sigillo cupo</b>#A8331F <span>6,3:1 · alternativa</span></div></div>
+  <div class="tinta"><div class="tinta__campo" style="background:#C8442A"></div>
+    <div class="tinta__dati"><b>Cinabro</b>#C8442A <span>4,6:1 · limite</span></div></div>
+  <div class="tinta"><div class="tinta__campo" style="background:#F0937C"></div>
+    <div class="tinta__dati"><b>Sigillo chiaro</b>#F0937C <span>versione su fondo scuro</span></div></div>
+</div>
+
+<p class="nota">Contrasti misurati sui fondi reali del sito, non stimati.
+<strong>#B23A22</strong> è la scelta: 5,67:1 sul marmo principale e 5,20:1 sul
+marmo alternato, quindi utilizzabile anche per testo piccolo. #C8442A si ferma
+a 4,25:1 sul fondo alternato, sotto la soglia.</p>
+
+<h3>Dove usarlo, e dove no</h3>
+<ul>
+  <li><strong>Sì</strong>: il numero della sezione «Al vapore» e «Wok» nel menu;
+    un filetto sotto il titolo della card «Wok e vapore» in home; il simbolo del
+    piccante; il timbro grafico accanto al marchio nel footer.</li>
+  <li><strong>No</strong>: fondi di sezione, pulsanti, header, link. Il colore
+    delle azioni resta il petrolio. Se il rosso diventa il colore dei bottoni,
+    in due schermate il sito è il cliché che volevate evitare.</li>
+</ul>
+
+<h3>Riferimenti stilistici concreti</h3>
+<ul>
+  <li><strong>Ceramica celadon Song</strong> (X-XIII secolo): verde-azzurro
+    smorzato, forme essenziali, nessuna decorazione applicata. È la prova che
+    «cinese» e «sobrio» convivono da mille anni — ed è cromaticamente parente
+    del vostro soffitto.</li>
+  <li><strong>Sigilli e timbri d'artista</strong> (印章): un rettangolo rosso di
+    pochi millimetri in un foglio bianco. Massima economia, massimo effetto:
+    è il modello per l'uso del rosso che propongo.</li>
+  <li><strong>Mobilio Ming</strong>: legno, giunzioni a vista, zero intaglio.
+    Il contrario del drago dorato.</li>
+  <li><strong>Kyubey e Kabuki Sushi</strong>, i due siti che mi avete indicato:
+    entrambi <em>bianchi</em>, con un solo oro spento e moltissime fotografie.
+    Confermano la direzione: il chiaro come registro, l'accento con parsimonia.</li>
+</ul>
+
+<h3>Tipografia: dove agire davvero</h3>
+<p>Il carattere fa più del colore per togliere l'aria da «anni 2000». Sul sito
+girano <strong>Fraunces</strong> per i titoli, <strong>Familjen Grotesk</strong>
+per il testo e <strong>DM Mono</strong> per prezzi, orari ed etichette, tutti
+ospitati sul vostro server. Il mono sui numeri è la scelta che dà l'aria da
+insegna moderna invece che da volantino.</p>
+<p><strong>Da evitare in modo assoluto</strong>: i caratteri «orientaleggianti»
+con le grazie a pagoda. Sono la firma tipografica del cliché e nessun ristorante
+cinese serio in Asia li usa.</p>
+
+<!-- ===================================================== -->
+<h2>6 · Prenotazione</h2>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto</span>
+  Modulo completo con validazione in italiano, errori sotto il campo collegati
+  al campo, riepilogo focalizzato dopo un invio fallito, protezione dal doppio
+  clic, timeout di rete, honeypot anti-bot, limite di richieste, schermata di
+  conferma con riepilogo e file per il calendario. La formula si imposta da sola
+  in base a data e ora. Esiste un pannello riservato per leggere le prenotazioni,
+  con filtri ed esportazione.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Risolto ora</span>
+  <strong>Il modulo non chiedeva quanti sono i bambini.</strong> Il prezzo ridotto
+  esiste ed è pubblicato, ma il campo «Persone» raccoglie un numero solo. In
+  sala il conto si fa a mano e la prenotazione non aiuta a preparare seggioloni
+  o tavoli.</p>
+  <p>Come: due contatori affiancati, <em>Adulti</em> e <em>Bambini sotto 120 cm</em>,
+  con pulsanti più e meno da 44 px. Il totale continua ad andare al campo
+  esistente per non rompere il database, e il numero di bambini viaggia in un
+  campo nuovo. Richiede una colonna in più nella tabella.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto ora</span>
+  <strong>Fasce orarie a pulsanti invece del campo ora libero.</strong>
+  Oggi c'è un selettore d'orario a scorrimento di 15 minuti.</p>
+  <p>Come: due gruppi, <em>Pranzo</em> 12:00 · 12:30 · 13:00 · 13:30 e
+  <em>Cena</em> 19:00 · 19:30 · 20:00 · 20:30 · 21:00; le fasce già chiuse per
+  la data scelta appaiono disattivate. Sotto, la durata del tavolo per quella
+  fascia, così il limite di tempo si comunica nel momento in cui conta.</p>
+  <p class="perche">un campo orario libero fa arrivare richieste per le 14:52 e
+  costringe a richiamare. Otto pulsanti si toccano da telefono in un gesto e
+  raccontano da soli come funziona il servizio.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto ora</span>
+  <strong>Il totale stimato, aggiornato mentre si compila.</strong>
+  <code>3 adulti × 22,90 + 1 bambino × 12,90 = 81,60 € · bevande escluse</code>.
+  Tutti i dati sono già nel browser: è un conto, non una chiamata al server.</p>
+  <p class="perche">è la funzione che manca in quasi tutti i siti di AYCE ed è
+  quella che il cliente sta facendo con la calcolatrice del telefono mentre
+  guarda la pagina. Farlo per lui rimuove l'ultima esitazione prima dell'invio.</p>
+</div>
+
+<!-- ===================================================== -->
+<h2>7 · Dove siamo</h2>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto</span>
+  Orari con stato in tempo reale, indirizzo, telefono, e la mappa caricata solo
+  dopo un clic esplicito — quindi nessun cookie di Google prima del consenso,
+  con l'informativa già allineata.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto ora</span>
+  <strong>Parcheggio e distanze.</strong> Due righe: dove si parcheggia e quanto
+  dista dal centro e dal porto a piedi. Aggiungete un pulsante
+  <em>Indicazioni</em> che apra la navigazione, distinto da quello che mostra la
+  mappa dentro la pagina.</p>
+  <p class="perche">a Savona il parcheggio decide la scelta del locale la sera.
+  E per i turisti dal porto la distanza a piedi è l'informazione che manca in
+  tutti i siti concorrenti.</p>
+</div>
+
+<!-- ===================================================== -->
+<h2>8 · Domande frequenti</h2>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto</span>
+  Otto domande in una fisarmonica accessibile, unificate: prima erano divise su
+  due pagine e una si ripeteva identica.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto ora</span>
+  <strong>Dati strutturati FAQ.</strong> Le domande non sono dichiarate a Google
+  come tali. Aggiungendo lo schema <code>FAQPage</code> possono comparire
+  direttamente nei risultati di ricerca, sotto il vostro link.</p>
+  <p class="perche">occupa più spazio verticale nella pagina dei risultati e
+  intercetta chi cerca «all you can eat Savona prezzi» senza che debba entrare.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fare">Da fare</span>
+  Tre domande che mancano e che un buffet riceve sempre: si può portare la
+  torta da casa; cosa succede se si arriva in ritardo sulla prenotazione;
+  se il conto si può dividere.</p>
+</div>
+
+<!-- ===================================================== -->
+<h2>9 · Navigazione</h2>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto</span>
+  Cinque voci: <em>Come funziona · Prezzi · Menu · Dove siamo · Domande</em>,
+  più il pulsante di prenotazione separato. Il sito è passato da sei pagine a
+  tre: «Chi siamo» e «Contatti» sono diventate sezioni della home, con
+  reindirizzamenti permanenti dai vecchi indirizzi per non perdere
+  posizionamento né lasciare link rotti.</p>
+  <p>Su questo punto non c'è altro da semplificare: siete già al limite basso.</p>
+</div>
+
+<!-- ===================================================== -->
+<h2>10 · Footer</h2>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto</span>
+  Tre colonne: marchio e descrizione, elenco pagine, contatti con orari.
+  Aree tattili portate a 44 px.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--obiezione">Blocca la pubblicazione</span>
+  <strong>La partita IVA è un segnaposto.</strong> Nel footer c'è
+  «P. IVA da inserire» e nell'informativa privacy mancano ragione sociale,
+  provider di hosting e data di ultimo aggiornamento. Sono dati obbligatori.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fare">Da fare</span>
+  Link ai profili social e a Google Business, se attivi. Il footer è il posto
+  dove Google si aspetta di trovare la conferma dell'identità dell'attività.</p>
+</div>
+
+<!-- ===================================================== -->
+<hr>
+<h2>Blocco tecnico · Velocità</h2>
+
+<div class="riquadro">
+  <h3>Stato misurato oggi</h3>
+  <div class="tabella">
+    <table>
+      <thead><tr><th>Pagina</th><th class="num">Non compressa</th><th class="num">Con gzip</th><th>Budget</th></tr></thead>
+      <tbody>
+        <tr><td>Home</td><td class="num">182 KB</td><td class="num">137 KB</td><td>500 KB</td></tr>
+        <tr><td>Menu</td><td class="num">170 KB</td><td class="num">120 KB</td><td>500 KB</td></tr>
+        <tr><td>Prenota</td><td class="num">188 KB</td><td class="num">125 KB</td><td>500 KB</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="nota">Di questi, 104 KB sono i tre caratteri tipografici. Il resto del
+  sito pesa poco più di 30 KB perché non usa librerie: niente jQuery, niente
+  framework, niente Google Fonts in produzione.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto</span>
+  Caratteri ospitati sul vostro server, sottoinsieme latino, con precaricamento
+  dei due critici e <code>font-display: swap</code>. Cache lunga sui file con
+  nome stabile, cache breve e rivalidata su CSS e JS, compressione gzip e brotli,
+  tipi MIME dichiarati per i woff2 e i webp, intestazioni di sicurezza complete.
+  Zero richieste a domini esterni: la mappa parte solo su clic.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fare">Da fare</span>
+  <strong>Minificazione.</strong> CSS, JS e HTML sono formattati per essere
+  leggibili. Stima realistica: 36 KB di CSS scendono a circa 27, i tre file JS
+  da 30 a circa 18. Prima della compressione sono 20 KB in meno, dopo la
+  compressione il guadagno reale è più vicino ai 6-7 KB.</p>
+  <p class="perche">è un guadagno onesto ma piccolo, e ha un costo: il file
+  minificato non si corregge più a mano. Fatelo solo se qualcuno mantiene un
+  processo di build; se il sito lo aggiorna il ristoratore con un editor di
+  testo, <strong>non fatelo</strong>: i 7 KB non valgono l'impossibilità di
+  cambiare un prezzo.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fare">Da fare, quando arrivano le foto</span>
+  <strong>La pipeline immagini è il punto dove si vince o si perde.</strong>
+  Un JPEG da telefono pesa 4 MB: dieci foto non trattate mandano la home da
+  137 KB a 40 MB e il sito diventa inusabile in 4G.</p>
+  <ul>
+    <li>AVIF con fallback WebP dentro <code>&lt;picture&gt;</code>; il JPEG solo
+      come ultima risorsa.</li>
+    <li><code>srcset</code> a tre larghezze (600, 1200, 2000 px) più
+      <code>sizes</code> corretto, così il telefono non scarica la versione da desktop.</li>
+    <li><code>width</code> e <code>height</code> sempre dichiarati: senza, la
+      pagina sobbalza al caricamento e Google penalizza.</li>
+    <li><code>loading="lazy"</code> su tutto tranne l'immagine dell'hero, che
+      invece vuole <code>fetchpriority="high"</code>.</li>
+    <li>Budget: <strong>200 KB</strong> per la foto dell'hero, <strong>80 KB</strong>
+      per ciascuna foto di piatto. Sopra questi valori, si ricomprime.</li>
+  </ul>
+  <p class="nota">I riquadri grafici che oggi stanno al posto delle foto hanno
+  già le proporzioni definitive: sostituendoli il layout non si muove, quindi
+  nessuno spostamento di contenuto in caricamento.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fare">Da fare</span>
+  <strong>Misura vera dopo la pubblicazione.</strong> Tutti i numeri qui sopra
+  sono misurati in locale. Servono Lighthouse su mobile e i dati di campo di
+  Search Console, che sono l'unica cosa che Google usa davvero per il
+  posizionamento. Obiettivi: LCP sotto 2,0 s, CLS sotto 0,05, INP sotto 200 ms.</p>
+</div>
+
+<!-- ===================================================== -->
+<h2>Blocco tecnico · SEO locale</h2>
+
+<div class="voce">
+  <p><span class="stato stato--fatto">Fatto</span>
+  Dati strutturati <code>Restaurant</code> completi (indirizzo, coordinate,
+  orari, fasce di prezzo, cucine servite, azione di prenotazione),
+  <code>Menu</code> con le otto sezioni, <code>BreadcrumbList</code>.
+  Titoli e descrizioni unici per pagina, sitemap, robots, indirizzi canonici,
+  versione inglese collegata con <code>hreflang</code> reciproci.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--obiezione">Blocca tutto</span>
+  <strong>Il dominio è un segnaposto.</strong> Ovunque compare
+  <code>www.x-sapori.it</code>, che ho inventato io. Finché non lo sostituite,
+  canonici, sitemap e dati strutturati indicano a Google indirizzi inesistenti.
+  È la prima cosa da fare, prima di caricare i file.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fare">Priorità 1 · Google Business Profile</span>
+  <p>Per un ristorante locale <strong>vale più del sito</strong>: la maggior parte
+  delle persone decide dentro Maps senza mai aprire il vostro dominio.</p>
+  <ul>
+    <li>Rivendicare la scheda e verificarla.</li>
+    <li>Categoria principale: <em>Ristorante buffet</em>. Secondarie:
+      <em>Ristorante cinese</em>, <em>Ristorante giapponese</em>,
+      <em>Ristorante brasiliano</em>. Le secondarie sono il modo corretto di
+      presidiare «ristorante cinese Savona» senza snaturare il posizionamento.</li>
+    <li>Orari identici a quelli del sito, festivi compresi.</li>
+    <li>Attributi: accesso in sedia a rotelle, adatto ai bambini, seggioloni,
+      pagamento con carta. Sono filtri di ricerca dentro Maps.</li>
+    <li>Collegare il pulsante «Prenota» alla pagina di prenotazione.</li>
+    <li>Rispondere a <strong>tutte</strong> le recensioni, incluse le negative,
+      entro pochi giorni.</li>
+  </ul>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fare">Priorità 2 · Coerenza NAP</span>
+  Nome, indirizzo e telefono devono essere <strong>identici carattere per
+  carattere</strong> ovunque. Fissate questa forma e non deviate:</p>
+  <div class="riquadro" style="margin-top:.8rem">
+    <p style="margin:0;font-family:var(--f-data);font-size:.9rem;line-height:1.9">
+      X-Sapori<br>
+      Via Luigi Pirandello, 2r<br>
+      17100 Savona SV<br>
+      +39 019 221 3138
+    </p>
+  </div>
+  <p>Dove verificarla: Google Business, Apple Maps, TripAdvisor, TheFork,
+  Facebook, Instagram, Yelp, PagineGialle, Bing Places.</p>
+  <p class="perche">i motori incrociano queste fonti per stabilire che l'attività
+  esiste davvero. «Via L. Pirandello 2/r» e «Via Luigi Pirandello, 2r» possono
+  essere letti come due locali diversi, e la fiducia si divide fra i due.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--fare">Priorità 3 · Parole chiave</span>
+  <div class="tabella">
+    <table>
+      <thead><tr><th>Chiave</th><th>Dove va presidiata</th></tr></thead>
+      <tbody>
+        <tr><td>all you can eat Savona</td><td>titolo home e primo paragrafo — è la principale</td></tr>
+        <tr><td>ristorante cinese Savona</td><td>categoria secondaria su Google Business, sezione del menu «Al vapore» e «Wok»</td></tr>
+        <tr><td>sushi Savona</td><td>titolo e descrizione della pagina menu, sezione sushi</td></tr>
+        <tr><td>ristorante giapponese Savona</td><td>categoria secondaria, testo della sezione sushi</td></tr>
+        <tr><td>churrasco / brace brasiliana Savona</td><td>poca concorrenza in Liguria: presidiabile facilmente</td></tr>
+        <tr><td>ristorante per bambini Savona</td><td>FAQ e sezione prezzi — intercetta le famiglie</td></tr>
+        <tr><td>ristorante aperto lunedì Savona</td><td>chiave trascurata e preziosa: molti chiudono il lunedì, voi no</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="perche">l'ultima riga è il tipo di occasione che si trova solo
+  guardando i dati reali dell'attività invece di copiare una lista di parole
+  chiave generica.</p>
+  <p><strong>Cosa non fare</strong>: ripetere «ristorante cinese Savona» in ogni
+  paragrafo. Google lo riconosce da vent'anni e lo penalizza. Le chiavi si
+  presidiano una volta, nel posto giusto.</p>
+</div>
+
+<div class="voce">
+  <p><span class="stato stato--conferma">Solo se vere</span>
+  <strong>Recensioni.</strong> Sul sito non ce n'è nessuna, di proposito: nel
+  materiale che mi avete dato non ce n'erano di verificabili. Quando ne avrete
+  di reali su Google, si possono riportare con la fonte e dichiarare a Google con
+  i dati strutturati. Inventarle è un rischio legale, oltre che inutile: si
+  riconoscono.</p>
+</div>
+
+<!-- ===================================================== -->
+<div class="chiusura">
+  <p><strong>Ordine consigliato di esecuzione.</strong>
+  Prima i tre blocchi rossi: dominio reale, partita IVA e dati della privacy,
+  contraddizione sui bambini. Sono le cose che impediscono di pubblicare.
+  Poi allergeni e campo bambini nel modulo, che sono obbligo di legge e buco
+  funzionale. Poi barra fissa mobile, prezzo nell'hero e fasce orarie, che sono
+  conversione. La palette e il rosso dei sigilli per ultimi: sono i più
+  divertenti e i meno urgenti.</p>
+  <p>Tutte le affermazioni su cosa è già in produzione sono verificate sul
+  codice del sito, non ricordate. I contrasti cromatici sono calcolati sui colori
+  reali. Quello che non ho potuto provare — il backend PHP, che su questa
+  macchina non gira, e la resa visiva, perché non posso fare screenshot — è
+  segnalato come tale.</p>
+</div>
+
+</div>

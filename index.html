@@ -66,6 +66,54 @@
   }
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Serve prenotare anche in settimana?",
+      "acceptedAnswer": { "@type": "Answer", "text": "A pranzo di solito si trova posto anche senza preavviso. Dal venerdì alla domenica la sala si riempie quasi sempre: meglio prenotare, soprattutto per tavoli da sei persone in su." }
+    },
+    {
+      "@type": "Question",
+      "name": "Quanto possiamo restare al tavolo?",
+      "acceptedAnswer": { "@type": "Answer", "text": "A cena il tavolo è vostro per tutta la serata: non facciamo doppio turno. A pranzo lo teniamo per 90 minuti, così anche chi ha poco tempo trova posto." }
+    },
+    {
+      "@type": "Question",
+      "name": "Come funziona il prezzo per i bambini?",
+      "acceptedAnswer": { "@type": "Answer", "text": "I bambini sotto i 120 cm pagano 9,90 € a pranzo e 12,90 € a cena, tutti i giorni. Seggioloni disponibili: basta segnalarlo nel modulo di prenotazione." }
+    },
+    {
+      "@type": "Question",
+      "name": "Gestite allergie e intolleranze?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sì. Indicatele nelle note della prenotazione: prepariamo piatti senza glutine, senza crostacei e senza frutta a guscio in postazione separata. Per i celiaci vi chiediamo di avvisare almeno il giorno prima." }
+    },
+    {
+      "@type": "Question",
+      "name": "Si può festeggiare un compleanno?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Certo. Selezionate «Compleanno» nel modulo: portiamo il dolce con le candeline a fine cena. Per tavolate numerose prepariamo la sala riservata, fino a 40 persone con 48 ore di preavviso." }
+    },
+    {
+      "@type": "Question",
+      "name": "Come si paga?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Accettiamo carte di credito, bancomat e pagamenti da smartphone. I buoni pasto cartacei solo a pranzo, fino a due a persona." }
+    },
+    {
+      "@type": "Question",
+      "name": "C’è spazio per passeggini e sedie a rotelle?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sì. L’ingresso è a livello strada, la sala è tutta al piano terra e i corridoi sono larghi. Segnalatecelo in prenotazione e vi assegniamo un tavolo vicino all’ingresso." }
+    },
+    {
+      "@type": "Question",
+      "name": "Fate consegne a domicilio o asporto?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No, né l’uno né l’altro. La formula funziona solo con i piatti serviti caldi al tavolo, appena usciti dalla cucina." }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <a class="skip-link" href="#main">Vai al contenuto principale</a>
@@ -140,6 +188,11 @@
         <a class="btn btn--ghost" href="menu.html">Sfoglia il menu</a>
       </div>
 
+      <p class="hero__prezzo enter" style="--d:540ms">
+        <span>Pranzo da <b>14,90 €</b></span>
+        <span>Cena da <b>22,90 €</b></span>
+        <span>bevande escluse</span>
+      </p>
       <p class="hero__meta enter" style="--d:600ms">
         <span>Via Luigi Pirandello, 2r — Savona</span>
         <span>Tutti i giorni · 12:00–15:00 · 19:00–23:00</span>
@@ -172,6 +225,7 @@
       <div class="section__head reveal">
         <p class="eyebrow">Come funziona</p>
         <h2 id="come-t">Si ordina dal menu, non si fa la fila</h2>
+        <p class="dato-varieta">67 piatti · 8 sezioni · 4 cucine</p>
         <p class="lead">
           L'all you can eat qui funziona come in un ristorante à la carte: scegliete dal menu,
           la cucina prepara al momento e i piatti arrivano in porzioni piccole, nell'ordine giusto.
@@ -199,6 +253,11 @@
       </ol>
 
       <p class="lead reveal" style="margin-top:var(--sp-5)">
+        <strong>Quanto dura:</strong> a cena il tavolo è vostro per tutta la serata, non facciamo
+        doppio turno. A pranzo lo teniamo 90 minuti, così anche chi ha poco tempo trova posto.
+      </p>
+
+      <p class="lead reveal" style="margin-top:var(--sp-3)">
         <strong>Una sola regola:</strong> ordinate quello che mangiate. I piatti lasciati interi
         vengono conteggiati, così nulla finisce nella spazzatura.
       </p>
@@ -305,6 +364,24 @@
         </div>
       </dl>
 
+      <div class="incluso reveal">
+        <div>
+          <h3>Nel prezzo c'è</h3>
+          <ul>
+            <li>Tutti i piatti delle otto sezioni del menu</li>
+            <li>Giri illimitati, senza supplementi sulle portate</li>
+            <li>I dolci, compresi come tutto il resto</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Si paga a parte</h3>
+          <ul>
+            <li>Le bevande, ordinate alla carta</li>
+            <li>I piatti ordinati e lasciati interi</li>
+          </ul>
+        </div>
+      </div>
+
       <div class="reveal" style="margin-top:var(--sp-5);display:flex;flex-wrap:wrap;gap:var(--sp-4);align-items:center;justify-content:space-between">
         <p class="lead" style="margin:0">
           <strong style="color:var(--ottone-30)">Bambini sotto i 120 cm:</strong>
@@ -399,7 +476,9 @@
               <p style="margin-inline:auto">
                 <button class="btn btn--primary" type="button" id="mappa-load">Carica la mappa</button>
               </p>
-              <p><a href="https://www.google.com/maps/search/?api=1&amp;query=Via+Luigi+Pirandello+2r+Savona" target="_blank" rel="noopener">Oppure apri Google Maps in una nuova scheda</a></p>
+              <p style="margin-inline:auto">
+                <a class="btn btn--ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=Via+Luigi+Pirandello+2r,+17100+Savona" target="_blank" rel="noopener">Indicazioni stradali</a>
+              </p>
             </div>
           </div>
         </div>
@@ -467,6 +546,11 @@
   </section>
 
 </main>
+
+<nav class="barra-fissa" id="barra-fissa" aria-label="Azioni rapide">
+  <a class="btn btn--primary" href="prenota.html">Prenota</a>
+  <a class="btn btn--ghost" href="tel:+390192213138">Chiama</a>
+</nav>
 
 <footer class="site-footer">
   <div class="wrap">

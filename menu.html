@@ -137,8 +137,10 @@
 
       <div class="filters" role="group" aria-label="Filtra i piatti">
         <span class="filters__label" id="filtri-label">Filtra</span>
-        <button class="chip" type="button" data-filter="veg" aria-pressed="false">Vegetariano</button>
         <button class="chip" type="button" data-filter="vegano" aria-pressed="false">Vegano</button>
+        <button class="chip" type="button" data-filter="veg" aria-pressed="false">Vegetariano</button>
+        <button class="chip" type="button" data-filter="pesce" aria-pressed="false">Pesce</button>
+        <button class="chip" type="button" data-filter="carne" aria-pressed="false">Carne</button>
         <button class="chip" type="button" data-filter="piccante" aria-pressed="false">Piccante</button>
 
         <label class="search">
@@ -155,6 +157,24 @@
   <p class="visually-hidden" role="status" aria-live="polite" id="menu-status"></p>
 
   <div class="wrap">
+    <p class="conteggio" id="menu-conteggio" aria-hidden="true">67 piatti · 8 sezioni · 4 cucine</p>
+  </div>
+
+  <div class="wrap">
+
+    <aside class="avviso-allergeni" aria-labelledby="allergeni-t">
+      <h2 id="allergeni-t">Allergie e intolleranze</h2>
+      <p>
+        Prepariamo piatti senza glutine, senza crostacei e senza frutta a guscio
+        in postazione separata. Per i celiaci vi chiediamo di avvisare almeno il
+        giorno prima.
+      </p>
+      <p>
+        L'elenco degli allergeni presenti in ogni piatto è a vostra disposizione:
+        chiedetelo al personale in sala, oppure segnalate l'allergia nelle note
+        quando <a href="prenota.html">prenotate il tavolo</a>.
+      </p>
+    </aside>
 
     <section class="menu-course" id="antipasti" aria-labelledby="antipasti-t">
       <div class="menu-course__head">
@@ -164,13 +184,13 @@
       <p class="lead" style="margin-top:var(--sp-3)">Fritti croccanti e piccoli assaggi freddi da dividere. Ordinateli in due giri: il primo per rompere il ghiaccio, il secondo mentre arriva il sushi.</p>
       <div class="dish-list">
         <div class="dish"><div><span class="dish__name">Involtini primavera</span><span class="dish__desc">Verdure croccanti, sfoglia sottile, salsa agrodolce.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Gamberi in pastella</span><span class="dish__desc">Gamberi interi fritti leggeri, maionese al sesamo.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Nuvole di drago</span><span class="dish__desc">Chips di gambero soffiate, servite calde.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Gamberi in pastella</span><span class="dish__desc">Gamberi interi fritti leggeri, maionese al sesamo.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Nuvole di drago</span><span class="dish__desc">Chips di gambero soffiate, servite calde.</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Alghe wakame</span><span class="dish__desc">Insalata di alghe marinate al sesamo.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Edamame al sale</span><span class="dish__desc">Baccelli di soia scottati e salati.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span></div></div>
-        <div class="dish"><div><span class="dish__name">Insalata di polpo</span><span class="dish__desc">Polpo, sedano e olio al peperoncino.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Insalata di polpo</span><span class="dish__desc">Polpo, sedano e olio al peperoncino.</span></div></div>
         <div class="dish"><div><span class="dish__name">Patatine dolci fritte</span><span class="dish__desc">Bastoncini di patata americana con miele.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Pollo croccante al sesamo</span><span class="dish__desc">Bocconcini in pastella, salsa agrodolce e semi di sesamo.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Pollo croccante al sesamo</span><span class="dish__desc">Bocconcini in pastella, salsa agrodolce e semi di sesamo.</span></div></div>
       </div>
     </section>
 
@@ -184,7 +204,7 @@
         <div class="dish" data-tags="veg"><div><span class="dish__name">Ravioli ricotta e spinaci</span><span class="dish__desc">Serviti in crema di panna e grana.</span></div><div class="dish__tags"><span class="tag tag--veg">Veg</span></div></div>
         <div class="dish" data-tags="veg"><div><span class="dish__name">Caprese</span><span class="dish__desc">Mozzarella, pomodoro a fette, origano e olio extravergine.</span></div><div class="dish__tags"><span class="tag tag--veg">Veg</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Insalata mista di stagione</span><span class="dish__desc">Lattuga, pomodoro, cetriolo, carota e cipolla rossa.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span></div></div>
-        <div class="dish"><div><span class="dish__name">Insalata di pollo grigliato</span><span class="dish__desc">Petto di pollo alla piastra, peperoni, fagiolini e cipolla.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Insalata di pollo grigliato</span><span class="dish__desc">Petto di pollo alla piastra, peperoni, fagiolini e cipolla.</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Penne al pomodoro e basilico</span><span class="dish__desc">Sugo fresco, cotte al momento.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Patatine fritte</span><span class="dish__desc">La richiesta numero uno dei bambini.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Verdure grigliate</span><span class="dish__desc">Zucchine, melanzane e peperoni con olio e prezzemolo.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span></div></div>
@@ -194,17 +214,17 @@
 
     <section class="menu-course" id="vapore" aria-labelledby="vapore-t">
       <div class="menu-course__head">
-        <p class="eyebrow">Dal cestello</p>
+        <p class="eyebrow eyebrow--cina">Dal cestello</p>
         <h2 id="vapore-t">Al vapore</h2>
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">La parte più tradizionale della tavola cinese. I ravioli escono dal cestello di bambù quando li ordinate, mai prima.</p>
       <div class="dish-list">
-        <div class="dish"><div><span class="dish__name">Ravioli al vapore di maiale</span><span class="dish__desc">Ripieno classico con zenzero e cipollotto.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Ravioli di gamberi (har gow)</span><span class="dish__desc">Sfoglia traslucida, gambero intero.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Ravioli al vapore di maiale</span><span class="dish__desc">Ripieno classico con zenzero e cipollotto.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Ravioli di gamberi (har gow)</span><span class="dish__desc">Sfoglia traslucida, gambero intero.</span></div></div>
         <div class="dish" data-tags="veg"><div><span class="dish__name">Ravioli vegetariani</span><span class="dish__desc">Verza, funghi shiitake e carota.</span></div><div class="dish__tags"><span class="tag tag--veg">Veg</span></div></div>
         <div class="dish"><div><span class="dish__name">Ravioli alla griglia</span><span class="dish__desc">Cotti al vapore e poi scottati sulla piastra.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Baozi al maiale caramellato</span><span class="dish__desc">Panino soffice ripieno di char siu.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Siu mai</span><span class="dish__desc">Fagottini aperti di maiale e gambero.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Baozi al maiale caramellato</span><span class="dish__desc">Panino soffice ripieno di char siu.</span></div></div>
+        <div class="dish" data-tags="carne pesce"><div><span class="dish__name">Siu mai</span><span class="dish__desc">Fagottini aperti di maiale e gambero.</span></div></div>
       </div>
     </section>
 
@@ -215,36 +235,36 @@
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">Riso preparato più volte durante il servizio, pesce porzionato a vista al banco.</p>
       <div class="dish-list">
-        <div class="dish"><div><span class="dish__name">Nigiri salmone</span><span class="dish__desc">Due pezzi, riso tiepido e salmone fresco.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Nigiri tonno</span><span class="dish__desc">Due pezzi, tonno pinna gialla.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Nigiri branzino e limone</span><span class="dish__desc">Scorza di limone e sale in fiocchi.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Uramaki California</span><span class="dish__desc">Surimi, avocado, maionese e tobiko.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Uramaki salmone e philadelphia</span><span class="dish__desc">Otto pezzi, sesamo tostato.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Nigiri salmone</span><span class="dish__desc">Due pezzi, riso tiepido e salmone fresco.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Nigiri tonno</span><span class="dish__desc">Due pezzi, tonno pinna gialla.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Nigiri branzino e limone</span><span class="dish__desc">Scorza di limone e sale in fiocchi.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Uramaki California</span><span class="dish__desc">Surimi, avocado, maionese e tobiko.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Uramaki salmone e philadelphia</span><span class="dish__desc">Otto pezzi, sesamo tostato.</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Hosomaki cetriolo</span><span class="dish__desc">Sei pezzi, alga nori croccante.</span></div><div class="dish__tags"><span class="tag tag--veg">Veg</span></div></div>
-        <div class="dish"><div><span class="dish__name">Tartare di salmone</span><span class="dish__desc">Salmone al coltello, olio al sesamo e semi tostati.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Tartare di tonno</span><span class="dish__desc">Servita in ciotola con salsa alla soia e sesamo nero.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Sashimi di salmone</span><span class="dish__desc">Tagli spessi porzionati a vista al banco.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Sashimi misto</span><span class="dish__desc">Tre tagli del giorno, wasabi e zenzero.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Temaki gambero</span><span class="dish__desc">Cono di alga con gambero in tempura.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Tartare di salmone</span><span class="dish__desc">Salmone al coltello, olio al sesamo e semi tostati.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Tartare di tonno</span><span class="dish__desc">Servita in ciotola con salsa alla soia e sesamo nero.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Sashimi di salmone</span><span class="dish__desc">Tagli spessi porzionati a vista al banco.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Sashimi misto</span><span class="dish__desc">Tre tagli del giorno, wasabi e zenzero.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Temaki gambero</span><span class="dish__desc">Cono di alga con gambero in tempura.</span></div></div>
         <div class="dish"><div><span class="dish__name">Uramaki flambé</span><span class="dish__desc">Scottato alla fiamma con salsa teriyaki.</span></div><div class="dish__tags"><span class="tag">Caldo</span></div></div>
       </div>
     </section>
 
     <section class="menu-course" id="wok" aria-labelledby="wok-t">
       <div class="menu-course__head">
-        <p class="eyebrow">Fuoco vivo</p>
+        <p class="eyebrow eyebrow--cina">Fuoco vivo</p>
         <h2 id="wok-t">Wok e primi</h2>
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">Riso e spaghetti saltati in pochi secondi a fiamma alta. Li consigliamo a metà cena, quando il tavolo ha già assaggiato il resto.</p>
       <div class="dish-list">
-        <div class="dish"><div><span class="dish__name">Riso alla cantonese</span><span class="dish__desc">Prosciutto, piselli e uovo.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Riso saltato ai gamberi</span><span class="dish__desc">Gamberetti, cipollotto e uovo.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Riso alla cantonese</span><span class="dish__desc">Prosciutto, piselli e uovo.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Riso saltato ai gamberi</span><span class="dish__desc">Gamberetti, cipollotto e uovo.</span></div></div>
         <div class="dish" data-tags="veg"><div><span class="dish__name">Spaghetti di soia saltati</span><span class="dish__desc">Verdure croccanti e salsa di soia leggera.</span></div><div class="dish__tags"><span class="tag tag--veg">Veg</span></div></div>
-        <div class="dish"><div><span class="dish__name">Spaghetti di riso al pollo</span><span class="dish__desc">Pollo marinato, germogli e carota.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Udon al manzo</span><span class="dish__desc">Noodles spessi, manzo e cipolla caramellata.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Spaghetti di riso al pollo</span><span class="dish__desc">Pollo marinato, germogli e carota.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Udon al manzo</span><span class="dish__desc">Noodles spessi, manzo e cipolla caramellata.</span></div></div>
         <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Verdure miste al wok</span><span class="dish__desc">Bok choy, funghi e bambù.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span></div></div>
-        <div class="dish" data-tags="veg vegano piccante"><div><span class="dish__name">Tofu saltato piccante</span><span class="dish__desc">Tofu, peperoncino e salsa di fagioli neri.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span><span class="tag">Piccante</span></div></div>
-        <div class="dish" data-tags="piccante"><div><span class="dish__name">Zuppa agropiccante</span><span class="dish__desc">Funghi, bambù, uovo e aceto di riso.</span></div><div class="dish__tags"><span class="tag">Piccante</span></div></div>
+        <div class="dish" data-tags="veg vegano piccante"><div><span class="dish__name">Tofu saltato piccante</span><span class="dish__desc">Tofu, peperoncino e salsa di fagioli neri.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span><span class="tag tag--piccante">Piccante</span></div></div>
+        <div class="dish" data-tags="piccante"><div><span class="dish__name">Zuppa agropiccante</span><span class="dish__desc">Funghi, bambù, uovo e aceto di riso.</span></div><div class="dish__tags"><span class="tag tag--piccante">Piccante</span></div></div>
       </div>
     </section>
 
@@ -255,15 +275,15 @@
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">Carne allo spiedo e alla brace, tagliata al momento e servita in porzioni piccole. Disponibile a pranzo e a cena, in tutte le formule.</p>
       <div class="dish-list">
-        <div class="dish"><div><span class="dish__name">Picanha alla brace</span><span class="dish__desc">Codone di manzo con il suo grasso, sale grosso, tagliato al momento.</span></div><div class="dish__tags"><span class="tag">Il classico</span></div></div>
-        <div class="dish"><div><span class="dish__name">Spiedini di pollo</span><span class="dish__desc">Marinati alle spezie e cotti allo spiedo.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Linguiça</span><span class="dish__desc">Salsiccia brasiliana leggermente affumicata.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Filetto di maiale al miele</span><span class="dish__desc">Glassato lentamente, sesamo.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Gamberoni alla griglia</span><span class="dish__desc">Aglio, prezzemolo e burro.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Salmone teriyaki</span><span class="dish__desc">Trancio scottato, glassa dolce-salata.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Costine di maiale</span><span class="dish__desc">Marinate 12 ore, cotte in forno e finite alla piastra.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Capesante gratinate</span><span class="dish__desc">Burro all'aglio e pane croccante.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Anatra croccante</span><span class="dish__desc">Con crêpe sottili, cetriolo e salsa hoisin.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Picanha alla brace</span><span class="dish__desc">Codone di manzo con il suo grasso, sale grosso, tagliato al momento.</span></div><div class="dish__tags"><span class="tag">Il classico</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Spiedini di pollo</span><span class="dish__desc">Marinati alle spezie e cotti allo spiedo.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Linguiça</span><span class="dish__desc">Salsiccia brasiliana leggermente affumicata.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Filetto di maiale al miele</span><span class="dish__desc">Glassato lentamente, sesamo.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Gamberoni alla griglia</span><span class="dish__desc">Aglio, prezzemolo e burro.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Salmone teriyaki</span><span class="dish__desc">Trancio scottato, glassa dolce-salata.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Costine di maiale</span><span class="dish__desc">Marinate 12 ore, cotte in forno e finite alla piastra.</span></div></div>
+        <div class="dish" data-tags="pesce"><div><span class="dish__name">Capesante gratinate</span><span class="dish__desc">Burro all'aglio e pane croccante.</span></div></div>
+        <div class="dish" data-tags="carne"><div><span class="dish__name">Anatra croccante</span><span class="dish__desc">Con crêpe sottili, cetriolo e salsa hoisin.</span></div></div>
       </div>
     </section>
 

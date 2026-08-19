@@ -75,8 +75,9 @@ Per aggiungere le etichette:
 <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Nome</span><span class="dish__desc">Descrizione.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span></div></div>
 ```
 
-- `data-tags` fa funzionare i filtri. Valori possibili: `veg`, `vegano`, `piccante`.
-  Un piatto vegano è anche vegetariano: scrivete entrambi.
+- `data-tags` fa funzionare i filtri. Valori possibili: `veg`, `vegano`,
+  `pesce`, `carne`, `piccante`. Un piatto vegano è anche vegetariano: scrivete
+  entrambi. Un piatto con maiale e gambero porta sia `carne` sia `pesce`.
 - La parte `<span class="tag …">` è l'etichetta che si **vede**. Devono
   corrispondere: se scrivete `data-tags="vegano"` mettete anche l'etichetta Vegano.
 

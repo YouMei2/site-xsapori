@@ -58,6 +58,15 @@
   --inchiostro:#14191C;
   --carta:#E7EDEF;
 
+  /* Rosso dei sigilli d'artista: l'unico riferimento cinese esplicito del
+     sistema. Sta in quattro punti — le due sezioni cinesi del menu, il
+     simbolo del piccante e il timbro nel footer — e mai sulle azioni:
+     il colore dei pulsanti resta il petrolio. Misurato 5,67:1 sul marmo
+     principale e 5,20:1 su quello alternato, quindi buono anche per testo
+     piccolo. Il rosso lacca da ristorante anni Novanta è un'altra cosa. */
+  --sigillo:#B23A22;
+  --sigillo-chiaro:#F0937C;
+
   /* Semantici — superficie chiara (predefinita) */
   --surface:var(--marmo-00);
   --surface-2:var(--marmo-10);
@@ -139,6 +148,8 @@
   --detail:var(--ottone-50);
   --detail-text:var(--ottone-30);
   --focus:var(--ottone-30);
+  /* su fondo scuro il sigillo va schiarito, altrimenti sparisce */
+  --sigillo:var(--sigillo-chiaro);
   background:var(--surface);
   color:var(--on-surface);
 }
@@ -194,6 +205,9 @@ button,input,select,textarea{font:inherit;color:inherit;}
   color:var(--detail-text);margin:0;
 }
 .on-dark .eyebrow{color:var(--detail-text);}
+/* Le due sezioni di cucina cinese portano l'occhiello in rosso sigillo:
+   è il modo di dire «qui siamo in Cina» senza vestire di rosso il sito. */
+.eyebrow--cina{color:var(--sigillo);}
 .lead{font-size:var(--fs-lead);color:var(--on-surface-dim);max-width:62ch;}
 .mono{font-family:var(--font-data);font-variant-numeric:tabular-nums;}
 .center{text-align:center;margin-inline:auto;}
@@ -384,6 +398,20 @@ button,input,select,textarea{font:inherit;color:inherit;}
 .hero .eyebrow{color:var(--ottone-30);}
 .hero__lead{margin-top:var(--sp-4);max-width:48ch;color:#C6D0D4;font-size:var(--fs-lead);}
 .hero__actions{display:flex;flex-wrap:wrap;gap:var(--sp-3);margin-top:var(--sp-5);}
+
+/* Il prezzo nella prima schermata: per un all you can eat è la domanda
+   numero uno, prima ancora del menu. Nasconderlo genera solo telefonate. */
+.hero__prezzo{
+  display:flex;flex-wrap:wrap;gap:.5rem var(--sp-4);margin-top:var(--sp-4);
+  font-family:var(--font-data);font-size:.82rem;letter-spacing:.04em;
+  color:#C6D0D4;font-variant-numeric:tabular-nums;
+}
+.hero__prezzo b{color:var(--ottone-30);font-weight:400;font-size:1.05em;}
+.hero__prezzo span{display:flex;align-items:center;gap:.5rem;}
+.hero__prezzo span+span::before{
+  content:"";width:1px;height:1em;background:rgba(231,237,239,.28);
+  margin-right:.5rem;flex:none;
+}
 .hero__meta{
   display:flex;flex-wrap:wrap;gap:.6rem var(--sp-5);margin-top:var(--sp-5);
   font-family:var(--font-data);font-size:.76rem;letter-spacing:.05em;color:#A9B6BC;
@@ -420,6 +448,36 @@ button,input,select,textarea{font:inherit;color:inherit;}
 }
 .step h3{font-family:var(--font-body);font-weight:600;font-size:1.28rem;letter-spacing:-.005em;}
 .step p{margin-top:.5rem;color:var(--on-surface-dim);font-size:.98rem;}
+
+/* La varietà detta come numero: «ampia scelta» non dice niente */
+.dato-varieta{
+  font-family:var(--font-data);font-size:var(--fs-micro);
+  letter-spacing:.16em;text-transform:uppercase;color:var(--detail-text);
+  margin-top:var(--sp-4);font-variant-numeric:tabular-nums;
+}
+
+/* Cosa è compreso e cosa no: è la tabella che il cliente costruisce
+   comunque in testa, tanto vale dargliela già fatta. */
+.incluso{
+  display:grid;gap:var(--sp-4);margin-top:var(--sp-6);
+  padding:var(--sp-4) var(--sp-5);
+  border:1px solid var(--rule);border-radius:var(--r-sm);
+  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
+}
+@media (min-width:760px){ .incluso{grid-template-columns:1fr 1fr;gap:var(--sp-6);} }
+.incluso h3{
+  font-family:var(--font-body);font-size:.8rem;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--detail-text);
+}
+.incluso ul{display:grid;gap:.55rem;margin-top:var(--sp-3);}
+.incluso li{display:flex;gap:.6rem;font-size:.98rem;color:var(--on-surface-dim);}
+.incluso li::before{
+  content:"";width:6px;height:6px;border-radius:50%;flex:none;margin-top:.55em;
+  background:var(--detail);
+}
+.incluso div:last-child li::before{
+  border-radius:0;height:1px;width:10px;background:var(--on-surface-dim);margin-top:.75em;
+}
 
 /* Prezzi */
 .prezzi{display:grid;gap:var(--sp-3);margin-top:var(--sp-6);}
@@ -552,23 +610,6 @@ button,input,select,textarea{font:inherit;color:inherit;}
 }
 .cornice figcaption::before{content:"";width:20px;height:1px;background:var(--detail);flex:none;}
 
-/* Segnaposto foto: texture del sistema, non riquadro grigio */
-.ph{
-  position:relative;display:grid;place-items:center;text-align:center;padding:var(--sp-5);
-  background:
-    repeating-linear-gradient(115deg,rgba(185,141,74,.07) 0 2px,transparent 2px 22px),
-    linear-gradient(160deg,var(--sala-70),var(--sala-90));
-  color:#93A0A6;border-radius:var(--r-sm);overflow:hidden;
-}
-.ph::before{
-  content:"";position:absolute;inset:-30% -10% auto;height:70%;
-  background:radial-gradient(60% 100% at 50% 0,rgba(143,208,226,.16),transparent 70%);
-}
-.ph span{position:relative;font-family:var(--font-data);font-size:.72rem;
-  letter-spacing:.12em;text-transform:uppercase;max-width:32ch;line-height:1.6;}
-.ph--wide{aspect-ratio:16/10;}
-.ph--tall{aspect-ratio:3/4;}
-.ph--square{aspect-ratio:1;}
 
 /* Blocco diviso testo/immagine */
 .split{display:grid;gap:var(--sp-5);align-items:center;}
@@ -669,7 +710,7 @@ button,input,select,textarea{font:inherit;color:inherit;}
   letter-spacing:.13em;text-transform:uppercase;color:var(--on-surface-dim);margin-right:.3rem;
 }
 .chip{
-  display:inline-flex;align-items:center;gap:.4rem;min-height:40px;
+  display:inline-flex;align-items:center;gap:.4rem;min-height:44px;
   padding:.4rem .85rem;border:1px solid var(--rule-strong);border-radius:var(--r-pill);
   background:none;font-size:.86rem;cursor:pointer;
   transition:background-color var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out);
@@ -684,6 +725,25 @@ button,input,select,textarea{font:inherit;color:inherit;}
 }
 .search input{border:0;background:none;outline:0;width:min(30vw,180px);font-size:.9rem;}
 .search svg{width:16px;height:16px;color:var(--on-surface-dim);flex:none;}
+
+/* Contatore dei piatti: senza filtri dichiara la varietà, con i filtri conta */
+.conteggio{
+  font-family:var(--font-data);font-size:var(--fs-micro);
+  letter-spacing:.14em;text-transform:uppercase;color:var(--on-surface-dim);
+  padding-block:var(--sp-4) 0;font-variant-numeric:tabular-nums;
+}
+.conteggio[data-filtrato="true"]{color:var(--accent);}
+
+/* Allergeni: obbligo informativo, quindi sta in alto e non si nasconde */
+.avviso-allergeni{
+  margin-top:var(--sp-5);padding:var(--sp-4) var(--sp-5);
+  background:var(--surface-2);border:1px solid var(--rule);
+  border-left:3px solid var(--detail);border-radius:var(--r-sm);
+}
+.avviso-allergeni h2{
+  font-family:var(--font-body);font-size:1.05rem;font-weight:600;letter-spacing:0;
+}
+.avviso-allergeni p{margin-top:var(--sp-2);color:var(--on-surface-dim);font-size:.96rem;max-width:70ch;}
 
 .menu-course{padding-block:var(--sp-6);border-bottom:1px solid var(--rule);scroll-margin-top:9rem;}
 .menu-course__head{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--sp-3);}
@@ -704,6 +764,9 @@ button,input,select,textarea{font:inherit;color:inherit;}
   color:var(--on-surface-dim);white-space:nowrap;
 }
 .tag--veg{color:var(--success);border-color:rgba(30,107,79,.35);}
+/* Il piccante è l'unico posto del menu dove compare il rosso dei sigilli:
+   colore del testo soltanto, il bordo resta neutro. */
+.tag--piccante{color:var(--sigillo);}
 .no-results{
   margin-top:var(--sp-5);padding:var(--sp-5);border:1px dashed var(--rule-strong);
   border-radius:var(--r-sm);text-align:center;color:var(--on-surface-dim);
@@ -740,6 +803,70 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
   border-color:var(--petrolio-60);box-shadow:0 0 0 3px rgba(31,127,156,.18);outline:none;
 }
 .hint{font-size:.85rem;color:var(--on-surface-dim);}
+
+/* --- Fasce orarie ----------------------------------------
+   Sostituiscono a schermo il campo orario libero, che faceva arrivare
+   richieste per le 14:52. Il campo nativo resta nel documento ed è
+   sempre lui a essere inviato. */
+.fasce{display:grid;gap:var(--sp-3);}
+.fasce__riga{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;}
+.fasce__turno{
+  font-family:var(--font-data);font-size:var(--fs-micro);
+  letter-spacing:.14em;text-transform:uppercase;color:var(--on-surface-dim);
+  width:100%;
+}
+@media (min-width:520px){ .fasce__turno{width:4.5rem;} }
+.fascia{
+  min-height:44px;min-width:4.2rem;padding:.5rem .8rem;
+  border:1px solid var(--rule-strong);border-radius:var(--r-sm);
+  background:var(--surface);cursor:pointer;
+  font-family:var(--font-data);font-size:.9rem;font-variant-numeric:tabular-nums;
+  transition:border-color var(--dur-fast) var(--ease-out),
+             background-color var(--dur-fast) var(--ease-out),
+             color var(--dur-fast) var(--ease-out);
+}
+.fascia:hover{border-color:var(--detail);}
+.fascia[aria-pressed="true"]{
+  background:var(--petrolio-70);border-color:var(--petrolio-70);color:#fff;
+}
+.fasce__durata{margin-top:var(--sp-2);}
+
+/* --- Contatori adulti e bambini --------------------------
+   Il campo "persone" continua a ricevere il totale: al server non
+   cambia niente. */
+.contatori{display:grid;gap:var(--sp-3);}
+@media (min-width:520px){ .contatori{grid-template-columns:1fr 1fr;gap:var(--sp-4);} }
+.contatore{
+  display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);
+  padding:.6rem .75rem;border:1px solid var(--rule);border-radius:var(--r-sm);
+  background:var(--surface-2);
+}
+.contatore__nome{font-weight:600;font-size:.95rem;line-height:1.25;}
+.contatore__nome small{display:block;font-weight:400;font-size:.78rem;color:var(--on-surface-dim);}
+.contatore__comandi{display:flex;align-items:center;gap:.2rem;flex:none;}
+.contatore__btn{
+  width:44px;height:44px;flex:none;
+  border:1px solid var(--rule-strong);border-radius:var(--r-sm);
+  background:var(--surface);cursor:pointer;font-size:1.2rem;line-height:1;
+  transition:border-color var(--dur-fast) var(--ease-out),opacity var(--dur-fast) var(--ease-out);
+}
+.contatore__btn:hover:not(:disabled){border-color:var(--detail);}
+.contatore__btn:disabled{opacity:.38;cursor:not-allowed;}
+.contatore__valore{
+  min-width:2.2rem;text-align:center;
+  font-family:var(--font-data);font-size:1.05rem;font-variant-numeric:tabular-nums;
+}
+
+/* Il conto che il cliente sta già facendo col telefono in mano */
+.stima{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem .8rem;
+  margin-top:var(--sp-3);padding-top:var(--sp-3);
+  border-top:1px solid var(--rule);
+  font-family:var(--font-data);font-size:.85rem;
+  font-variant-numeric:tabular-nums;color:var(--on-surface-dim);
+}
+.stima__totale{font-size:1.05rem;color:var(--on-surface);font-weight:500;}
+.stima__nota{font-size:.78rem;}
 .field-error{
   display:flex;align-items:flex-start;gap:.4rem;
   font-size:.86rem;color:var(--error);font-weight:600;
@@ -797,6 +924,35 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
 .riepilogo{display:grid;gap:.5rem;margin-top:var(--sp-4);font-family:var(--font-data);font-size:.9rem;}
 .riepilogo div{display:flex;justify-content:space-between;gap:var(--sp-3);
   padding-block:.45rem;border-bottom:1px solid rgba(30,107,79,.2);}
+
+/* --- Barra fissa su mobile --------------------------------
+   Compare solo su schermi stretti e solo dopo che l'hero è uscito,
+   sparisce quando entra il footer per non coprirne i contatti.
+   Da nascosta usa visibility:hidden, così esce anche dal giro dei TAB:
+   una barra invisibile ma focalizzabile è una trappola per la tastiera. */
+.barra-fissa{
+  position:fixed;left:0;right:0;bottom:0;z-index:var(--z-header);
+  display:none;gap:.6rem;
+  padding:.6rem var(--gutter);
+  padding-bottom:calc(.6rem + env(safe-area-inset-bottom,0px));
+  background:rgba(14,20,23,.95);
+  backdrop-filter:blur(14px);
+  border-top:1px solid rgba(185,141,74,.35);
+  visibility:hidden;transform:translateY(100%);
+  transition:transform var(--dur-mid) var(--ease-out),
+             visibility var(--dur-mid),opacity var(--dur-mid) var(--ease-out);
+  opacity:0;
+}
+.barra-fissa[data-visibile="true"]{visibility:visible;transform:none;opacity:1;}
+.barra-fissa .btn{flex:1;min-height:52px;padding-inline:1rem;}
+.barra-fissa .btn--ghost{border-color:rgba(231,237,239,.4);color:var(--carta);}
+@media (max-width:899px){ .barra-fissa{display:flex;} }
+@media (prefers-reduced-motion:reduce){
+  .barra-fissa{transform:none;}
+  .barra-fissa:not([data-visibile="true"]){opacity:0;}
+}
+/* Lo spazio in fondo evita che la barra copra l'ultima riga del footer */
+@media (max-width:899px){ .site-footer{padding-bottom:calc(var(--sp-4) + 4.5rem);} }
 
 /* --- 12. Footer ------------------------------------------- */
 .site-footer{background:var(--sala-90);color:var(--carta);padding-block:var(--sp-6) var(--sp-4);}
@@ -931,6 +1087,11 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
         <a class="btn btn--ghost" href="#" data-altrove="Il menu completo, con filtri e ricerca, è nel sito vero">Sfoglia il menu</a>
       </div>
 
+      <p class="hero__prezzo enter" style="--d:540ms">
+        <span>Pranzo da <b>14,90 €</b></span>
+        <span>Cena da <b>22,90 €</b></span>
+        <span>bevande escluse</span>
+      </p>
       <p class="hero__meta enter" style="--d:600ms">
         <span>Via Luigi Pirandello, 2r — Savona</span>
         <span>Tutti i giorni · 12:00–15:00 · 19:00–23:00</span>
@@ -963,6 +1124,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
       <div class="section__head reveal">
         <p class="eyebrow">Come funziona</p>
         <h2 id="come-t">Si ordina dal menu, non si fa la fila</h2>
+        <p class="dato-varieta">67 piatti · 8 sezioni · 4 cucine</p>
         <p class="lead">
           L'all you can eat qui funziona come in un ristorante à la carte: scegliete dal menu,
           la cucina prepara al momento e i piatti arrivano in porzioni piccole, nell'ordine giusto.
@@ -990,6 +1152,11 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
       </ol>
 
       <p class="lead reveal" style="margin-top:var(--sp-5)">
+        <strong>Quanto dura:</strong> a cena il tavolo è vostro per tutta la serata, non facciamo
+        doppio turno. A pranzo lo teniamo 90 minuti, così anche chi ha poco tempo trova posto.
+      </p>
+
+      <p class="lead reveal" style="margin-top:var(--sp-3)">
         <strong>Una sola regola:</strong> ordinate quello che mangiate. I piatti lasciati interi
         vengono conteggiati, così nulla finisce nella spazzatura.
       </p>
@@ -1096,6 +1263,24 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
         </div>
       </dl>
 
+      <div class="incluso reveal">
+        <div>
+          <h3>Nel prezzo c'è</h3>
+          <ul>
+            <li>Tutti i piatti delle otto sezioni del menu</li>
+            <li>Giri illimitati, senza supplementi sulle portate</li>
+            <li>I dolci, compresi come tutto il resto</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Si paga a parte</h3>
+          <ul>
+            <li>Le bevande, ordinate alla carta</li>
+            <li>I piatti ordinati e lasciati interi</li>
+          </ul>
+        </div>
+      </div>
+
       <div class="reveal" style="margin-top:var(--sp-5);display:flex;flex-wrap:wrap;gap:var(--sp-4);align-items:center;justify-content:space-between">
         <p class="lead" style="margin:0">
           <strong style="color:var(--ottone-30)">Bambini sotto i 120 cm:</strong>
@@ -1190,7 +1375,9 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
               <p style="margin-inline:auto">
                 <button class="btn btn--primary" type="button" id="mappa-load">Carica la mappa</button>
               </p>
-              <p><a href="https://www.google.com/maps/search/?api=1&amp;query=Via+Luigi+Pirandello+2r+Savona" target="_blank" rel="noopener">Oppure apri Google Maps in una nuova scheda</a></p>
+              <p style="margin-inline:auto">
+                <a class="btn btn--ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=Via+Luigi+Pirandello+2r,+17100+Savona" target="_blank" rel="noopener">Indicazioni stradali</a>
+              </p>
             </div>
           </div>
         </div>
@@ -1258,6 +1445,11 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
   </section>
 
 </main>
+
+<nav class="barra-fissa" id="barra-fissa" aria-label="Azioni rapide">
+  <a class="btn btn--primary" href="#" data-altrove="Il modulo di prenotazione è nel sito vero">Prenota</a>
+  <a class="btn btn--ghost" href="tel:+390192213138">Chiama</a>
+</nav>
 
 <footer class="site-footer">
   <div class="wrap">
@@ -1379,6 +1571,39 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
       window.requestAnimationFrame(update);
     }, { passive: true });
     update();
+  }
+
+  /* --- Barra fissa su mobile ------------------------------ */
+  // Appare quando l'hero è uscito dallo schermo e si ritira quando entra
+  // il footer, così non copre mai indirizzo e telefono in fondo.
+  var barra = document.getElementById('barra-fissa');
+  if (barra) {
+    var heroBarra = document.querySelector('.hero');
+    var piede = document.querySelector('.site-footer');
+    var attesa = false;
+
+    var valuta = function () {
+      var oltreHero = heroBarra
+        ? window.scrollY > heroBarra.offsetHeight - 120
+        : window.scrollY > 400;
+
+      var piedeVicino = false;
+      if (piede) {
+        var r = piede.getBoundingClientRect();
+        piedeVicino = r.top < window.innerHeight - 40;
+      }
+
+      barra.dataset.visibile = (oltreHero && !piedeVicino) ? 'true' : 'false';
+      attesa = false;
+    };
+
+    window.addEventListener('scroll', function () {
+      if (attesa) return;
+      attesa = true;
+      window.requestAnimationFrame(valuta);
+    }, { passive: true });
+    window.addEventListener('resize', valuta, { passive: true });
+    valuta();
   }
 
   /* --- Menu mobile ---------------------------------------- */
