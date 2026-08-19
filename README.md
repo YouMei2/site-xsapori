@@ -202,9 +202,11 @@ window stays open.
 
 | Action | Expected result |
 |---|---|
-| Pick a Monday | «Il lunedì siamo chiusi» |
-| Time 16:00 | «A quell'ora la cucina è chiusa» |
-| Time 23:00 | Rejected: last seating is 22:45 |
+| Pick a Monday | Accepted — open seven days a week |
+| Time 16:00 | «A quell'ora la cucina è chiusa» (between the two services) |
+| Time 22:30 | Rejected: last seating is 22:15 |
+| Change date to a Saturday | The set-menu list switches to the weekend tariff by itself |
+| Pick 25 December | Weekend tariff applies even though it is a weekday |
 | Uncheck the consent box | Form will not submit |
 | 41 guests | «tra 1 e 40» |
 | 4 bookings in a row | The fourth → «Attendete 10 minuti» (limit: 3 per 10 minutes) |
@@ -487,7 +489,48 @@ straight to the customer. Switched off via `reply_to_guest`.
 
 Each recipient gets **their own separate message** — staff addresses
 are not visible to one another, and one failing mailbox does not sink
-the rest.
+the rest. This holds for both transports.
+
+### What the guest receives
+
+If the guest filled in the optional email field, they also get a
+confirmation. Controlled by `mail.guest_confirmation`.
+
+Subject:
+
+```
+Abbiamo ricevuto la vostra richiesta — X-Sapori Savona
+```
+
+**This confirms receipt of the request, not the booking itself.** The
+site promises a callback («vi richiamiamo per confermare»), and the
+table only counts as held once that call happens. Wording that said
+«prenotazione confermata» would send a guest to a table that does not
+exist on a busy Saturday night. The email therefore carries a
+prominent block:
+
+> **La prenotazione non è ancora confermata.**
+> Vi richiamiamo entro poche ore, negli orari di apertura, per
+> confermare il tavolo.
+
+**Do not soften this wording.** It is the one thing standing between a
+web form and a guest turning up to no table.
+
+The rest: a summary of the request, their own notes echoed back, the
+phone number as a `tel:` link for changes or cancellation, the address
+and opening hours, and a link to the privacy notice.
+
+`Reply-To` points at the **first address in `mail.to`**, not at
+`no-reply`. If the guest answers («possiamo spostare alle 21?»), the
+reply must reach a human.
+
+No email is sent when: the guest left the email field empty (it is
+optional), the address fails validation, or `guest_confirmation` is
+`false`. None of these is an error, and none is logged as one.
+
+The two emails are sent **independently**. A failure of one does not
+affect the other, and neither affects the booking, which is already in
+the database.
 
 ---
 
@@ -663,7 +706,28 @@ Two points need a lawyer or a *commercialista*:
 must exist and be checked regularly. Two addresses are better — if one
 fills up, the other still works.
 
-### 9.3. Set menu is not cross-checked against the time
+### 9.3. Holiday calendar needs a yearly glance
+
+Set menus are now cross-checked against the date and the time: the
+tariff is derived from them, so a guest cannot pick «Cena weekend» for
+a Tuesday. On a `giorno festivo` the weekend tariff applies even
+mid-week.
+
+The calendar lives in `config.php` under `holidays` (fixed MM-DD
+dates), plus Easter Sunday and Easter Monday computed automatically.
+Two things to check once a year:
+
+- **`03-18` — Nostra Signora di Misericordia, patron saint of Savona.**
+  Included because the city treats it as a holiday. If the restaurant
+  does not apply the festive tariff that day, delete the line.
+- **`holidays_extra`** takes one-off `YYYY-MM-DD` dates for local
+  events or moved observances.
+
+Mirror any change in the `HOLIDAYS` constant at the top of
+`js/booking.js`, or the form's auto-selected tariff will disagree with
+the server.
+
+### 9.3b. Former issue: set menu not cross-checked (fixed)
 
 A guest can pick «Cena · 24,90 €» and a time of 12:00. The server lets
 it through: menu and time are validated independently.
@@ -675,14 +739,23 @@ call.
 
 If you want strict cross-checking, say so and it can be added.
 
-### 9.4. The guest gets no email confirmation
+### 9.4. Guest confirmation email — check the wording before launch
 
-Right now the email goes only to staff. The guest sees confirmation on
-the page but receives no message.
+Implemented (see §6). One thing needs a decision rather than code:
+the email tells the guest their booking is **not yet confirmed** and
+that staff will call back.
 
-Worth adding: it removes a share of the «did you get my request?»
-calls. The email field is optional, so send only to those who provided
-one.
+That matches what the site currently promises. If the restaurant ever
+switches to auto-confirming bookings, the wording in
+`xs_build_guest_message()` must change at the same time — and so must
+the copy on `prenota.html`. Wording that runs ahead of the actual
+process is worse than no email at all.
+
+Also worth checking before launch: the constants at the top of
+`api/notify.php` (`XS_ADDRESS`, `XS_HOURS`, `XS_PHONE`, `XS_SITE`)
+appear in the guest email. They match the site footers today. If the
+restaurant moves or changes hours, they change in three places — see
+§10.
 
 ---
 

@@ -25,8 +25,12 @@ CREATE TABLE IF NOT EXISTS `bookings` (
   -- ---------- что ----------
   -- Значения совпадают с <option value> в prenota.html и с массивами
   -- допустимых значений в config.php. Менять надо во всех трёх местах.
-  `formula`        ENUM('pranzo','cena','weekend') NOT NULL DEFAULT 'cena'
-                   COMMENT 'тариф: обед / ужин / выходные',
+  -- Цена зависит и от времени суток, и от дня недели, поэтому четыре
+  -- значения, а не два. Будни (пн–пт): обед 14,90 / ужин 22,90.
+  -- Выходные и праздники: обед 18,90 / ужин 24,90.
+  `formula`        ENUM('pranzo_feriale','cena_feriale','pranzo_weekend','cena_weekend')
+                   NOT NULL DEFAULT 'cena_feriale'
+                   COMMENT 'тариф: обед/ужин × будни/выходные',
   `occasion`       ENUM('nessuna','compleanno','gruppo','famiglia','altro') NOT NULL DEFAULT 'nessuna'
                    COMMENT 'повод: обычный визит / день рождения / группа-корпоратив / семья с детьми / другое',
 
@@ -112,6 +116,42 @@ CREATE TABLE IF NOT EXISTS `bookings` (
 
 -- Проверка выданных прав:
 -- SHOW GRANTS FOR 'xsapori_web'@'localhost';
+
+
+-- =====================================================================
+--  МИГРАЦИЯ: старые значения formula -> новые (август 2026)
+--
+--  Нужна ТОЛЬКО если таблица уже создана со старым набором
+--  ('pranzo','cena','weekend'). Для новой установки пропустить.
+--
+--  Порядок важен: сначала расширяем ENUM обоими наборами значений,
+--  потом переносим данные, и только затем убираем старые значения.
+--  Если сразу заменить список, MySQL обнулит все несовпадающие строки.
+-- =====================================================================
+
+-- ALTER TABLE `bookings` MODIFY `formula`
+--   ENUM('pranzo','cena','weekend',
+--        'pranzo_feriale','cena_feriale','pranzo_weekend','cena_weekend')
+--   NOT NULL DEFAULT 'cena_feriale';
+--
+-- -- Старое 'weekend' не различало обед и ужин. Считаем по времени:
+-- -- до 16:00 это обед, позже — ужин.
+-- UPDATE `bookings` SET `formula` = 'pranzo_weekend'
+--  WHERE `formula` = 'weekend' AND `booking_time` < '16:00:00';
+-- UPDATE `bookings` SET `formula` = 'cena_weekend'
+--  WHERE `formula` = 'weekend';
+--
+-- -- Старые 'pranzo' и 'cena' действовали в будни.
+-- UPDATE `bookings` SET `formula` = 'pranzo_feriale' WHERE `formula` = 'pranzo';
+-- UPDATE `bookings` SET `formula` = 'cena_feriale'   WHERE `formula` = 'cena';
+--
+-- -- Проверить, что старых значений не осталось:
+-- SELECT `formula`, COUNT(*) FROM `bookings` GROUP BY `formula`;
+--
+-- -- И только теперь сузить список:
+-- ALTER TABLE `bookings` MODIFY `formula`
+--   ENUM('pranzo_feriale','cena_feriale','pranzo_weekend','cena_weekend')
+--   NOT NULL DEFAULT 'cena_feriale';
 
 
 -- =====================================================================

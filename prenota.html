@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Prenota un tavolo · X-Sapori Savona</title>
-<meta name="description" content="Prenota il tuo tavolo da X-Sapori, ristorante cinese all you can eat a Savona. Modulo di prenotazione online per famiglie, gruppi e compleanni, oppure chiama 019 221 3138.">
+<meta name="description" content="Prenota il tuo tavolo da X-Sapori, ristorante all you can eat a Savona. Modulo di prenotazione online per famiglie, gruppi e compleanni, oppure chiama 019 221 3138.">
 <link rel="canonical" href="prenota.html">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Prenota un tavolo · X-Sapori Savona">
-<meta property="og:description" content="Prenotazione tavolo al ristorante cinese di Savona: scegli data, orario e numero di persone.">
+<meta property="og:description" content="Prenotazione tavolo al gran buffet di Savona: scegli data, orario e numero di persone.">
 <meta property="og:url" content="prenota.html">
 <meta property="og:image" content="https://source.unsplash.com/1200x630/?restaurant,table-setting">
 <meta property="og:locale" content="it_IT">
@@ -26,7 +26,7 @@
   "@context": "https://schema.org",
   "@type": "Restaurant",
   "name": "X-Sapori",
-  "description": "Prenotazione tavolo al ristorante cinese all you can eat X-Sapori di Savona.",
+  "description": "Prenotazione tavolo al ristorante all you can eat X-Sapori di Savona.",
   "url": "prenota.html",
   "telephone": "+390192213138",
   "acceptsReservations": "True",
@@ -35,7 +35,7 @@
     "target": { "@type": "EntryPoint", "urlTemplate": "prenota.html", "inLanguage": "it-IT" },
     "result": { "@type": "FoodEstablishmentReservation", "name": "Prenotazione tavolo X-Sapori" }
   },
-  "servesCuisine": ["Cinese", "Sushi", "Asiatica"],
+  "servesCuisine": ["Italiana", "Brasiliana", "Cinese", "Giapponese", "Sushi"],
   "priceRange": "€€",
   "address": {
     "@type": "PostalAddress",
@@ -105,7 +105,7 @@
             </p>
             <p class="field">
               <label for="orario">Orario <span class="req" aria-hidden="true">*</span></label>
-              <input type="time" id="orario" name="orario" min="12:00" max="23:30" step="900" required>
+              <input type="time" id="orario" name="orario" min="12:00" max="23:00" step="900" required>
             </p>
             <p class="field">
               <label for="persone">Persone <span class="req" aria-hidden="true">*</span></label>
@@ -114,12 +114,16 @@
           </div>
           <p class="field" style="margin-top:var(--sp-4)">
             <label for="formula">Formula</label>
+            <!-- Значения должны совпадать с ENUM в schema.sql,
+                 массивом formulas в config.php и подписями
+                 в xs_formula_label() в api/notify.php. -->
             <select id="formula" name="formula">
-              <option value="pranzo">Pranzo · 14,90 € (mar – ven)</option>
-              <option value="cena" selected>Cena · 24,90 € (mar – ven)</option>
-              <option value="weekend">Weekend · 27,90 € (sab, dom e festivi)</option>
+              <option value="pranzo_feriale">Pranzo · 14,90 € (da lunedì a venerdì)</option>
+              <option value="cena_feriale" selected>Cena · 22,90 € (da lunedì a venerdì)</option>
+              <option value="pranzo_weekend">Pranzo · 18,90 € (sabato, domenica e festivi)</option>
+              <option value="cena_weekend">Cena · 24,90 € (sabato, domenica e festivi)</option>
             </select>
-            <span class="hint">Il prezzo è a persona, bevande escluse. Aperti da martedì a domenica, 12:00–14:30 e 19:00–23:30. Lunedì chiuso.</span>
+            <span class="hint">La formula si imposta da sola in base alla data e all'orario che scegliete. Nei giorni festivi — Natale, Capodanno, Pasquetta, 18 marzo e gli altri — vale la tariffa del weekend anche se cadono in settimana. Prezzo a persona, bevande escluse. Bambini sotto i 120 cm: 9,90 € a pranzo, 12,90 € a cena.</span>
           </p>
         </fieldset>
 
@@ -188,7 +192,7 @@
         <ul class="info-list">
           <li>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-            <span><strong>Orari</strong>Martedì – domenica, 12:00–14:30 e 19:00–23:30. Lunedì chiuso.</span>
+            <span><strong>Orari</strong>Tutti i giorni, 12:00–15:00 e 19:00–23:00. Aperti anche il lunedì.</span>
           </li>
           <li>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/></svg>
@@ -254,7 +258,7 @@
     <div class="footer-grid">
       <div>
         <a class="brand" href="index.html">X<span>·</span>Sapori <small>Savona</small></a>
-        <p style="margin-top:var(--sp-3);max-width:38ch">Ristorante cinese all you can eat a Savona. Buffet servito al tavolo, sushi e cucina asiatica. Solo servizio in sala: non effettuiamo delivery.</p>
+        <p style="margin-top:var(--sp-3);max-width:38ch">Gran Buffet all you can eat a Savona. Buffet servito al tavolo, sushi e cucina asiatica. Solo servizio in sala: non effettuiamo delivery.</p>
       </div>
       <div>
         <h4>Link rapidi</h4>
@@ -272,7 +276,7 @@
         <ul>
           <li>Via Luigi Pirandello, 2r<br>17100 Savona (SV)</li>
           <li><a href="tel:+390192213138">+39 019 221 3138</a></li>
-          <li>Mar – Dom · 12:00–14:30 · 19:00–23:30<br>Lunedì chiuso</li>
+          <li>Tutti i giorni · 12:00–15:00 · 19:00–23:00</li>
         </ul>
       </div>
     </div>

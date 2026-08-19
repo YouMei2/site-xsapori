@@ -1,6 +1,15 @@
 <?php
 /**
- * X-Sapori Savona — уведомление персонала о новой брони по email.
+ * X-Sapori Savona — уведомления о новой брони по email.
+ *
+ * Отправляются два независимых письма:
+ *   1. Персоналу — всегда, со всеми деталями и телефоном гостя.
+ *   2. Гостю — только если он указал email (поле необязательное).
+ *      Это подтверждение ПОЛУЧЕНИЯ заявки, а не подтверждение брони:
+ *      столик подтверждает персонал звонком. Формулировки в письме
+ *      подобраны так, чтобы гость не приехал к неподтверждённому столу.
+ *
+ * Письма отправляются независимо: сбой одного не влияет на другое.
  *
  * Подключается из booking.php ПОСЛЕ того, как ответ уже ушёл клиенту.
  * Отсюда два правила, которые нельзя нарушать:
@@ -22,6 +31,22 @@
 declare(strict_types=1);
 
 // =====================================================================
+//  Контакты ресторана — попадают в письмо гостю
+// =====================================================================
+// Держим здесь, а не в config.php: это те же данные, что уже вбиты
+// в футеры страниц и в JSON-LD. Меняются раз в несколько лет, и
+// хранить их в конфиге с паролями смысла нет.
+// При переезде ресторана правится тут, в футерах и в schema.org-разметке.
+
+const XS_NAME     = 'X-Sapori';
+const XS_PHONE    = '+39 019 221 3138';
+const XS_PHONE_HREF = '+390192213138';
+const XS_ADDRESS  = 'Via Luigi Pirandello 2r, 17100 Savona (SV)';
+const XS_HOURS    = 'Aperti tutti i giorni: 12:00–15:00 e 19:00–23:00.';
+const XS_SITE     = 'https://xsapori.it';
+
+
+// =====================================================================
 //  Точка входа
 // =====================================================================
 
@@ -34,23 +59,30 @@ function xs_notify_booking(array $cfg, int $id, array $b): void
 {
     $mailCfg = $cfg['mail'] ?? [];
 
-    if (empty($mailCfg['enabled']) || empty($mailCfg['to'])) {
-        error_log('[notify] уведомления по email выключены или не указан получатель');
+    if (empty($mailCfg['enabled'])) {
+        error_log('[notify] уведомления по email выключены');
         return;
     }
 
-    try {
-        $ok = xs_send_staff_mail($mailCfg, $id, $b);
-    } catch (Throwable $e) {
-        error_log('[notify] исключение при отправке брони #' . $id . ': ' . $e->getMessage());
-        $ok = false;
+    // ---------- письмо персоналу ----------
+    // Обязательное. Без него бронь никто не увидит, пока не заглянет в базу.
+    $staffOk = false;
+
+    if (empty($mailCfg['to'])) {
+        error_log('[notify] mail.to не заполнен, персоналу отправить некуда');
+    } else {
+        try {
+            $staffOk = xs_send_staff_mail($mailCfg, $id, $b);
+        } catch (Throwable $e) {
+            error_log('[notify] исключение при отправке персоналу, бронь #' . $id . ': ' . $e->getMessage());
+        }
     }
 
-    if (!$ok) {
+    if (!$staffOk) {
         // Единственный оставшийся канал — сама база. Пишем в лог так,
         // чтобы по нему можно было восстановить бронь руками.
         error_log(sprintf(
-            '[notify] ПИСЬМО НЕ ОТПРАВЛЕНО, бронь #%d: %s %s, %d чел., %s %s, тел. %s',
+            '[notify] ПИСЬМО ПЕРСОНАЛУ НЕ ОТПРАВЛЕНО, бронь #%d: %s %s, %d чел., %s %s, тел. %s',
             $id,
             $b['date'] ?? '?',
             $b['time'] ?? '?',
@@ -60,6 +92,31 @@ function xs_notify_booking(array $cfg, int $id, array $b): void
             $b['phone'] ?? '?'
         ));
     }
+
+    // ---------- письмо гостю ----------
+    // Необязательное во всех смыслах: гость мог не указать email,
+    // и функция может быть выключена в конфиге. Отправляется отдельно
+    // от письма персоналу — сбой одного не должен влиять на другое.
+    if (empty($mailCfg['guest_confirmation'])) {
+        return;
+    }
+
+    $guestEmail = xs_header_safe((string) ($b['email'] ?? ''));
+
+    if ($guestEmail === '' || !filter_var($guestEmail, FILTER_VALIDATE_EMAIL)) {
+        return; // email не указан — это нормально, поле необязательное
+    }
+
+    try {
+        if (!xs_send_guest_mail($mailCfg, $id, $b, $guestEmail)) {
+            // Только в лог. Гость уже видел подтверждение на странице,
+            // а персонал получил заявку — недоставленная копия ничего
+            // не ломает.
+            error_log('[notify] письмо-подтверждение гостю не отправлено, бронь #' . $id);
+        }
+    } catch (Throwable $e) {
+        error_log('[notify] исключение при отправке гостю, бронь #' . $id . ': ' . $e->getMessage());
+    }
 }
 
 
@@ -67,13 +124,17 @@ function xs_notify_booking(array $cfg, int $id, array $b): void
 //  Человеческие названия
 // =====================================================================
 
-/** Подписи формул — те же, что видит гость в prenota.html. */
+/**
+ * Подписи формул — те же, что видит гость в prenota.html.
+ * При смене цен править здесь, в prenota.html, index.html и menu.html.
+ */
 function xs_formula_label(string $v): string
 {
     return [
-        'pranzo'  => 'Pranzo · 14,90 € a persona',
-        'cena'    => 'Cena · 24,90 € a persona',
-        'weekend' => 'Weekend · 27,90 € a persona',
+        'pranzo_feriale' => 'Pranzo feriale · 14,90 € a persona',
+        'cena_feriale'   => 'Cena feriale · 22,90 € a persona',
+        'pranzo_weekend' => 'Pranzo weekend/festivi · 18,90 € a persona',
+        'cena_weekend'   => 'Cena weekend/festivi · 24,90 € a persona',
     ][$v] ?? $v;
 }
 
@@ -205,11 +266,12 @@ function xs_build_message(int $id, array $b): array
     $shortDate = $date !== '' ? implode('/', array_reverse(explode('-', $date))) : '?';
 
     $subject = sprintf(
-        'Prenotazione #%d — %s %s · %d persone · %s',
+        'Prenotazione #%d — %s %s · %s · %s',
         $id,
         $shortDate,
         $time,
-        $guests,
+        // Единственное число по-итальянски: «1 persona», а не «1 persone».
+        $guests === 1 ? '1 persona' : $guests . ' persone',
         $name !== '' ? $name : '?'
     );
 
@@ -320,13 +382,7 @@ function xs_send_staff_mail(array $cfg, int $id, array $b): bool
         return false;
     }
 
-    $from     = xs_header_safe((string) ($cfg['from'] ?? ''));
-    $fromName = (string) ($cfg['from_name'] ?? 'Sito X-Sapori');
-
-    if (!filter_var($from, FILTER_VALIDATE_EMAIL)) {
-        error_log('[notify] mail.from не является корректным адресом');
-        return false;
-    }
+    // Адрес отправителя проверяет xs_deliver — он общий для обоих писем.
 
     // Reply-To на email гостя: персонал жмёт «Ответить» и пишет
     // прямо клиенту, не копируя адрес руками.
@@ -337,6 +393,48 @@ function xs_send_staff_mail(array $cfg, int $id, array $b): bool
             $replyTo = xs_address($guest, trim(($b['firstName'] ?? '') . ' ' . ($b['lastName'] ?? '')));
         }
     }
+
+    return xs_deliver($cfg, $recipients, $msg, $replyTo, $id);
+}
+
+
+/**
+ * Собирает MIME-письмо и отдаёт его выбранному транспорту.
+ *
+ * Общая часть для письма персоналу и письма гостю: различается
+ * только содержимое ($msg), получатели и Reply-To.
+ *
+ * @param array{subject:string,text:string,html:string} $msg
+ */
+function xs_deliver(array $cfg, array $recipients, array $msg, string $replyTo, int $id): bool
+{
+    $from = xs_header_safe((string) ($cfg['from'] ?? ''));
+
+    if (!filter_var($from, FILTER_VALIDATE_EMAIL)) {
+        error_log('[notify] mail.from не является корректным адресом');
+        return false;
+    }
+
+    // Каждому получателю — своё письмо, со своим Message-ID.
+    // Так адреса персонала не видны друг другу, и отказ одного ящика
+    // не влияет на остальные. Транспорты ведут себя одинаково:
+    // раньше mail() слал по одному, а SMTP — одно письмо на всех.
+    $allOk = true;
+
+    foreach ($recipients as $recipient) {
+        if (!xs_deliver_one($cfg, $recipient, $msg, $replyTo, $id, $from)) {
+            $allOk = false;
+        }
+    }
+
+    return $allOk;
+}
+
+
+/** Собирает и отправляет письмо одному получателю. */
+function xs_deliver_one(array $cfg, string $recipient, array $msg, string $replyTo, int $id, string $from): bool
+{
+    $fromName = (string) ($cfg['from_name'] ?? 'Sito X-Sapori');
 
     // ---------- MIME ----------
     // multipart/alternative: клиент сам выбирает HTML или текст.
@@ -373,10 +471,203 @@ function xs_send_staff_mail(array $cfg, int $id, array $b): bool
     $transport = (string) ($cfg['transport'] ?? 'mail');
 
     if ($transport === 'smtp') {
-        return xs_send_via_smtp($cfg, $recipients, $msg['subject'], $headers, $body, $from);
+        return xs_send_via_smtp($cfg, [$recipient], $msg['subject'], $headers, $body, $from);
     }
 
-    return xs_send_via_mail($cfg, $recipients, $msg['subject'], $headers, $body, $from);
+    return xs_send_via_mail($cfg, [$recipient], $msg['subject'], $headers, $body, $from);
+}
+
+
+// =====================================================================
+//  Письмо гостю
+// =====================================================================
+
+/**
+ * Подтверждение ПОЛУЧЕНИЯ заявки — не подтверждение брони.
+ *
+ * Разница принципиальная. Сайт обещает гостю обратный звонок
+ * («vi richiamiamo per confermare»), и столик считается занятым
+ * только после него. Письмо со словом «confermata» привело бы
+ * к тому, что гость приехал бы к неподтверждённому столу
+ * в субботу вечером, когда сажать некуда.
+ *
+ * Поэтому в тексте: «abbiamo ricevuto la richiesta», а статус
+ * вынесен отдельным заметным блоком.
+ */
+function xs_build_guest_message(int $id, array $b): array
+{
+    $first  = trim((string) ($b['firstName'] ?? ''));
+    $date   = (string) ($b['date'] ?? '');
+    $time   = (string) ($b['time'] ?? '');
+    $guests = (int) ($b['guests'] ?? 0);
+    $notes  = trim((string) ($b['notes'] ?? ''));
+
+    $formula  = xs_formula_label((string) ($b['formula'] ?? ''));
+    $occasion = xs_occasion_label((string) ($b['occasion'] ?? ''));
+
+    $subject = sprintf(
+        'Abbiamo ricevuto la vostra richiesta — %s Savona',
+        XS_NAME
+    );
+
+    $persone = $guests === 1 ? '1 persona' : $guests . ' persone';
+
+    // ---------- текстовая версия ----------
+    $lines = [
+        ($first !== '' ? 'Gentile ' . $first . ',' : 'Buongiorno,'),
+        '',
+        'grazie: abbiamo ricevuto la vostra richiesta di prenotazione.',
+        '',
+        'ATTENZIONE: la prenotazione non è ancora confermata.',
+        'Vi richiamiamo entro poche ore, negli orari di apertura,',
+        'per confermare il tavolo.',
+        '',
+        'RIEPILOGO DELLA RICHIESTA (n. ' . $id . ')',
+        str_repeat('-', 46),
+        'Data       ' . xs_date_it($date),
+        'Orario     ' . $time,
+        'Persone    ' . $persone,
+        'Formula    ' . $formula,
+        'Occasione  ' . $occasion,
+        '',
+        'ORARI DI APERTURA',
+        str_repeat('-', 46),
+        'Tutti i giorni, lunedì compreso:',
+        '  pranzo  12:00 – 15:00',
+        '  cena    19:00 – 23:00',
+    ];
+
+    if ($notes !== '') {
+        $lines[] = '';
+        $lines[] = 'Le vostre note (girate alla cucina):';
+        $lines[] = wordwrap($notes, 68, "\n", false);
+    }
+
+    $lines[] = '';
+    $lines[] = str_repeat('-', 46);
+    $lines[] = 'Per modificare o annullare la richiesta, chiamateci';
+    $lines[] = 'allo ' . XS_PHONE . '. Un posto liberato in tempo';
+    $lines[] = 'è un tavolo in più per un\'altra famiglia.';
+    $lines[] = '';
+    $lines[] = XS_NAME . ' — ' . XS_ADDRESS;
+    $lines[] = XS_HOURS;
+    $lines[] = XS_SITE;
+    $lines[] = '';
+    $lines[] = 'Questo messaggio è stato inviato automaticamente perché';
+    $lines[] = 'è stato compilato il modulo di prenotazione sul nostro sito.';
+    $lines[] = 'Informativa privacy: ' . XS_SITE . '/privacy.html';
+
+    $text = implode("\r\n", $lines);
+
+    // ---------- HTML-версия ----------
+    $h = static fn (string $s): string => htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+
+    $row = static function (string $label, string $value) use ($h): string {
+        return '<tr>'
+            . '<td style="padding:7px 14px 7px 0;color:#6b7280;font-size:13px;white-space:nowrap;vertical-align:top">' . $h($label) . '</td>'
+            . '<td style="padding:7px 0;font-size:15px;color:#111827;font-weight:600">' . $h($value) . '</td>'
+            . '</tr>';
+    };
+
+    $notesHtml = '';
+    if ($notes !== '') {
+        $notesHtml =
+            '<div style="margin-top:16px;padding:12px 14px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:4px">'
+            . '<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#6b7280;margin-bottom:5px">Le vostre note</div>'
+            . '<div style="font-size:14px;color:#111827;line-height:1.55">' . nl2br($h($notes)) . '</div>'
+            . '</div>';
+    }
+
+    $html =
+        '<!DOCTYPE html><html lang="it"><head><meta charset="utf-8">'
+        . '<meta name="viewport" content="width=device-width,initial-scale=1"></head>'
+        . '<body style="margin:0;padding:20px;background:#f3f4f6;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">'
+        . '<table role="presentation" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb">'
+
+        // шапка в цветах сайта
+        . '<tr><td style="background:#101315;padding:20px 24px">'
+        . '<div style="color:#c9a253;font-size:12px;letter-spacing:.18em;text-transform:uppercase">' . $h(XS_NAME) . ' Savona</div>'
+        . '<div style="color:#ffffff;font-size:20px;margin-top:5px">Abbiamo ricevuto la vostra richiesta</div>'
+        . '</td></tr>'
+
+        . '<tr><td style="padding:22px 24px">'
+        . '<p style="margin:0 0 14px;font-size:15px;color:#111827;line-height:1.6">'
+        . ($first !== '' ? 'Gentile ' . $h($first) . ',' : 'Buongiorno,') . '<br>'
+        . 'grazie: la vostra richiesta di prenotazione è arrivata.</p>'
+
+        // Статус — самый заметный блок письма. Гость должен уйти
+        // с пониманием, что столик ещё не подтверждён.
+        . '<div style="padding:14px 16px;background:#fef7e0;border-left:4px solid #c9a253;border-radius:4px">'
+        . '<div style="font-size:15px;color:#111827;line-height:1.6">'
+        . '<strong>La prenotazione non è ancora confermata.</strong><br>'
+        . 'Vi richiamiamo entro poche ore, negli orari di apertura, per confermare il tavolo.'
+        . '</div></div>'
+
+        . '<p style="margin:20px 0 8px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#6b7280">'
+        . 'Riepilogo della richiesta n. ' . $id . '</p>'
+        . '<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%">'
+        . $row('Data', xs_date_it($date))
+        . $row('Orario', $time)
+        . $row('Persone', $persone)
+        . $row('Formula', $formula)
+        . $row('Occasione', $occasion)
+        . '</table>'
+        . $notesHtml
+
+        // Часы работы отдельным блоком: гость часто открывает письмо
+        // повторно именно чтобы свериться, во сколько приходить.
+        . '<div style="margin-top:18px;padding:14px 16px;background:#eef6f9;border-left:4px solid #1f7f9c;border-radius:4px">'
+        . '<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#125a70;margin-bottom:8px">Orari di apertura</div>'
+        . '<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;font-size:14px;color:#111827">'
+        . '<tr><td style="padding:2px 14px 2px 0;color:#4b5563">Pranzo</td><td style="padding:2px 0;font-weight:600">12:00 – 15:00</td></tr>'
+        . '<tr><td style="padding:2px 14px 2px 0;color:#4b5563">Cena</td><td style="padding:2px 0;font-weight:600">19:00 – 23:00</td></tr>'
+        . '</table>'
+        . '<div style="margin-top:8px;font-size:13px;color:#4b5563">Siamo aperti tutti i giorni, lunedì compreso.</div>'
+        . '</div>'
+
+        . '<p style="margin:20px 0 0;font-size:14px;color:#111827;line-height:1.6">'
+        . 'Per modificare o annullare, chiamateci allo '
+        . '<a href="tel:' . $h(XS_PHONE_HREF) . '" style="color:#1f7f9c;font-weight:700;text-decoration:none">' . $h(XS_PHONE) . '</a>. '
+        . 'Un posto liberato in tempo è un tavolo in più per un\'altra famiglia.</p>'
+
+        . '<p style="margin:20px 0 0;padding-top:16px;border-top:1px solid #e5e7eb;font-size:13px;color:#6b7280;line-height:1.7">'
+        . '<strong style="color:#111827">' . $h(XS_NAME) . '</strong><br>'
+        . $h(XS_ADDRESS) . '<br>'
+        . $h(XS_HOURS) . '<br>'
+        . '<a href="' . $h(XS_SITE) . '" style="color:#1f7f9c">' . $h(XS_SITE) . '</a>'
+        . '</p>'
+
+        . '<p style="margin:14px 0 0;font-size:11px;color:#9ca3af;line-height:1.6">'
+        . 'Messaggio automatico, inviato perché è stato compilato il modulo di prenotazione sul nostro sito. '
+        . '<a href="' . $h(XS_SITE) . '/privacy.html" style="color:#9ca3af">Informativa privacy</a>.'
+        . '</p>'
+
+        . '</td></tr></table></body></html>';
+
+    return ['subject' => $subject, 'text' => $text, 'html' => $html];
+}
+
+
+/**
+ * Отправляет гостю подтверждение получения заявки.
+ *
+ * @param string $guestEmail уже проверенный filter_var адрес
+ */
+function xs_send_guest_mail(array $cfg, int $id, array $b, string $guestEmail): bool
+{
+    $msg = xs_build_guest_message($id, $b);
+
+    // Reply-To на ящик персонала: если гость ответит на письмо
+    // («possiamo spostare alle 21?»), ответ должен попасть людям,
+    // а не в no-reply, который никто не читает.
+    $replyTo = '';
+    $staffBox = xs_header_safe((string) (((array) ($cfg['to'] ?? []))[0] ?? ''));
+
+    if (filter_var($staffBox, FILTER_VALIDATE_EMAIL)) {
+        $replyTo = xs_address($staffBox, XS_NAME . ' Savona');
+    }
+
+    return xs_deliver($cfg, [$guestEmail], $msg, $replyTo, $id);
 }
 
 

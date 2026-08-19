@@ -29,16 +29,35 @@
   // Зеркало 'hours' из config.php. 1 = lunedì ... 7 = domenica.
   // Пустой массив = закрыто.
   var HOURS = {
-    1: [],
-    2: [['12:00', '14:30'], ['19:00', '23:30']],
-    3: [['12:00', '14:30'], ['19:00', '23:30']],
-    4: [['12:00', '14:30'], ['19:00', '23:30']],
-    5: [['12:00', '14:30'], ['19:00', '23:30']],
-    6: [['12:00', '14:30'], ['19:00', '23:30']],
-    7: [['12:00', '14:30'], ['19:00', '23:30']]
+    1: [['12:00', '15:00'], ['19:00', '23:00']],
+    2: [['12:00', '15:00'], ['19:00', '23:00']],
+    3: [['12:00', '15:00'], ['19:00', '23:00']],
+    4: [['12:00', '15:00'], ['19:00', '23:00']],
+    5: [['12:00', '15:00'], ['19:00', '23:00']],
+    6: [['12:00', '15:00'], ['19:00', '23:00']],
+    7: [['12:00', '15:00'], ['19:00', '23:00']]
   };
 
   var CLOSED_DATES = [];          // разовые закрытия, формат YYYY-MM-DD
+
+  // Зеркало 'holidays' из config.php. В праздник действует тариф
+  // выходного дня, даже если это будни. Формат MM-DD.
+  var HOLIDAYS = [
+    '01-01',  // Capodanno
+    '01-06',  // Epifania
+    '03-18',  // Nostra Signora di Misericordia, patrona di Savona
+    '04-25',  // Festa della Liberazione
+    '05-01',  // Festa del Lavoro
+    '06-02',  // Festa della Repubblica
+    '08-15',  // Ferragosto
+    '11-01',  // Ognissanti
+    '12-08',  // Immacolata
+    '12-25',  // Natale
+    '12-26'   // Santo Stefano
+  ];
+
+  var HOLIDAYS_EXTRA = [];        // разовые праздники, формат YYYY-MM-DD
+  var EASTER_HOLIDAYS = true;     // Pasqua e Lunedì dell'Angelo
   var LAST_SEATING_BEFORE_CLOSE = 45;  // минут до закрытия
   var MIN_MINUTES_AHEAD = 30;     // на сегодня — не раньше чем через полчаса
   var MAX_MONTHS_AHEAD = 6;
@@ -54,7 +73,7 @@
     datePast:     'Non è possibile prenotare per una data passata.',
     dateFar:      'Accettiamo prenotazioni fino a sei mesi in anticipo. Per date più lontane chiamateci.',
     dateClosed:   'Quel giorno il ristorante è chiuso. Scegliete un\'altra data.',
-    dayClosed:    'Il lunedì siamo chiusi. Vi aspettiamo da martedì a domenica.',
+    dayClosed:    'Quel giorno il ristorante non è aperto. Scegliete un\'altra data.',
     timeEmpty:    'Indicate l\'orario di arrivo.',
     timeInvalid:  'L\'orario non è valido.',
     guestsEmpty:  'Indicate quante persone siete.',
@@ -113,6 +132,66 @@
   /** ISO-номер дня недели: 1 = понедельник ... 7 = воскресенье. */
   function isoWeekday(d) {
     return d.getDay() === 0 ? 7 : d.getDay();
+  }
+
+  /** Дата католической Пасхи. Алгоритм Meeus/Jones/Butcher,
+   *  тот же, что в easter_date_for() в api/booking.php. */
+  function easterOf(year) {
+    var a = year % 19,
+        b = Math.floor(year / 100),
+        c = year % 100,
+        d = Math.floor(b / 4),
+        e = b % 4,
+        f = Math.floor((b + 8) / 25),
+        g = Math.floor((b - f + 1) / 3),
+        h = (19 * a + b - d - g + 15) % 30,
+        i = Math.floor(c / 4),
+        k = c % 4,
+        l = (32 + 2 * e + 2 * i - h - k) % 7,
+        m = Math.floor((a + 11 * h + 22 * l) / 451),
+        month = Math.floor((h + l - 7 * m + 114) / 31),
+        day = ((h + l - 7 * m + 114) % 31) + 1;
+
+    return new Date(year, month - 1, day);
+  }
+
+  /** Праздничный ли день. Зеркало is_festivo() на сервере. */
+  function isFestivo(d) {
+    var md = ymd(d).slice(5);
+
+    if (HOLIDAYS.indexOf(md) !== -1) { return true; }
+    if (HOLIDAYS_EXTRA.indexOf(ymd(d)) !== -1) { return true; }
+
+    if (EASTER_HOLIDAYS) {
+      var e = easterOf(d.getFullYear());
+      if (ymd(d) === ymd(e)) { return true; }
+      var pasquetta = new Date(e.getFullYear(), e.getMonth(), e.getDate() + 1);
+      if (ymd(d) === ymd(pasquetta)) { return true; }
+    }
+    return false;
+  }
+
+  /** Какая смена по времени: 'pranzo' | 'cena' | null (вне часов). */
+  function serviceFor(date, minutes) {
+    var windows = HOURS[isoWeekday(date)] || [];
+
+    for (var i = 0; i < windows.length; i++) {
+      var open = toMinutes(windows[i][0]);
+      var close = toMinutes(windows[i][1]);
+      if (minutes >= open && minutes <= close - LAST_SEATING_BEFORE_CLOSE) {
+        return i === 0 ? 'pranzo' : 'cena';
+      }
+    }
+    return null;
+  }
+
+  /** Единственно верная формула для этой даты и времени. */
+  function expectedFormula(date, minutes) {
+    var service = serviceFor(date, minutes);
+    if (!service) { return null; }
+
+    var weekend = isoWeekday(date) >= 6 || isFestivo(date);
+    return service + '_' + (weekend ? 'weekend' : 'feriale');
   }
 
   /** "YYYY-MM-DD" -> Date в местном поясе, либо null при мусоре.
@@ -355,12 +434,69 @@
       add('email', MSG.emailInvalid);
     }
 
+    // ---------- формула должна соответствовать дате и времени ----------
+    // Дублирует серверную проверку. На практике сюда почти не попадают:
+    // syncFormula() ниже переключает список сам, как только гость
+    // меняет дату или время. Проверка нужна на случай, если значение
+    // подставили в обход интерфейса.
+    if (date && minutes !== null) {
+      var expected = expectedFormula(date, minutes);
+
+      if (expected && values.formula && values.formula !== expected) {
+        var el = input('formula');
+        var label = '';
+        for (var j = 0; el && j < el.options.length; j++) {
+          if (el.options[j].value === expected) { label = el.options[j].text; }
+        }
+
+        var why;
+        if (isFestivo(date)) {
+          why = 'Quel giorno è festivo, quindi si applica la tariffa festiva.';
+        } else if (isoWeekday(date) >= 6) {
+          why = 'Quel giorno cade nel fine settimana.';
+        } else {
+          why = 'Quel giorno è feriale, quindi si applica la tariffa feriale.';
+        }
+
+        add('formula', why + ' La formula corretta è «' + label + '».');
+      }
+    }
+
     // ---------- согласие ----------
     if (!values.privacy) {
       add('privacy', MSG.privacy);
     }
 
     return errors;
+  }
+
+  // ===================================================================
+  //  Автоподстановка формулы
+  // ===================================================================
+
+  /**
+   * Выставляет в списке формулу, соответствующую дате и времени.
+   *
+   * Тариф однозначно выводится из даты и времени, поэтому давать
+   * гостю ошибаться незачем: как только он выбрал вторник и 20:30,
+   * в списке сама встаёт «Cena feriale». Выбор при этом не заблокирован —
+   * список остаётся обычным, просто с правильным значением.
+   */
+  function syncFormula() {
+    var el = input('formula');
+    var dateEl = input('data');
+    var timeEl = input('orario');
+    if (!el || !dateEl || !timeEl) { return; }
+
+    var date = parseDate(dateEl.value);
+    var minutes = toMinutes((timeEl.value || '').slice(0, 5));
+    if (!date || minutes === null) { return; }
+
+    var expected = expectedFormula(date, minutes);
+    if (expected && el.value !== expected) {
+      el.value = expected;
+      clearFieldError('formula');
+    }
   }
 
   // ===================================================================
@@ -568,6 +704,12 @@
       : 'input';
 
     el.addEventListener(eventName, function () { clearFieldError(name); });
+  });
+
+  // Дата и время определяют тариф — пересчитываем формулу при их смене.
+  ['data', 'orario'].forEach(function (name) {
+    var el = input(name);
+    if (el) { el.addEventListener('change', syncFormula); }
   });
 
   // Обработчик синхронный СОЗНАТЕЛЬНО. Соблазн отложить его на setTimeout

@@ -335,9 +335,93 @@ if ($timeRaw === '') {
     }
 }
 
+// ---------- праздники ----------
+
+/**
+ * Дата католической Пасхи по григорианскому календарю.
+ *
+ * Алгоритм Meeus/Jones/Butcher. Реализован вручную, а не через
+ * easter_date(): та функция живёт в расширении calendar, которого
+ * на шаред-хостинге может не оказаться, и падение из-за подсчёта
+ * тарифа было бы глупым.
+ *
+ * @return string дата в формате Y-m-d
+ */
+function easter_date_for(int $year): string
+{
+    $a = $year % 19;
+    $b = intdiv($year, 100);
+    $c = $year % 100;
+    $d = intdiv($b, 4);
+    $e = $b % 4;
+    $f = intdiv($b + 8, 25);
+    $g = intdiv($b - $f + 1, 3);
+    $h = (19 * $a + $b - $d - $g + 15) % 30;
+    $i = intdiv($c, 4);
+    $k = $c % 4;
+    $l = (32 + 2 * $e + 2 * $i - $h - $k) % 7;
+    $m = intdiv($a + 11 * $h + 22 * $l, 451);
+
+    $month = intdiv($h + $l - 7 * $m + 114, 31);
+    $day   = (($h + $l - 7 * $m + 114) % 31) + 1;
+
+    return sprintf('%04d-%02d-%02d', $year, $month, $day);
+}
+
+/**
+ * Является ли дата праздничной (giorno festivo).
+ *
+ * В праздник действует тариф выходного дня, даже если это будний день.
+ * Учитываются: фиксированные праздники из конфига (включая день
+ * покровительницы Савоны), Пасха с Пасхальным понедельником
+ * и разовые даты из holidays_extra.
+ */
+function is_festivo(DateTimeImmutable $d, array $cfg): bool
+{
+    $ymd = $d->format('Y-m-d');
+    $md  = $d->format('m-d');
+
+    if (in_array($md, (array) ($cfg['holidays'] ?? []), true)) {
+        return true;
+    }
+
+    if (in_array($ymd, (array) ($cfg['holidays_extra'] ?? []), true)) {
+        return true;
+    }
+
+    if (!empty($cfg['easter_holidays'])) {
+        $easter = new DateTimeImmutable(easter_date_for((int) $d->format('Y')), new DateTimeZone('Europe/Rome'));
+
+        // Сама Пасха всегда воскресенье, но проверяем и её:
+        // при смене расписания воскресенье может стать будним днём.
+        if ($ymd === $easter->format('Y-m-d')) {
+            return true;
+        }
+        // Lunedì dell'Angelo (Pasquetta) — вот ради чего всё это.
+        if ($ymd === $easter->modify('+1 day')->format('Y-m-d')) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/** Итальянские подписи формул — те же, что видит гость в prenota.html. */
+function formula_label(string $v): string
+{
+    return [
+        'pranzo_feriale' => 'Pranzo · 14,90 € (da lunedì a venerdì)',
+        'cena_feriale'   => 'Cena · 22,90 € (da lunedì a venerdì)',
+        'pranzo_weekend' => 'Pranzo · 18,90 € (sabato, domenica e festivi)',
+        'cena_weekend'   => 'Cena · 24,90 € (sabato, domenica e festivi)',
+    ][$v] ?? $v;
+}
+
 // ---------- дата + время вместе: расписание ----------
 // Проверяем только когда обе части прошли собственную валидацию,
 // иначе получим второе сообщение об ошибке о том же самом.
+$service = null;   // 'pranzo' | 'cena' — заполняется ниже по времени
+
 if ($date !== null && $time !== null) {
     $weekday = (int) $date->format('N');           // 1 = понедельник
     $windows = (array) ($cfg['hours'][$weekday] ?? []);
@@ -345,12 +429,15 @@ if ($date !== null && $time !== null) {
     $cutoff  = (int) ($cfg['last_seating_before_close'] ?? 45);
 
     if ($windows === []) {
-        err($errors, 'data', 'Il lunedì siamo chiusi. Vi aspettiamo da martedì a domenica.');
+        // Сейчас ресторан открыт все семь дней, поэтому сюда попасть
+        // нельзя. Ветка оставлена рабочей на случай, если в config.php
+        // снова появится выходной: сообщение общее и не называет день.
+        err($errors, 'data', 'Quel giorno il ristorante è chiuso. Scegliete un\'altra data.');
     } else {
         $fits  = false;
         $human = [];
 
-        foreach ($windows as [$open, $close]) {
+        foreach ($windows as $i => [$open, $close]) {
             $openMin  = (int) to_minutes($open);
             $closeMin = (int) to_minutes($close);
             $lastSeat = $closeMin - $cutoff;
@@ -359,6 +446,9 @@ if ($date !== null && $time !== null) {
 
             if ($minutes >= $openMin && $minutes <= $lastSeat) {
                 $fits = true;
+                // Запоминаем, в какую смену попал гость: первое окно —
+                // обед, второе — ужин. Отсюда берётся половина формулы.
+                $service = $i === 0 ? 'pranzo' : 'cena';
                 break;
             }
         }
@@ -427,6 +517,59 @@ if ($occasion === '') {
 }
 if (!in_array($occasion, (array) $cfg['occasions'], true)) {
     err($errors, 'occasione', 'L\'occasione selezionata non è valida.');
+}
+
+// ---------- формула должна соответствовать дате и времени ----------
+// Раньше формула и дата проверялись независимо, и гость мог выбрать
+// «Cena weekend» на вторник: заявка проходила, а персонал выяснял
+// расхождение уже по телефону. Теперь тариф однозначно выводится
+// из даты (будни / выходной или праздник) и времени (обед / ужин).
+// Условие смотрит только на поля, от которых зависит тариф.
+// Проверять «ошибок нет вообще» нельзя: тогда при опечатке в имени
+// расхождение формулы всплыло бы только со второй попытки.
+$blocking = false;
+foreach ($errors as $e) {
+    if (in_array($e['field'], ['data', 'orario', 'formula'], true)) {
+        $blocking = true;
+        break;
+    }
+}
+
+if ($date !== null && $service !== null && !$blocking) {
+    $weekday = (int) $date->format('N');
+    $festivo = is_festivo($date, $cfg);
+
+    $dayType  = ($weekday >= 6 || $festivo) ? 'weekend' : 'feriale';
+    $expected = $service . '_' . $dayType;
+
+    if ($formula !== $expected) {
+        // Объясняем ПОЧЕМУ, а не просто «неверно»: гость должен понять,
+        // что 25 декабря считается праздником, даже если это четверг.
+        if ($festivo) {
+            $why = sprintf(
+                'Il %s è un giorno festivo, quindi si applica la tariffa festiva.',
+                $date->format('d/m/Y')
+            );
+        } elseif ($weekday >= 6) {
+            $why = sprintf('Il %s cade nel fine settimana.', $date->format('d/m/Y'));
+        } else {
+            $why = sprintf(
+                'Il %s è un giorno feriale, quindi si applica la tariffa feriale.',
+                $date->format('d/m/Y')
+            );
+        }
+
+        $when = $service === 'pranzo'
+            ? 'All\'orario indicato siamo nel servizio di pranzo.'
+            : 'All\'orario indicato siamo nel servizio di cena.';
+
+        err($errors, 'formula', sprintf(
+            '%s %s La formula corretta è «%s».',
+            $why,
+            $when,
+            formula_label($expected)
+        ));
+    }
 }
 
 // ---------- имя и фамилия ----------
