@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /prenota.html
+Disallow: /en/book.html
+
+Sitemap: https://www.x-sapori.it/sitemap.xml

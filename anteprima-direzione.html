@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="it" data-variant="a">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>X-Sapori · Anteprima direzione artistica</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..700,0..100,0..1&family=Familjen+Grotesk:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* =========================================================
+   X-SAPORI — anteprima direzione artistica
+   Unica variabile in prova: la superficie delle sezioni
+   alternate. Tutto il resto (colore primario, tipografia,
+   motion, spaziature) è identico fra A e B.
+   ========================================================= */
+
+:root{
+  /* Colori estratti dalla foto reale della sala */
+  --ink:        #0E1417;
+  --sala:       #1B2429;
+  --sala-2:     #232E34;
+  --tavolo:     #EFEBE3;
+  --tavolo-2:   #E4DED3;
+  --teal:       #1F7F9C;
+  --teal-deep:  #17627A;
+  --teal-soft:  #8FD0E2;
+  --brass:      #B98D4A;
+  --brass-soft: #DCC38C;
+  --paper:      #E7EDEF;
+  --paper-dim:  #A9B6BC;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Familjen Grotesk", system-ui, -apple-system, sans-serif;
+  --font-data: "DM Mono", ui-monospace, "SF Mono", monospace;
+
+  --sp-1:.4rem; --sp-2:.75rem; --sp-3:1.15rem; --sp-4:1.75rem;
+  --sp-5:2.5rem; --sp-6:4rem; --sp-7:6rem; --sp-8:8rem;
+  --wrap:1280px;
+  --gutter:clamp(1.25rem,5vw,3.5rem);
+
+  --ease-out: cubic-bezier(.16,.84,.44,1);
+  --dur-fast:180ms; --dur-mid:420ms; --dur-slow:900ms;
+}
+
+/* --- L'unica differenza fra le due varianti --------------- */
+html[data-variant="a"]{
+  --surface-alt:      var(--tavolo);
+  --surface-alt-2:    var(--tavolo-2);
+  --on-alt:           var(--ink);
+  --on-alt-dim:       #5C666B;
+  --alt-rule:         rgba(14,20,23,.14);
+  --alt-accent:       var(--teal-deep);
+}
+html[data-variant="b"]{
+  --surface-alt:      var(--sala-2);
+  --surface-alt-2:    var(--sala);
+  --on-alt:           var(--paper);
+  --on-alt-dim:       var(--paper-dim);
+  --alt-rule:         rgba(231,237,239,.14);
+  --alt-accent:       var(--teal-soft);
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+body{
+  margin:0;background:var(--ink);color:var(--paper);
+  font-family:var(--font-body);font-size:1.0625rem;line-height:1.65;
+  -webkit-font-smoothing:antialiased;text-wrap:pretty;
+}
+img{max-width:100%;display:block;height:auto;}
+h1,h2,h3{margin:0;font-family:var(--font-display);font-weight:500;line-height:1.03;letter-spacing:-.015em;
+  font-variation-settings:"SOFT" 28,"WONK" 1,"opsz" 96;}
+p{margin:0;}
+a{color:inherit;}
+:focus-visible{outline:3px solid var(--brass-soft);outline-offset:3px;border-radius:2px;}
+
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--gutter);}
+
+/* --- Switch di anteprima ---------------------------------- */
+.demo-bar{
+  position:fixed;z-index:100;left:50%;bottom:1rem;transform:translateX(-50%);
+  display:flex;align-items:center;gap:.35rem;padding:.35rem;
+  background:rgba(14,20,23,.88);border:1px solid rgba(185,141,74,.5);
+  border-radius:999px;backdrop-filter:blur(12px);
+  box-shadow:0 12px 40px rgba(0,0,0,.55);
+}
+.demo-bar__label{
+  font-family:var(--font-data);font-size:.7rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--paper-dim);padding-inline:.7rem;
+}
+.demo-bar button{
+  font:inherit;font-size:.85rem;font-weight:500;color:var(--paper);
+  background:none;border:0;border-radius:999px;padding:.55rem 1.1rem;
+  min-height:44px;cursor:pointer;transition:background-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out);
+}
+.demo-bar button[aria-pressed="true"]{background:var(--teal-deep);color:#fff;}
+.demo-bar button:hover:not([aria-pressed="true"]){background:rgba(255,255,255,.1);}
+@media (max-width:560px){ .demo-bar__label{display:none;} }
+
+/* --- Header ----------------------------------------------- */
+.site-header{
+  position:fixed;inset:0 0 auto;z-index:50;
+  padding-block:var(--sp-4);
+  transition:padding var(--dur-mid) var(--ease-out),background-color var(--dur-mid) var(--ease-out),border-color var(--dur-mid) var(--ease-out);
+  border-bottom:1px solid transparent;
+}
+.site-header.is-stuck{
+  padding-block:.7rem;background:rgba(14,20,23,.86);
+  backdrop-filter:blur(14px);border-bottom-color:rgba(185,141,74,.28);
+}
+.site-header__inner{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-4);}
+.brand{
+  font-family:var(--font-display);font-size:1.35rem;font-weight:600;letter-spacing:-.02em;
+  text-decoration:none;display:flex;align-items:baseline;gap:.45rem;
+}
+.brand span{color:var(--brass);}
+.brand small{
+  font-family:var(--font-data);font-size:.62rem;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--paper-dim);
+}
+.nav{display:none;gap:var(--sp-4);font-size:.95rem;}
+.nav a{text-decoration:none;color:var(--paper-dim);transition:color var(--dur-fast) var(--ease-out);}
+.nav a:hover{color:var(--paper);}
+@media (min-width:900px){ .nav{display:flex;} }
+
+/* --- Bottoni ---------------------------------------------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  min-height:48px;padding:.85rem 1.6rem;border-radius:999px;
+  font-family:var(--font-body);font-size:.95rem;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;border:1px solid transparent;cursor:pointer;
+  transition:background-color var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out);
+}
+.btn--primary{background:var(--teal-deep);color:#fff;}
+.btn--primary:hover{background:var(--teal);transform:translateY(-2px);}
+.btn--ghost{border-color:rgba(231,237,239,.32);color:var(--paper);}
+.btn--ghost:hover{border-color:var(--brass);color:var(--brass-soft);}
+.btn:active{transform:translateY(0);}
+
+/* --- Hero ------------------------------------------------- */
+.hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden;}
+.hero__bg{position:absolute;inset:0;}
+.hero__bg img{
+  width:100%;height:100%;object-fit:cover;object-position:center 42%;
+  transform:scale(1.08);
+  animation:heroZoom 12s var(--ease-out) forwards;
+}
+.hero__bg::after{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,rgba(14,20,23,.82) 0%,rgba(14,20,23,.42) 34%,rgba(14,20,23,.88) 82%,var(--ink) 100%),
+    radial-gradient(120% 80% at 15% 80%,rgba(14,20,23,.7),transparent 60%);
+}
+@keyframes heroZoom{ to{ transform:scale(1); } }
+
+.hero__inner{position:relative;padding-block:var(--sp-7) var(--sp-5);width:100%;}
+@media (min-width:900px){ .hero__inner{padding-block:var(--sp-8) var(--sp-6);} }
+.eyebrow{
+  font-family:var(--font-data);font-size:.72rem;letter-spacing:.26em;
+  text-transform:uppercase;color:var(--brass-soft);
+}
+.hero__title{
+  font-size:clamp(2.9rem,8.5vw,6.5rem);margin-top:var(--sp-3);max-width:15ch;
+  font-variation-settings:"SOFT" 34,"WONK" 1,"opsz" 144;
+}
+.hero__title em{font-style:normal;color:var(--teal-soft);display:block;
+  font-size:.62em;font-variation-settings:"SOFT" 20,"WONK" 0,"opsz" 96;margin-top:.15em;}
+.hero__lead{margin-top:var(--sp-4);max-width:46ch;color:var(--paper-dim);font-size:1.1rem;}
+.hero__actions{display:flex;flex-wrap:wrap;gap:var(--sp-3);margin-top:var(--sp-5);}
+.hero__meta{
+  display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-5);margin-top:var(--sp-5);
+  font-family:var(--font-data);font-size:.78rem;letter-spacing:.06em;color:var(--paper-dim);
+}
+.hero__meta span{display:flex;align-items:center;gap:.5rem;}
+.hero__meta span::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--brass);}
+
+/* --- Le lamelle: elemento firma --------------------------- */
+.lamelle{margin-top:var(--sp-6);border-top:1px solid rgba(185,141,74,.3);padding-top:var(--sp-4);}
+.lamelle__list{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-3);list-style:none;margin:0;padding:0;}
+@media (min-width:760px){ .lamelle__list{grid-template-columns:repeat(4,1fr);gap:var(--sp-4);} }
+.lamella{display:flex;flex-direction:column;gap:.55rem;}
+.lamella svg{width:100%;height:26px;overflow:visible;}
+.lamella path{
+  fill:none;stroke:var(--teal-soft);stroke-width:2;stroke-linecap:round;
+  stroke-dasharray:var(--len,200);stroke-dashoffset:var(--len,200);
+  animation:draw 1.1s var(--ease-out) forwards;animation-delay:var(--d,0ms);
+}
+@keyframes draw{ to{ stroke-dashoffset:0; } }
+.lamella b{font-family:var(--font-body);font-weight:600;font-size:1rem;letter-spacing:.01em;}
+.lamella small{font-family:var(--font-data);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-dim);}
+
+/* --- Sezione alternata (la variabile in prova) ------------- */
+.alt{background:var(--surface-alt);color:var(--on-alt);position:relative;}
+.alt .eyebrow{color:var(--alt-accent);}
+.section{padding-block:clamp(4rem,10vw,7.5rem);}
+.section__head{max-width:52ch;}
+.section__head h2{font-size:clamp(2rem,4.4vw,3.4rem);margin-top:var(--sp-3);}
+.section__head p{margin-top:var(--sp-4);color:var(--on-alt-dim);font-size:1.08rem;}
+
+.steps{
+  display:grid;gap:var(--sp-4);margin-top:var(--sp-6);list-style:none;padding:0;
+  counter-reset:step;
+}
+@media (min-width:820px){ .steps{grid-template-columns:repeat(4,1fr);gap:var(--sp-5);} }
+.step{border-top:1px solid var(--alt-rule);padding-top:var(--sp-3);counter-increment:step;}
+.step::before{
+  content:counter(step,decimal-leading-zero);
+  font-family:var(--font-data);font-size:.72rem;letter-spacing:.16em;
+  color:var(--alt-accent);display:block;margin-bottom:var(--sp-2);
+}
+.step h3{font-size:1.32rem;font-family:var(--font-body);font-weight:600;letter-spacing:-.005em;}
+.step p{margin-top:.55rem;color:var(--on-alt-dim);font-size:.98rem;}
+
+/* --- Prezzi ------------------------------------------------ */
+.prices{background:var(--ink);color:var(--paper);}
+.prices .eyebrow{color:var(--brass-soft);}
+.price-grid{display:grid;gap:var(--sp-3);margin-top:var(--sp-6);}
+@media (min-width:800px){ .price-grid{grid-template-columns:repeat(4,1fr);} }
+.price{
+  border:1px solid rgba(231,237,239,.14);border-radius:4px;padding:var(--sp-4);
+  background:linear-gradient(180deg,rgba(255,255,255,.035),transparent);
+  transition:border-color var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out);
+}
+.price:hover{border-color:rgba(185,141,74,.55);transform:translateY(-3px);}
+.price--hi{border-color:rgba(185,141,74,.55);}
+.price dt{font-family:var(--font-data);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-dim);}
+.price dd{margin:var(--sp-2) 0 0;font-family:var(--font-display);font-size:2.6rem;font-variation-settings:"SOFT" 20,"opsz" 144;
+  font-variant-numeric:tabular-nums;}
+.price dd small{font-family:var(--font-data);font-size:.72rem;letter-spacing:.1em;color:var(--paper-dim);display:block;margin-top:.35rem;}
+.price--hi dd{color:var(--brass-soft);}
+
+/* --- Motion allo scroll ----------------------------------- */
+.reveal{opacity:0;transform:translateY(26px);}
+.reveal.is-in{opacity:1;transform:none;transition:opacity var(--dur-slow) var(--ease-out),transform var(--dur-slow) var(--ease-out);transition-delay:var(--d,0ms);}
+
+/* --- Ingresso hero ---------------------------------------- */
+.enter{opacity:0;transform:translateY(22px);animation:enter .9s var(--ease-out) forwards;animation-delay:var(--d,0ms);}
+@keyframes enter{ to{ opacity:1;transform:none; } }
+
+.note{
+  font-family:var(--font-data);font-size:.74rem;letter-spacing:.06em;
+  color:var(--on-alt-dim);border-left:2px solid var(--alt-accent);padding-left:var(--sp-3);
+  max-width:60ch;margin-top:var(--sp-6);
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:1ms !important;animation-delay:0ms !important;transition-duration:1ms !important;}
+  .reveal{opacity:1;transform:none;}
+  html{scroll-behavior:auto;}
+}
+</style>
+</head>
+<body>
+
+<div class="demo-bar" role="group" aria-label="Scegli la variante da vedere">
+  <span class="demo-bar__label">Variante</span>
+  <button type="button" data-set="a" aria-pressed="true">A · La sala</button>
+  <button type="button" data-set="b" aria-pressed="false">B · Tutto scuro</button>
+</div>
+
+<header class="site-header" id="header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="#"><span>X</span>Sapori <small>Savona</small></a>
+    <nav class="nav" aria-label="Navigazione principale">
+      <a href="#come">Come funziona</a>
+      <a href="#prezzi">Prezzi</a>
+      <a href="#">Menu</a>
+      <a href="#">Contatti</a>
+    </nav>
+    <a class="btn btn--primary" href="#">Prenota un tavolo</a>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="hero__bg">
+      <img src="uploads/sala-x-sapori-originale.webp" alt="La sala di X-Sapori: soffitto a lamelle blu petrolio, pareti in marmo grigio scuro e tavoli in marmo chiaro" width="300" height="225">
+    </div>
+    <div class="wrap hero__inner">
+      <p class="eyebrow enter" style="--d:120ms">Gran Buffet · Savona · Nuova apertura</p>
+      <h1 class="hero__title enter" style="--d:240ms">Quattro cucine, un solo prezzo <em>al vostro tavolo</em></h1>
+      <p class="hero__lead enter" style="--d:400ms">Non si fa la fila al buffet: si ordina dal menu e i piatti arrivano caldi, uno alla volta, quante volte volete.</p>
+      <div class="hero__actions enter" style="--d:520ms">
+        <a class="btn btn--primary" href="#">Prenota un tavolo</a>
+        <a class="btn btn--ghost" href="#">Sfoglia il menu</a>
+      </div>
+      <p class="hero__meta enter" style="--d:640ms">
+        <span>Via Luigi Pirandello, 2r</span>
+        <span>12:00–15:00 · 19:00–23:00</span>
+        <span>019 221 3138</span>
+      </p>
+
+      <div class="lamelle enter" style="--d:760ms">
+        <ul class="lamelle__list">
+          <li class="lamella">
+            <svg viewBox="0 0 200 26" aria-hidden="true"><path d="M2 24C40 4 160 4 198 24" style="--len:210;--d:900ms"/></svg>
+            <b>Italia</b><small>Primi · mozzarella</small>
+          </li>
+          <li class="lamella">
+            <svg viewBox="0 0 200 26" aria-hidden="true"><path d="M2 24C40 4 160 4 198 24" style="--len:210;--d:1010ms"/></svg>
+            <b>Brasile</b><small>Brace · churrasco</small>
+          </li>
+          <li class="lamella">
+            <svg viewBox="0 0 200 26" aria-hidden="true"><path d="M2 24C40 4 160 4 198 24" style="--len:210;--d:1120ms"/></svg>
+            <b>Cina</b><small>Wok · vapore</small>
+          </li>
+          <li class="lamella">
+            <svg viewBox="0 0 200 26" aria-hidden="true"><path d="M2 24C40 4 160 4 198 24" style="--len:210;--d:1230ms"/></svg>
+            <b>Giappone</b><small>Sushi · tartare</small>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt section" id="come">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <p class="eyebrow">Come funziona</p>
+        <h2>Si ordina dal menu, non si fa la fila</h2>
+        <p>Quattro passaggi, sempre gli stessi, dalla porta al dolce. È una sequenza vera: per questo è numerata.</p>
+      </div>
+      <ol class="steps">
+        <li class="step reveal" style="--d:0ms">
+          <h3>Vi sedete</h3>
+          <p>Nessuna coda, nessun vassoio. Il tavolo è vostro per tutta la serata.</p>
+        </li>
+        <li class="step reveal" style="--d:90ms">
+          <h3>Segnate sulla comanda</h3>
+          <p>Scegliete dal menu quello che volete assaggiare, quante volte volete.</p>
+        </li>
+        <li class="step reveal" style="--d:180ms">
+          <h3>La cucina parte</h3>
+          <p>Ogni piatto si prepara al momento e arriva caldo, in porzione piccola.</p>
+        </li>
+        <li class="step reveal" style="--d:270ms">
+          <h3>Si ricomincia</h3>
+          <p>Finito un giro, se ne ordina un altro. Il prezzo non cambia mai.</p>
+        </li>
+      </ol>
+      <p class="note reveal">
+        Questa è l'unica cosa che cambia fra A e B: in A le sezioni alternano il marmo
+        chiaro dei tavoli e il buio della sala, in B resta tutto scuro come oggi.
+        Colore primario, tipografia, animazioni e spaziature sono identici.
+      </p>
+    </div>
+  </section>
+
+  <section class="prices section" id="prezzi">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <p class="eyebrow">Formule</p>
+        <h2>Un prezzo deciso prima di sedervi</h2>
+        <p style="color:var(--paper-dim)">Bevande escluse. Bambini sotto i 120 cm: tariffa ridotta. Nessun supplemento sul numero di portate.</p>
+      </div>
+      <dl class="price-grid">
+        <div class="price reveal" style="--d:0ms"><dt>Pranzo · lun–ven</dt><dd>14,90 €<small>a persona</small></dd></div>
+        <div class="price price--hi reveal" style="--d:80ms"><dt>Cena · lun–ven</dt><dd>22,90 €<small>a persona</small></dd></div>
+        <div class="price reveal" style="--d:160ms"><dt>Pranzo · sab, dom e festivi</dt><dd>18,90 €<small>a persona</small></dd></div>
+        <div class="price reveal" style="--d:240ms"><dt>Cena · sab, dom e festivi</dt><dd>24,90 €<small>a persona</small></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="alt section">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <p class="eyebrow">Nota tecnica</p>
+        <h2>La foto qui sopra è a 300 pixel</h2>
+        <p>È l'unica immagine presente nel progetto e in un hero a tutto schermo si vede.
+           Con le tue foto ad alta risoluzione questa sezione cambia di categoria.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var buttons = document.querySelectorAll('.demo-bar button');
+  buttons.forEach(function(b){
+    b.addEventListener('click', function(){
+      root.dataset.variant = b.dataset.set;
+      buttons.forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
+    });
+  });
+
+  var header = document.getElementById('header');
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      header.classList.toggle('is-stuck', window.scrollY > 40);
+      ticking = false;
+    });
+  }, {passive:true});
+
+  var items = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    items.forEach(function(el){ el.classList.add('is-in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting){ e.target.classList.add('is-in'); io.unobserve(e.target); }
+    });
+  }, {rootMargin:'0px 0px -12% 0px', threshold:.1});
+  items.forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="X-Sapori">
+  <title>X-Sapori</title>
+  <g fill="none" stroke="#B98D4A" stroke-width="6" stroke-linecap="round">
+    <path d="M11 13C29 25 35 39 53 51"/>
+    <path d="M53 13C35 25 29 39 11 51"/>
+  </g>
+</svg>
