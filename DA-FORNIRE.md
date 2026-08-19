@@ -25,11 +25,18 @@ Servono per essere in regola e per far funzionare SEO e condivisioni.
 
 ---
 
-## 2. 🔴 Fotografie
+## 2. Fotografie
 
-È il fattore che oggi separa di più questo sito da uno da 10.000 €. L'unica
-foto presente è la sala a **300×225 pixel**: in un hero a tutto schermo si vede
-che è sgranata.
+**Il sito adesso è finito e si può giudicare senza foto.** Dove andranno le
+immagini ci sono tavole grafiche costruite sul motivo delle lamelle del
+soffitto: non sono segnaposto vuoti, sono un elemento di design che regge da
+solo. L'unica foto disponibile — la sala a 300×225 pixel — è usata in due modi
+onesti: sfocata come fondale dell'hero, e incorniciata alla sua misura reale
+nella sezione «La sala».
+
+Le foto restano comunque **il salto di qualità più grande** che questo sito può
+fare: un ristorante si sceglie guardando i piatti. Le tavole grafiche fanno il
+loro lavoro, ma non vendono una picanha.
 
 ### Requisiti tecnici validi per tutte
 
@@ -46,7 +53,7 @@ che è sgranata.
 
 | # | Soggetto | Formato | Dove finisce |
 |---|---|---|---|
-| 1 | **La sala vista d'insieme**, con il soffitto a lamelle blu ben visibile, tavoli apparecchiati, sala vuota o quasi | orizzontale 16:9 | Hero della home, a tutto schermo — **la più importante** |
+| 1 | **La sala vista d'insieme**, con il soffitto a lamelle blu ben visibile, tavoli apparecchiati, sala vuota o quasi | orizzontale 16:9 | Hero della home, a tutto schermo — **la più importante**. Oggi c'è la stessa foto sfocata: sostituendola si toglie `class="is-provvisoria"` e torna nitida |
 | 2 | **Sushi**: nigiri e tartare su un piatto scuro, luce laterale | orizzontale 4:3 | Card "Sushi e tartare" |
 | 3 | **Wok**: verdure saltate, meglio se con la fiamma o il vapore visibili | orizzontale 4:3 | Card "Wok e vapore" |
 | 4 | **Brace**: spiedini o picanha tagliata al momento, primo piano | orizzontale 4:3 | Card "Brace e churrasco" |

@@ -91,14 +91,15 @@ Le foto stanno nella cartella `uploads/`.
 **Se sostituite una foto esistente**, date al file nuovo lo stesso nome del
 vecchio: non serve toccare nessun altro file.
 
-**Se aggiungete una foto dove ora c'è un segnaposto**, cercate nel file il
-blocco che assomiglia a questo:
+**Se aggiungete una foto dove ora c'è una tavola grafica**, cercate nel file il
+commento che indica il punto esatto — ce n'è uno sopra ogni tavola:
 
 ```html
-<div class="ph ph--wide"><span>Foto da inserire · Selezione di nigiri…</span></div>
+<!-- FOTO: sostituire con <img src="uploads/sushi.webp" alt="…" width="1200" height="900" loading="lazy"> -->
+<div class="plate plate--giappone" aria-hidden="true"></div>
 ```
 
-e sostituitelo con:
+Cancellate la riga `<div class="plate …">` e mettete al suo posto:
 
 ```html
 <img src="uploads/nome-del-file.webp" alt="Descrizione di cosa si vede nella foto" width="1200" height="900" loading="lazy" decoding="async">
@@ -112,6 +113,16 @@ Tre cose obbligatorie:
   sobbalza durante il caricamento.
 - **`loading="lazy"`**: su tutte le immagini **tranne** quella grande dell'hero,
   che deve invece avere `fetchpriority="high"`.
+
+Le proporzioni delle tavole grafiche sono già quelle giuste per le foto
+(4:3 per le card delle cucine, 16:10 per i due riquadri della sala): sostituendo
+il blocco il layout non si sposta di un pixel.
+
+**La foto grande dell'hero** ha una regola sua. Finché è quella a bassa
+risoluzione, il tag `<img>` porta `class="is-provvisoria"` e il sito la sfoca di
+proposito, trasformandola in un fondale. Quando arriva lo scatto ad alta
+risoluzione: sostituite il file, **togliete `class="is-provvisoria"`** e
+rimettete un `alt` descrittivo al posto di quello vuoto. Nient'altro.
 
 Per il formato: mandate le foto a chi vi ha fatto il sito e fatele convertire in
 WebP o AVIF. Un JPEG da telefono pesa 4 MB, la stessa foto in WebP ne pesa 300 KB

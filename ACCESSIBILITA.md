@@ -99,4 +99,19 @@ conformità:
    dell'intestazione come «basso contrasto» perché non vede l'immagine sotto:
    in realtà scorre sopra la sfumatura scura dell'hero (rgba 14,20,23 all'86%).
    Va confermato a occhio con la foto definitiva, che potrebbe essere più chiara
-   di quella attuale.
+   di quella attuale. Sull'ultima verifica erano otto elementi, tutti di questa
+   categoria: cinque link di navigazione, il marchio e due voci di contorno.
+
+---
+
+## Nota sulle immagini decorative
+
+La foto dell'hero è oggi **decorativa**: è sfocata di proposito (l'originale è a
+300 pixel) e non porta informazione, quindi ha `alt=""` ed è correttamente
+esclusa dalla lettura vocale. Quando arriverà lo scatto ad alta risoluzione
+diventerà contenuto e servirà un `alt` descrittivo — è scritto in `MANUTENZIONE.md`.
+
+Le sei tavole grafiche che stanno al posto delle fotografie sono decorazione
+pura: le quattro dentro le card hanno `aria-hidden="true"` perché la card ha già
+titolo e descrizione, mentre le due della sezione «La sala» portano
+un'etichetta testuale visibile che le nomina.

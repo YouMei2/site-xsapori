@@ -122,8 +122,9 @@
     <div class="hero__bg">
       <!-- SOSTITUIRE con lo scatto della sala ad alta risoluzione (vedi DA-FORNIRE.md) -->
       <img src="../uploads/sala-x-sapori-originale.webp"
-           alt="The dining room at X-Sapori: teal-blue slatted ceiling, dark grey marble walls, pale marble tables with blue chairs"
-           width="300" height="225" fetchpriority="high" decoding="async">
+           alt=""
+           width="300" height="225" fetchpriority="high" decoding="async"
+           class="is-provvisoria">
     </div>
 
     <div class="wrap hero__inner">
@@ -219,7 +220,8 @@
       <div class="grid grid--4">
         <a class="card reveal" href="menu.html#sushi">
           <div class="card__media">
-            <div class="ph ph--wide"><span>Photo to be added · Selection of nigiri and tartare on a dark plate</span></div>
+            <!-- PHOTO: replace with <img src="../uploads/sushi.webp" alt="…" width="1200" height="900" loading="lazy"> -->
+            <div class="plate plate--giappone" aria-hidden="true"></div>
           </div>
           <div class="card__body">
             <span class="card__tag">Japan</span>
@@ -230,7 +232,8 @@
 
         <a class="card reveal" style="--d:80ms" href="menu.html#wok">
           <div class="card__media">
-            <div class="ph ph--wide"><span>Photo to be added · Flaming wok with stir-fried vegetables</span></div>
+            <!-- PHOTO: replace with <img src="../uploads/wok.webp" alt="…" width="1200" height="900" loading="lazy"> -->
+            <div class="plate plate--cina" aria-hidden="true"></div>
           </div>
           <div class="card__body">
             <span class="card__tag">China</span>
@@ -241,7 +244,8 @@
 
         <a class="card reveal" style="--d:160ms" href="menu.html#brace">
           <div class="card__media">
-            <div class="ph ph--wide"><span>Photo to be added · Close-up of meat skewers on the grill</span></div>
+            <!-- PHOTO: replace with <img src="../uploads/brace.webp" alt="…" width="1200" height="900" loading="lazy"> -->
+            <div class="plate plate--brasile" aria-hidden="true"></div>
           </div>
           <div class="card__body">
             <span class="card__tag">Brazil</span>
@@ -252,7 +256,8 @@
 
         <a class="card reveal" style="--d:240ms" href="menu.html#italiano">
           <div class="card__media">
-            <div class="ph ph--wide"><span>Photo to be added · Plate of Italian pasta and mozzarella</span></div>
+            <!-- PHOTO: replace with <img src="../uploads/italiano.webp" alt="…" width="1200" height="900" loading="lazy"> -->
+            <div class="plate plate--italia" aria-hidden="true"></div>
           </div>
           <div class="card__body">
             <span class="card__tag">Italy</span>
@@ -332,18 +337,20 @@
         </div>
 
         <div class="split__media reveal" style="--d:120ms">
-          <figure style="margin:0">
+          <figure class="cornice">
             <img src="../uploads/sala-x-sapori-originale.webp"
-                 alt="Pale marble tables with teal-blue chairs under the curved slatted ceiling"
-                 width="300" height="225" loading="lazy" decoding="async"
-                 style="border-radius:var(--r-sm);width:100%">
+                 alt="The dining room at X-Sapori: pale marble tables with teal-blue chairs under the curved slatted ceiling"
+                 width="300" height="225" loading="lazy" decoding="async">
+            <figcaption>The dining room on Via Pirandello</figcaption>
           </figure>
         </div>
       </div>
 
       <div class="grid grid--2" style="margin-top:var(--sp-5)">
-        <div class="ph ph--wide reveal"><span>Photo to be added · The sushi counter during service</span></div>
-        <div class="ph ph--wide reveal" style="--d:100ms"><span>Photo to be added · Table detail, brass edge and place setting</span></div>
+        <!-- PHOTO: replace with <img src="../uploads/banco-sushi.webp" alt="…" width="1600" height="1000" loading="lazy"> -->
+        <div class="plate plate--wide plate--marmo reveal"><span class="plate__label">The sushi counter</span></div>
+        <!-- PHOTO: replace with <img src="../uploads/tavolo.webp" alt="…" width="1600" height="1000" loading="lazy"> -->
+        <div class="plate plate--wide plate--marmo reveal" style="--d:100ms"><span class="plate__label">The marble tables</span></div>
       </div>
     </div>
   </section>
