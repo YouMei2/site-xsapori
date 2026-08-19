@@ -1,0 +1,12 @@
+{
+  "name": "X-Sapori · Gran Buffet Savona",
+  "short_name": "X-Sapori",
+  "description": "Gran buffet all you can eat a Savona: quattro cucine servite al tavolo.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0E1417",
+  "theme_color": "#0E1417",
+  "icons": [
+    { "src": "assets/brand/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

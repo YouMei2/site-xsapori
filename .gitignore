@@ -1,0 +1,10 @@
+# File locali di sviluppo, mai da pubblicare
+_audit.js
+.dev-server.js
+
+# Configurazione con le credenziali reali
+config.php
+
+# Sistema
+Thumbs.db
+.DS_Store

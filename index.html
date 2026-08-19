@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>X-Sapori · Gran Buffet all you can eat a Savona</title>
+<meta name="description" content="Quattro cucine — italiana, brasiliana, cinese e giapponese — servite al tavolo a un solo prezzo. Aperti tutti i giorni a pranzo e a cena in Via Pirandello 2r, Savona. Prenota allo 019 221 3138.">
+<meta name="theme-color" content="#0E1417">
+
+<!-- IMPOSTARE IL DOMINIO REALE PRIMA DELLA PUBBLICAZIONE (vedi DA-FORNIRE.md) -->
+<link rel="canonical" href="https://www.x-sapori.it/">
+<link rel="alternate" hreflang="it" href="https://www.x-sapori.it/">
+<link rel="alternate" hreflang="en" href="https://www.x-sapori.it/en/">
+<link rel="alternate" hreflang="x-default" href="https://www.x-sapori.it/">
+<meta property="og:type" content="restaurant">
+<meta property="og:site_name" content="X-Sapori">
+<meta property="og:title" content="X-Sapori · Gran Buffet all you can eat a Savona">
+<meta property="og:description" content="Quattro cucine servite al tavolo a un solo prezzo. Aperti tutti i giorni, pranzo e cena, a Savona.">
+<meta property="og:url" content="https://www.x-sapori.it/">
+<meta property="og:image" content="https://www.x-sapori.it/uploads/og-home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="it_IT">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preload" href="assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+<!-- Segna che il JavaScript è attivo: solo in quel caso le sezioni
+     partono nascoste per poi comparire. Senza JS il sito resta leggibile. -->
+<script>document.documentElement.classList.add('js');</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "X-Sapori",
+  "description": "Gran buffet all you can eat a Savona: cucina italiana, brasiliana, cinese e giapponese ordinata dal menu e servita al tavolo. Solo servizio in sala, senza asporto né consegne.",
+  "url": "https://www.x-sapori.it/",
+  "telephone": "+390192213138",
+  "servesCuisine": ["Italiana","Brasiliana","Cinese","Giapponese","Sushi"],
+  "priceRange": "€€",
+  "currenciesAccepted": "EUR",
+  "paymentAccepted": "Contanti, Carte di credito, Bancomat",
+  "acceptsReservations": "True",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Via Luigi Pirandello, 2r",
+    "addressLocality": "Savona",
+    "addressRegion": "SV",
+    "postalCode": "17100",
+    "addressCountry": "IT"
+  },
+  "geo": { "@type": "GeoCoordinates", "latitude": 44.3075, "longitude": 8.4813 },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"], "opens": "12:00", "closes": "15:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"], "opens": "19:00", "closes": "23:00" }
+  ],
+  "hasMenu": "https://www.x-sapori.it/menu.html",
+  "potentialAction": {
+    "@type": "ReserveAction",
+    "target": { "@type": "EntryPoint", "urlTemplate": "https://www.x-sapori.it/prenota.html" },
+    "result": { "@type": "FoodEstablishmentReservation", "name": "Prenotazione tavolo" }
+  }
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Vai al contenuto principale</a>
+
+<header class="site-header site-header--over-dark" id="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="index.html">
+      <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M11 13C29 25 35 39 53 51"/>
+        <path d="M53 13C35 25 29 39 11 51"/>
+      </svg>
+      <span>X-Sapori<small>Savona</small></span>
+    </a>
+
+    <nav class="nav" aria-label="Navigazione principale">
+      <a href="#come-funziona">Come funziona</a>
+      <a href="#formule">Prezzi</a>
+      <a href="menu.html">Menu</a>
+      <a href="#dove">Dove siamo</a>
+      <a href="#domande">Domande</a>
+    </nav>
+
+    <a class="btn btn--primary header-cta" href="prenota.html">Prenota un tavolo</a>
+
+    <a class="lang" href="en/index.html" hreflang="en" lang="en" title="English version">EN</a>
+
+    <button class="nav-toggle" type="button" id="nav-toggle" aria-expanded="false" aria-controls="drawer">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path d="M3 6h18M3 12h18M3 18h18"/>
+      </svg>
+      Menu
+    </button>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" data-open="false" hidden>
+  <button class="drawer__close" type="button" id="drawer-close" aria-label="Chiudi il menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18"/>
+    </svg>
+  </button>
+  <a href="#come-funziona" style="--d:60ms">Come funziona</a>
+  <a href="#formule" style="--d:110ms">Prezzi</a>
+  <a href="menu.html" style="--d:160ms">Menu</a>
+  <a href="#dove" style="--d:210ms">Dove siamo</a>
+  <a href="#domande" style="--d:260ms">Domande</a>
+  <a href="prenota.html" style="--d:310ms;color:var(--ottone-30)">Prenota un tavolo</a>
+</div>
+
+<main id="main">
+
+  <!-- =============== HERO =============== -->
+  <section class="hero">
+    <div class="hero__bg">
+      <!-- SOSTITUIRE con lo scatto della sala ad alta risoluzione (vedi DA-FORNIRE.md) -->
+      <img src="uploads/sala-x-sapori-originale.webp"
+           alt="La sala di X-Sapori: soffitto a lamelle blu petrolio, pareti in marmo grigio scuro, tavoli in marmo chiaro con sedie blu"
+           width="300" height="225" fetchpriority="high" decoding="async">
+    </div>
+
+    <div class="wrap hero__inner">
+      <p class="eyebrow enter" style="--d:100ms">Gran Buffet · Savona · Nuova apertura</p>
+      <h1 class="hero__title enter" style="--d:220ms">Quattro cucine, un solo prezzo <em>al vostro tavolo</em></h1>
+      <p class="hero__lead enter" style="--d:360ms">
+        Niente fila al buffet: si ordina dal menu e i piatti arrivano caldi, uno alla volta,
+        quante volte volete. Italiana, brasiliana, cinese e giapponese sotto lo stesso tetto.
+      </p>
+
+      <div class="hero__actions enter" style="--d:480ms">
+        <a class="btn btn--primary" href="prenota.html">Prenota un tavolo</a>
+        <a class="btn btn--ghost" href="menu.html">Sfoglia il menu</a>
+      </div>
+
+      <p class="hero__meta enter" style="--d:600ms">
+        <span>Via Luigi Pirandello, 2r — Savona</span>
+        <span>Tutti i giorni · 12:00–15:00 · 19:00–23:00</span>
+        <span><a href="tel:+390192213138" style="color:inherit">019 221 3138</a></span>
+      </p>
+
+      <div class="cucine enter" style="--d:720ms">
+        <h2 class="visually-hidden">Le quattro cucine</h2>
+        <ul class="cucine__list">
+          <li><a class="cucina" href="menu.html#italiano">
+            <svg viewBox="0 0 200 22" aria-hidden="true"><path class="draw" style="--len:210;--d:820ms" d="M2 20C40 3 160 3 198 20"/></svg>
+            <b>Italia</b><small>Primi · mozzarella</small></a></li>
+          <li><a class="cucina" href="menu.html#brace">
+            <svg viewBox="0 0 200 22" aria-hidden="true"><path class="draw" style="--len:210;--d:920ms" d="M2 20C40 3 160 3 198 20"/></svg>
+            <b>Brasile</b><small>Brace · churrasco</small></a></li>
+          <li><a class="cucina" href="menu.html#wok">
+            <svg viewBox="0 0 200 22" aria-hidden="true"><path class="draw" style="--len:210;--d:1020ms" d="M2 20C40 3 160 3 198 20"/></svg>
+            <b>Cina</b><small>Wok · vapore</small></a></li>
+          <li><a class="cucina" href="menu.html#sushi">
+            <svg viewBox="0 0 200 22" aria-hidden="true"><path class="draw" style="--len:210;--d:1120ms" d="M2 20C40 3 160 3 198 20"/></svg>
+            <b>Giappone</b><small>Sushi · tartare</small></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== COME FUNZIONA =============== -->
+  <section class="section" id="come-funziona" aria-labelledby="come-t">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <p class="eyebrow">Come funziona</p>
+        <h2 id="come-t">Si ordina dal menu, non si fa la fila</h2>
+        <p class="lead">
+          L'all you can eat qui funziona come in un ristorante à la carte: scegliete dal menu,
+          la cucina prepara al momento e i piatti arrivano in porzioni piccole, nell'ordine giusto.
+          Così si assaggia molto e non si spreca niente.
+        </p>
+      </div>
+
+      <ol class="steps">
+        <li class="step reveal">
+          <h3>Vi sedete</h3>
+          <p>Nessun vassoio, nessuna coda sotto le lampade. Il tavolo è vostro.</p>
+        </li>
+        <li class="step reveal" style="--d:90ms">
+          <h3>Segnate la comanda</h3>
+          <p>Scegliete dal menu quello che volete assaggiare, senza limiti di portate.</p>
+        </li>
+        <li class="step reveal" style="--d:180ms">
+          <h3>La cucina parte</h3>
+          <p>Ogni piatto si prepara sul momento ed esce caldo, in porzione da assaggio.</p>
+        </li>
+        <li class="step reveal" style="--d:270ms">
+          <h3>Si ricomincia</h3>
+          <p>Finito un giro se ne ordina un altro. Il prezzo resta quello deciso all'inizio.</p>
+        </li>
+      </ol>
+
+      <p class="lead reveal" style="margin-top:var(--sp-5)">
+        <strong>Una sola regola:</strong> ordinate quello che mangiate. I piatti lasciati interi
+        vengono conteggiati, così nulla finisce nella spazzatura.
+      </p>
+    </div>
+  </section>
+
+  <!-- =============== LE QUATTRO CUCINE =============== -->
+  <section class="section section--alt" aria-labelledby="cucine-t">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <p class="eyebrow">Dal menu</p>
+        <h2 id="cucine-t">Quattro cucine, una comanda sola</h2>
+        <p class="lead">
+          Chi vuole solo sushi, chi cerca un primo italiano, chi arriva per la brace e chi aspetta il dolce:
+          allo stesso tavolo, allo stesso prezzo.
+        </p>
+      </div>
+
+      <div class="grid grid--4">
+        <a class="card reveal" href="menu.html#sushi">
+          <div class="card__media">
+            <div class="ph ph--wide"><span>Foto da inserire · Selezione di nigiri e tartare su piatto scuro</span></div>
+          </div>
+          <div class="card__body">
+            <span class="card__tag">Giappone</span>
+            <h3>Sushi e tartare</h3>
+            <p>Nigiri, uramaki e tartare preparati al banco durante il servizio.</p>
+          </div>
+        </a>
+
+        <a class="card reveal" style="--d:80ms" href="menu.html#wok">
+          <div class="card__media">
+            <div class="ph ph--wide"><span>Foto da inserire · Wok in fiamma con verdure saltate</span></div>
+          </div>
+          <div class="card__body">
+            <span class="card__tag">Cina</span>
+            <h3>Wok e vapore</h3>
+            <p>Spaghetti di riso, ravioli al vapore e verdure saltate a fuoco vivo.</p>
+          </div>
+        </a>
+
+        <a class="card reveal" style="--d:160ms" href="menu.html#brace">
+          <div class="card__media">
+            <div class="ph ph--wide"><span>Foto da inserire · Spiedini di carne alla brace, primo piano</span></div>
+          </div>
+          <div class="card__body">
+            <span class="card__tag">Brasile</span>
+            <h3>Brace e churrasco</h3>
+            <p>Carne alla piastra e spiedini, portati al tavolo appena pronti.</p>
+          </div>
+        </a>
+
+        <a class="card reveal" style="--d:240ms" href="menu.html#italiano">
+          <div class="card__media">
+            <div class="ph ph--wide"><span>Foto da inserire · Piatto di primi italiani e mozzarella</span></div>
+          </div>
+          <div class="card__body">
+            <span class="card__tag">Italia</span>
+            <h3>Primi e mozzarella</h3>
+            <p>La parte italiana della carta, per chi al tavolo non vuole rinunciarci.</p>
+          </div>
+        </a>
+      </div>
+
+      <p class="reveal" style="margin-top:var(--sp-5)">
+        <a class="btn btn--ghost" href="menu.html">Vedi il menu completo</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- =============== FORMULE E PREZZI =============== -->
+  <section class="section on-dark" id="formule" aria-labelledby="formule-t">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <p class="eyebrow">Formule</p>
+        <h2 id="formule-t">Un prezzo deciso prima di sedervi</h2>
+        <p class="lead">
+          Il menu è sempre lo stesso: cambia solo il momento in cui venite.
+          Bevande escluse, nessun costo nascosto, nessun supplemento sul numero di portate.
+        </p>
+      </div>
+
+      <dl class="prezzi">
+        <div class="prezzo reveal">
+          <dt>Pranzo · da lunedì a venerdì</dt>
+          <dd>14,90 €<small>a persona</small></dd>
+        </div>
+        <div class="prezzo prezzo--hi reveal" style="--d:80ms">
+          <span class="prezzo__badge">La più richiesta</span>
+          <dt>Cena · da lunedì a venerdì</dt>
+          <dd>22,90 €<small>a persona</small></dd>
+        </div>
+        <div class="prezzo reveal" style="--d:160ms">
+          <dt>Pranzo · sabato, domenica e festivi</dt>
+          <dd>18,90 €<small>a persona</small></dd>
+        </div>
+        <div class="prezzo reveal" style="--d:240ms">
+          <dt>Cena · sabato, domenica e festivi</dt>
+          <dd>24,90 €<small>a persona</small></dd>
+        </div>
+      </dl>
+
+      <div class="reveal" style="margin-top:var(--sp-5);display:flex;flex-wrap:wrap;gap:var(--sp-4);align-items:center;justify-content:space-between">
+        <p class="lead" style="margin:0">
+          <strong style="color:var(--ottone-30)">Bambini sotto i 120 cm:</strong>
+          9,90 € a pranzo e 12,90 € a cena, tutti i giorni.
+        </p>
+        <a class="btn btn--primary" href="prenota.html">Prenota un tavolo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== LA SALA =============== -->
+  <section class="section" id="la-sala" aria-labelledby="sala-t">
+    <div class="wrap">
+      <div class="split">
+        <div class="reveal">
+          <p class="eyebrow">La sala</p>
+          <h2 id="sala-t">Marmo scuro, onde blu, luce bassa</h2>
+          <p class="lead" style="margin-top:var(--sp-4)">
+            Le pareti sono lastre di marmo grigio scuro, il soffitto è attraversato da lamelle
+            blu petrolio che ricordano il mare a due passi da qui, i tavoli sono in marmo chiaro
+            con profili in ottone.
+          </p>
+          <p class="lead" style="margin-top:var(--sp-3)">
+            Luce calda e bassa, sedie imbottite, distanza vera fra i tavoli: si parla senza alzare
+            la voce anche quando la sala è piena. Chi entra la prima volta di solito dice la stessa
+            frase — non sembra un all you can eat.
+          </p>
+          <p style="margin-top:var(--sp-4)">
+            <a class="btn btn--ghost" href="#dove">Come arrivare</a>
+          </p>
+        </div>
+
+        <div class="split__media reveal" style="--d:120ms">
+          <figure style="margin:0">
+            <img src="uploads/sala-x-sapori-originale.webp"
+                 alt="Tavoli in marmo chiaro con sedie blu petrolio sotto il soffitto a lamelle curve"
+                 width="300" height="225" loading="lazy" decoding="async"
+                 style="border-radius:var(--r-sm);width:100%">
+          </figure>
+        </div>
+      </div>
+
+      <div class="grid grid--2" style="margin-top:var(--sp-5)">
+        <div class="ph ph--wide reveal"><span>Foto da inserire · Il banco sushi durante il servizio</span></div>
+        <div class="ph ph--wide reveal" style="--d:100ms"><span>Foto da inserire · Dettaglio del tavolo apparecchiato, profilo in ottone</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== DOVE E QUANDO =============== -->
+  <section class="section section--alt" id="dove" aria-labelledby="dove-t">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <p class="eyebrow">Dove siamo e quando</p>
+        <h2 id="dove-t">Via Pirandello 2r, aperti sette giorni su sette</h2>
+      </div>
+
+      <div class="split" style="margin-top:var(--sp-5)">
+        <div class="reveal">
+          <p class="stato" id="stato-apertura" data-open="false">
+            <span id="stato-testo">Controllo gli orari…</span>
+          </p>
+
+          <ul class="orari">
+            <li><span>Pranzo, tutti i giorni</span><span>12:00 – 15:00</span></li>
+            <li><span>Cena, tutti i giorni</span><span>19:00 – 23:00</span></li>
+            <li><span>Giorno di chiusura</span><span>nessuno</span></li>
+          </ul>
+
+          <ul class="info-list" style="margin-top:var(--sp-5)">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-5.6-7-11a7 7 0 1114 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+              <span><strong>Via Luigi Pirandello, 2r</strong>17100 Savona (SV)</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 005 5L15 13l5 2v4a1 1 0 01-1 1A16 16 0 014 5a1 1 0 011-1z"/></svg>
+              <span><strong>Telefono</strong><a href="tel:+390192213138">019 221 3138</a></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 12h18M12 3v18"/></svg>
+              <span><strong>Solo servizio in sala</strong>Non facciamo consegne a domicilio né asporto.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="reveal" style="--d:120ms">
+          <div class="mappa" id="mappa">
+            <div class="mappa__consent" id="mappa-consent">
+              <p>La mappa è fornita da Google e imposta cookie di terze parti. La carichiamo solo se lo chiedete.</p>
+              <p style="margin-inline:auto">
+                <button class="btn btn--primary" type="button" id="mappa-load">Carica la mappa</button>
+              </p>
+              <p><a href="https://www.google.com/maps/search/?api=1&amp;query=Via+Luigi+Pirandello+2r+Savona" target="_blank" rel="noopener">Oppure apri Google Maps in una nuova scheda</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== DOMANDE =============== -->
+  <section class="section" id="domande" aria-labelledby="domande-t">
+    <div class="wrap wrap--narrow">
+      <div class="section__head reveal" style="max-width:none">
+        <p class="eyebrow">Domande frequenti</p>
+        <h2 id="domande-t">Le risposte che ci chiedono al telefono</h2>
+      </div>
+
+      <div class="faq reveal">
+        <details>
+          <summary>Serve prenotare anche in settimana?</summary>
+          <p>A pranzo di solito si trova posto anche senza preavviso. Dal venerdì alla domenica la sala si riempie quasi sempre: meglio prenotare, soprattutto per tavoli da sei persone in su.</p>
+        </details>
+        <details>
+          <summary>Quanto possiamo restare al tavolo?</summary>
+          <p>A cena il tavolo è vostro per tutta la serata: non facciamo doppio turno. A pranzo lo teniamo per 90 minuti, così anche chi ha poco tempo trova posto.</p>
+        </details>
+        <details>
+          <summary>Come funziona il prezzo per i bambini?</summary>
+          <p>I bambini sotto i 120 cm pagano 9,90 € a pranzo e 12,90 € a cena, tutti i giorni. Seggioloni disponibili: basta segnalarlo nel modulo di prenotazione.</p>
+        </details>
+        <details>
+          <summary>Gestite allergie e intolleranze?</summary>
+          <p>Sì. Indicatele nelle note della prenotazione: prepariamo piatti senza glutine, senza crostacei e senza frutta a guscio in postazione separata. Per i celiaci vi chiediamo di avvisare almeno il giorno prima.</p>
+        </details>
+        <details>
+          <summary>Si può festeggiare un compleanno?</summary>
+          <p>Certo. Selezionate «Compleanno» nel modulo: portiamo il dolce con le candeline a fine cena. Per tavolate numerose prepariamo la sala riservata, fino a 40 persone con 48 ore di preavviso.</p>
+        </details>
+        <details>
+          <summary>Come si paga?</summary>
+          <p>Accettiamo carte di credito, bancomat e pagamenti da smartphone. I buoni pasto cartacei solo a pranzo, fino a due a persona.</p>
+        </details>
+        <details>
+          <summary>C'è spazio per passeggini e sedie a rotelle?</summary>
+          <p>Sì. L'ingresso è a livello strada, la sala è tutta al piano terra e i corridoi sono larghi. Segnalatecelo in prenotazione e vi assegniamo un tavolo vicino all'ingresso.</p>
+        </details>
+        <details>
+          <summary>Fate consegne a domicilio o asporto?</summary>
+          <p>No, né l'uno né l'altro. La formula funziona solo con i piatti serviti caldi al tavolo, appena usciti dalla cucina.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== CTA FINALE =============== -->
+  <section class="cta-band on-dark">
+    <div class="wrap cta-band__inner">
+      <div class="reveal">
+        <p class="eyebrow">Il tavolo si prenota, la cena si gusta</p>
+        <h2 style="margin-top:var(--sp-3)">Nel weekend la sala si riempie: assicuratevi il posto</h2>
+      </div>
+      <div class="reveal" style="--d:120ms;display:flex;flex-wrap:wrap;gap:var(--sp-3)">
+        <a class="btn btn--primary" href="prenota.html">Prenota un tavolo</a>
+        <a class="btn btn--ghost" href="tel:+390192213138">019 221 3138</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html" style="color:var(--carta)">
+          <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true">
+            <path d="M11 13C29 25 35 39 53 51"/>
+            <path d="M53 13C35 25 29 39 11 51"/>
+          </svg>
+          <span>X-Sapori<small>Savona</small></span>
+        </a>
+        <p style="margin-top:var(--sp-3);max-width:42ch">
+          Gran buffet all you can eat: quattro cucine ordinate dal menu e servite al tavolo.
+          Solo servizio in sala.
+        </p>
+      </div>
+
+      <div>
+        <h2>Pagine</h2>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="prenota.html">Prenota un tavolo</a></li>
+          <li><a href="index.html#dove">Dove siamo</a></li>
+          <li><a href="privacy.html">Informativa privacy</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>Contatti</h2>
+        <ul>
+          <li>Via Luigi Pirandello, 2r<br>17100 Savona (SV)</li>
+          <li><a href="tel:+390192213138">+39 019 221 3138</a></li>
+          <li>Tutti i giorni<br>12:00–15:00 · 19:00–23:00</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 X-Sapori · Via Luigi Pirandello, 2r, 17100 Savona (SV)</span>
+      <span>P. IVA da inserire</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/site.js" defer></script>
+</body>
+</html>

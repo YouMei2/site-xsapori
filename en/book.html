@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book a table · X-Sapori Savona</title>
+<meta name="description" content="Book your table at X-Sapori in Savona: fill in the form and we call you back to confirm. Groups, birthdays, allergies and high chairs: just let us know.">
+<meta name="theme-color" content="#0E1417">
+<meta name="robots" content="noindex, follow">
+
+<link rel="canonical" href="https://www.x-sapori.it/en/book.html">
+<link rel="alternate" hreflang="it" href="https://www.x-sapori.it/prenota.html">
+<link rel="alternate" hreflang="en" href="https://www.x-sapori.it/en/book.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="X-Sapori">
+<meta property="og:title" content="Book a table · X-Sapori Savona">
+<meta property="og:description" content="Fill in the form: we call you back to confirm within a few hours, during opening times.">
+<meta property="og:url" content="https://www.x-sapori.it/en/book.html">
+<meta property="og:locale" content="en_GB">
+
+<link rel="icon" href="../assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="preload" href="../assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../styles.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site-header is-stuck" id="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="index.html">
+      <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M11 13C29 25 35 39 53 51"/>
+        <path d="M53 13C35 25 29 39 11 51"/>
+      </svg>
+      <span>X-Sapori<small>Savona</small></span>
+    </a>
+
+    <nav class="nav" aria-label="Main navigation">
+      <a href="index.html#come-funziona">How it works</a>
+      <a href="index.html#formule">Prices</a>
+      <a href="menu.html">Menu</a>
+      <a href="index.html#dove">Where we are</a>
+      <a href="book.html" aria-current="page">Book</a>
+    </nav>
+
+    <a class="btn btn--ghost header-cta" href="tel:+390192213138">019 221 3138</a>
+
+    <a class="lang" href="../prenota.html" hreflang="it" lang="it" title="Versione italiana">IT</a>
+
+    <button class="nav-toggle" type="button" id="nav-toggle" aria-expanded="false" aria-controls="drawer">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path d="M3 6h18M3 12h18M3 18h18"/>
+      </svg>
+      Menu
+    </button>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" data-open="false" hidden>
+  <button class="drawer__close" type="button" id="drawer-close" aria-label="Close the menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18"/>
+    </svg>
+  </button>
+  <a href="index.html" style="--d:60ms">Home</a>
+  <a href="index.html#formule" style="--d:110ms">Prices</a>
+  <a href="menu.html" style="--d:160ms">Menu</a>
+  <a href="index.html#dove" style="--d:210ms">Where we are</a>
+  <a href="book.html" style="--d:260ms;color:var(--ottone-30)">Book a table</a>
+</div>
+
+<main id="main">
+
+  <section class="page-head">
+    <div class="wrap">
+      <p class="breadcrumb"><a href="index.html">Home</a> · Book a table</p>
+      <h1 style="margin-top:var(--sp-3)">Your table, booked in a minute</h1>
+      <p class="lead" style="margin-top:var(--sp-4)">
+        Fill in the form: we call you back to confirm within a few hours, during opening times.
+        For groups over 12, or a birthday with a cake, a phone call is even quicker.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap booking">
+
+      <div>
+        <!-- Confirmation: replaces the form once the request has gone through -->
+        <div class="esito" id="esito" data-visible="false" tabindex="-1">
+          <div class="esito__card">
+            <div class="esito__check" aria-hidden="true">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                <path d="M4 12.5l5.5 5.5L20 7"/>
+              </svg>
+            </div>
+            <h2 style="font-family:var(--font-body);font-size:1.5rem;font-weight:600">Request sent</h2>
+            <p style="margin-top:var(--sp-3)">
+              We have received your request. We call you back to confirm within a few hours, during
+              opening times. The booking is confirmed only after that call.
+            </p>
+
+            <div class="riepilogo" id="esito-riepilogo"></div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:var(--sp-3);margin-top:var(--sp-5)">
+              <a class="btn btn--primary" id="esito-ics" href="#" download="booking-x-sapori.ics">Add to calendar</a>
+              <a class="btn btn--ghost" href="tel:+390192213138">Call the restaurant</a>
+              <a class="btn btn--ghost" href="menu.html">See the menu</a>
+            </div>
+          </div>
+        </div>
+
+        <!--
+          action and method stay valid without JavaScript:
+          booking.php accetta i dati come form-data normale.
+          Con JavaScript attivo la spedizione avviene in JSON via fetch.
+          novalidate: i messaggi di errore li scrive il nostro script,
+          così sono in italiano e nello stile del sito.
+        -->
+        <form class="form" id="booking-form" action="../api/booking.php" method="post" novalidate>
+
+          <!-- Honeypot: invisibile alle persone, compilato dai bot.
+               Il nome coincide con honeypot_field in config.php. -->
+          <div class="hp" aria-hidden="true">
+            <label for="indirizzo_web">Do not fill in this field</label>
+            <input type="text" id="indirizzo_web" name="indirizzo_web" tabindex="-1" autocomplete="off">
+          </div>
+
+          <fieldset>
+            <legend>When you would like to come</legend>
+            <div class="field-grid field-grid--3">
+              <p class="field">
+                <label for="data">Date <span class="req" aria-hidden="true">*</span></label>
+                <!-- min e max li imposta booking.js: oggi e fra sei mesi -->
+                <input type="date" id="data" name="data" autocomplete="off" required>
+              </p>
+              <p class="field">
+                <label for="orario">Time <span class="req" aria-hidden="true">*</span></label>
+                <input type="time" id="orario" name="orario" min="12:00" max="23:00" step="900" required>
+              </p>
+              <p class="field">
+                <label for="persone">Guests <span class="req" aria-hidden="true">*</span></label>
+                <input type="number" id="persone" name="persone" min="1" max="40" step="1" value="2" inputmode="numeric" required>
+              </p>
+            </div>
+
+            <p class="field" style="margin-top:var(--sp-4)">
+              <label for="formula">Set menu</label>
+              <!-- I valori devono coincidere con l'ENUM in schema.sql,
+                   con l'array formulas in config.php e con le etichette
+                   di xs_formula_label() in api/notify.php. -->
+              <select id="formula" name="formula" aria-describedby="formula-hint">
+                <option value="pranzo_feriale">Lunch · €14.90 (Monday to Friday)</option>
+                <option value="cena_feriale" selected>Dinner · €22.90 (Monday to Friday)</option>
+                <option value="pranzo_weekend">Lunch · €18.90 (Saturday, Sunday and holidays)</option>
+                <option value="cena_weekend">Dinner · €24.90 (Saturday, Sunday and holidays)</option>
+              </select>
+              <span class="hint" id="formula-hint">
+                It sets itself from the date and time you choose. On public holidays the weekend
+                rate applies even midweek. Price per person, drinks excluded.
+                Children under 120 cm: €9.90 at lunch, €12.90 at dinner.
+              </span>
+            </p>
+          </fieldset>
+
+          <fieldset>
+            <legend>How we reach you</legend>
+            <div class="field-grid field-grid--2">
+              <p class="field">
+                <label for="nome">First name <span class="req" aria-hidden="true">*</span></label>
+                <input type="text" id="nome" name="nome" autocomplete="given-name" maxlength="60" placeholder="e.g. Giulia" required>
+              </p>
+              <p class="field">
+                <label for="cognome">Last name <span class="req" aria-hidden="true">*</span></label>
+                <input type="text" id="cognome" name="cognome" autocomplete="family-name" maxlength="60" placeholder="e.g. Rossi" required>
+              </p>
+            </div>
+            <div class="field-grid field-grid--2" style="margin-top:var(--sp-3)">
+              <p class="field">
+                <label for="telefono">Phone <span class="req" aria-hidden="true">*</span></label>
+                <input type="tel" id="telefono" name="telefono" autocomplete="tel" inputmode="tel" maxlength="24" placeholder="e.g. +39 019 221 3138" aria-describedby="tel-hint" required>
+                <span class="hint" id="tel-hint">Only used to confirm the table.</span>
+              </p>
+              <p class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" autocomplete="email" inputmode="email" maxlength="190" placeholder="e.g. giulia.rossi@email.com" aria-describedby="email-hint">
+                <span class="hint" id="email-hint">Optional: confirmation comes by phone.</span>
+              </p>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Anything we should know</legend>
+            <p class="field">
+              <label for="occasione">Occasion</label>
+              <select id="occasione" name="occasione">
+                <option value="nessuna">Just dinner</option>
+                <option value="compleanno">Birthday (with cake and candles)</option>
+                <option value="gruppo">Group or company dinner</option>
+                <option value="famiglia">Family with children (high chair needed)</option>
+                <option value="altro">Other (explain in the notes)</option>
+              </select>
+            </p>
+            <p class="field" style="margin-top:var(--sp-3)">
+              <label for="note">Allergies, intolerances or notes</label>
+              <textarea id="note" name="note" maxlength="1000" placeholder="e.g. one coeliac guest, two small children, we would prefer a quiet table" aria-describedby="note-hint"></textarea>
+              <span class="hint" id="note-hint">We prepare gluten-free, shellfish-free and nut-free alternatives.</span>
+            </p>
+            <p class="checkbox" style="margin-top:var(--sp-4)">
+              <input type="checkbox" id="privacy" name="privacy" value="1" required>
+              <label for="privacy">
+                I have read the <a href="privacy.html">privacy notice</a> and I consent to my data
+                being used to manage the booking. <span class="req" aria-hidden="true">*</span>
+              </label>
+            </p>
+          </fieldset>
+
+          <!-- Qui booking.js scrive l'esito generale: successo, 429, errore di rete.
+               role="status" e aria-live: lo screen reader lo legge senza spostare il focus. -->
+          <p class="form-msg" id="form-msg" role="status" aria-live="polite" hidden></p>
+
+          <div class="form__actions">
+            <button class="btn btn--primary" type="submit" id="booking-submit">Send request</button>
+            <button class="btn btn--ghost" type="reset">Clear the form</button>
+            <span class="hint">Fields marked <span class="req">*</span> are required.</span>
+          </div>
+        </form>
+      </div>
+
+      <aside class="aside-card" aria-label="Useful booking information">
+        <h2 style="font-family:var(--font-body);font-size:1.15rem;font-weight:600">Before you book</h2>
+        <ul class="info-list">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <span><strong>Opening hours</strong>Every day, 12:00–15:00 and 19:00–23:00. Open on Mondays too.</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/></svg>
+            <span><strong>Groups and birthdays</strong>Up to 40 people in the private room, with 48 hours of notice.</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-5.6-7-11a7 7 0 1114 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+            <span><strong>Where we are</strong>Via Luigi Pirandello, 2r — 17100 Savona (SV)</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 005 5L15 13l5 2v4a1 1 0 01-1 1A16 16 0 014 5a1 1 0 011-1z"/></svg>
+            <span><strong>Prefer the phone?</strong><a href="tel:+390192213138">019 221 3138</a></span>
+          </li>
+        </ul>
+
+        <p class="hint" style="margin-top:var(--sp-4);padding-top:var(--sp-3);border-top:1px solid var(--rule)">
+          A request is not yet a confirmed booking: we call you. If you have not heard from us
+          by the next day, please call.
+        </p>
+      </aside>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html" style="color:var(--carta)">
+          <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true">
+            <path d="M11 13C29 25 35 39 53 51"/>
+            <path d="M53 13C35 25 29 39 11 51"/>
+          </svg>
+          <span>X-Sapori<small>Savona</small></span>
+        </a>
+        <p style="margin-top:var(--sp-3);max-width:42ch">
+          All you can eat buffet: four kitchens ordered from the menu and served at your table.
+          Dining room only.
+        </p>
+      </div>
+      <div>
+        <h2>Pages</h2>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="book.html">Book a table</a></li>
+          <li><a href="index.html#dove">Where we are</a></li>
+          <li><a href="privacy.html">Privacy notice</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Contact</h2>
+        <ul>
+          <li>Via Luigi Pirandello, 2r<br>17100 Savona (SV)</li>
+          <li><a href="tel:+390192213138">+39 019 221 3138</a></li>
+          <li>Every day<br>12:00–15:00 · 19:00–23:00</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 X-Sapori · Via Luigi Pirandello, 2r, 17100 Savona (SV)</span>
+      <span>VAT number to be added</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/site.js" defer></script>
+<script src="../js/booking.js" defer></script>
+</body>
+</html>

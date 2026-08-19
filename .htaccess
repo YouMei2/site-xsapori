@@ -1,0 +1,129 @@
+# =====================================================================
+#  X-Sapori Savona — configurazione Apache
+#  Apache 2.4 su hosting condiviso. Per nginx vedere README.md.
+# =====================================================================
+
+# ---------------------------------------------------------------------
+#  File che non devono mai essere serviti via HTTP
+# ---------------------------------------------------------------------
+# Non contengono password, ma rivelano la struttura del database, il nome
+# utente e il funzionamento interno: materiale pronto per un attacco.
+# Verificato: senza questa regola /schema.sql si scarica da link diretto.
+<FilesMatch "(?i)\.(sql|md|log|bak|old|orig|save|swp|dist|example)$">
+  Require all denied
+</FilesMatch>
+
+# La configurazione sull'hosting sta sopra la radice del sito, ma se per
+# errore finisce qui accanto meglio un 403 che il suo contenuto.
+<FilesMatch "(?i)^config.*\.php$">
+  Require all denied
+</FilesMatch>
+
+# File che iniziano con un punto: .gitignore, .env, .htpasswd e simili.
+<FilesMatch "(?i)^\.">
+  Require all denied
+</FilesMatch>
+
+# notify.php è una libreria, non un endpoint: la richiama booking.php.
+<Files "notify.php">
+  Require all denied
+</Files>
+
+# Server di sviluppo, anteprime e strumenti interni: se per errore
+# finiscono sull'hosting, restano comunque irraggiungibili.
+<FilesMatch "(?i)^(anteprima-|_audit|_frammenti)">
+  Require all denied
+</FilesMatch>
+
+# ---------------------------------------------------------------------
+#  Pagine unite: reindirizzamenti permanenti
+# ---------------------------------------------------------------------
+# «Chi siamo» e «Contatti» sono diventate sezioni della home. Il 301
+# conserva il posizionamento già acquisito e non lascia link rotti.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^chi-siamo\.html$ /index.html#la-sala [R=301,L]
+  RewriteRule ^contatti\.html$  /index.html#dove    [R=301,L]
+</IfModule>
+
+# ---------------------------------------------------------------------
+#  Pagina di errore
+# ---------------------------------------------------------------------
+ErrorDocument 404 /404.html
+
+# ---------------------------------------------------------------------
+#  Intestazioni di sicurezza
+# ---------------------------------------------------------------------
+<IfModule mod_headers.c>
+  # Il browser non deve indovinare il tipo di contenuto.
+  Header always set X-Content-Type-Options "nosniff"
+  # Il sito non è pensato per essere incorniciato su domini altrui.
+  Header always set X-Frame-Options "SAMEORIGIN"
+  # Il referer verso l'esterno non rivela il percorso completo.
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # Funzioni del dispositivo che il sito non usa.
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+
+  # Content-Security-Policy.
+  # frame-src google.com: serve alla mappa, che parte solo su richiesta.
+  # 'unsafe-inline' su script: le pagine contengono la riga che aggiunge
+  # la classe .js; toglierlo richiede spostarla in un file esterno, ma
+  # allora comparirebbe uno sfarfallio del contenuto al caricamento.
+  Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; frame-src https://www.google.com; form-action 'self'; base-uri 'self'; object-src 'none'"
+
+  # Moduli e API non devono essere messi in cache da proxy intermedi.
+  <FilesMatch "\.php$">
+    Header always set Cache-Control "no-store"
+  </FilesMatch>
+
+  # Risorse con nome stabile: cache lunga solo dove è sicuro.
+  <FilesMatch "\.(woff2|svg|webp|avif|jpg|jpeg|png|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  # CSS e JS cambiano a ogni modifica del sito: cache breve e rivalidata.
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=604800, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ---------------------------------------------------------------------
+#  Compressione
+# ---------------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml application/manifest+json
+</IfModule>
+# I woff2 sono già compressi: ricomprimerli è solo lavoro sprecato.
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/css application/javascript image/svg+xml
+</IfModule>
+
+# ---------------------------------------------------------------------
+#  Tipi MIME che alcuni hosting non conoscono
+# ---------------------------------------------------------------------
+<IfModule mod_mime.c>
+  AddType font/woff2 .woff2
+  AddType image/webp .webp
+  AddType image/avif .avif
+  AddType application/manifest+json .webmanifest
+</IfModule>
+
+# ---------------------------------------------------------------------
+#  Errori PHP mai visibili nel browser
+# ---------------------------------------------------------------------
+# booking.php lo imposta da sé con ini_set, ma se l'hosting esegue PHP
+# in modo che ini_set non abbia effetto, questa è la rete di sicurezza.
+<IfModule mod_php.c>
+  php_flag display_errors off
+  php_flag log_errors on
+</IfModule>
+
+# ---------------------------------------------------------------------
+#  Varie
+# ---------------------------------------------------------------------
+Options -Indexes
+DirectoryIndex index.html index.php
