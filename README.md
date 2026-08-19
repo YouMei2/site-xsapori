@@ -841,3 +841,5 @@ live HTTP requests.
 - `fastcgi_finish_request()` — absent under `php -S`, the fallback
   path was used
 - Real-world deliverability — depends on the domain's SPF/DKIM
+
+hehe :
