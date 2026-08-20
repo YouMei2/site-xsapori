@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>X-Sapori · Due hero a confronto</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+<script>document.documentElement.classList.add('js');</script>
+
+<style>
+/* =========================================================
+   Confronto fra due hero. Tutto il resto del sistema di
+   design resta quello vero: colori, caratteri, spaziature
+   e movimenti arrivano da styles.css.
+   ========================================================= */
+
+.selettore{
+  position:fixed;z-index:200;left:50%;bottom:1rem;transform:translateX(-50%);
+  display:flex;align-items:center;gap:.35rem;padding:.35rem;
+  background:rgba(14,20,23,.92);border:1px solid rgba(185,141,74,.5);
+  border-radius:var(--r-pill);backdrop-filter:blur(12px);
+  box-shadow:0 14px 40px rgba(0,0,0,.5);
+}
+.selettore__voce{
+  font-family:var(--font-data);font-size:.7rem;letter-spacing:.12em;
+  text-transform:uppercase;color:#A9B6BC;padding-inline:.7rem;
+}
+.selettore button{
+  font:inherit;font-size:.86rem;font-weight:500;color:var(--carta);
+  background:none;border:0;border-radius:var(--r-pill);
+  padding:.5rem 1rem;min-height:44px;cursor:pointer;
+  transition:background-color var(--dur-fast) var(--ease-out);
+}
+.selettore button[aria-pressed="true"]{background:var(--petrolio-70);color:#fff;}
+.selettore button:hover:not([aria-pressed="true"]){background:rgba(255,255,255,.1);}
+
+#confronto[data-hero="a"] .hero-b,
+#confronto[data-hero="b"] .hero-a{display:none;}
+
+/* =========================================================
+   HERO B — «Il passo delle cucine»
+   Quattro corsie di piatti veri, una per cucina, che scorrono
+   lentamente in direzioni alterne. Il titolo sta in mezzo:
+   voi sedete al centro, le cucine lavorano attorno.
+   ========================================================= */
+.passo{
+  position:relative;overflow:hidden;
+  min-height:min(100svh,900px);
+  display:grid;grid-template-rows:auto 1fr auto;
+  gap:var(--sp-4);
+  padding-block:6.5rem var(--sp-5);
+  background:
+    radial-gradient(120% 80% at 50% 50%, #162025 0%, var(--sala-90) 68%);
+  color:var(--carta);
+  --surface:var(--sala-90);
+  --on-surface:var(--carta);
+  --on-surface-dim:#A9B6BC;
+  --rule-strong:rgba(231,237,239,.3);
+  --accent:var(--petrolio-20);
+}
+@media (min-width:900px){ .passo{padding-block:8rem var(--sp-6);gap:var(--sp-5);} }
+
+/* --- Le corsie ------------------------------------------------------ */
+.corsie{display:grid;gap:.35rem;align-content:start;}
+.corsie--sotto{align-content:end;}
+
+.corsia{
+  display:flex;align-items:center;gap:var(--sp-3);
+  overflow:hidden;
+  /* le corsie sfumano ai bordi invece di essere tagliate di netto */
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+}
+.corsia__nome{
+  flex:none;width:5.5rem;
+  font-family:var(--font-data);font-size:.62rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--corsia-tinta);
+  padding-left:var(--gutter);
+}
+@media (max-width:759px){
+  .corsia__nome{width:auto;padding-left:1rem;font-size:.56rem;letter-spacing:.14em;}
+}
+
+.corsia__nastro{
+  display:flex;gap:0;white-space:nowrap;
+  will-change:transform;
+  animation:scorri var(--durata,80s) linear infinite;
+}
+.corsia--indietro .corsia__nastro{animation-direction:reverse;}
+.corsia:hover .corsia__nastro,
+.corsia:focus-within .corsia__nastro{animation-play-state:paused;}
+
+.corsia__gruppo{display:flex;flex:none;}
+.corsia__piatto{
+  font-family:var(--font-display);
+  font-size:clamp(1.15rem,2.4vw,1.9rem);
+  font-weight:400;letter-spacing:-.01em;
+  color:var(--corsia-tinta);
+  opacity:.55;
+  padding-inline:.9rem;
+}
+.corsia__piatto::after{
+  content:"·";margin-left:.9rem;opacity:.5;
+}
+
+@keyframes scorri{ to{ transform:translateX(-50%); } }
+
+/* Una tinta per cucina. Il rosso dei sigilli finalmente fa un lavoro
+   vero: è la Cina, non un ornamento sparso. */
+.corsia--italia   { --corsia-tinta:#D8D2C6; --durata:96s; }
+.corsia--brasile  { --corsia-tinta:var(--ottone-30); --durata:78s; }
+.corsia--cina     { --corsia-tinta:var(--sigillo-chiaro); --durata:88s; }
+.corsia--giappone { --corsia-tinta:var(--petrolio-20); --durata:70s; }
+
+/* --- Il centro ------------------------------------------------------ */
+.passo__centro{
+  position:relative;display:flex;align-items:center;
+  padding-block:var(--sp-5);
+}
+.passo__centro::before{
+  content:"";position:absolute;inset:-12% -20%;
+  background:radial-gradient(58% 70% at 50% 50%,var(--sala-90) 42%,transparent 78%);
+}
+.passo__testo{position:relative;width:100%;}
+
+.passo__titolo{
+  font-size:clamp(2.6rem,7vw,5.6rem);
+  line-height:.98;letter-spacing:-.035em;max-width:14ch;
+}
+.passo__titolo em{
+  display:block;font-style:normal;color:var(--petrolio-20);
+  font-size:.52em;letter-spacing:-.02em;margin-top:.25em;
+}
+.passo__sotto{
+  margin-top:var(--sp-4);max-width:44ch;color:#C6D0D4;font-size:var(--fs-lead);
+}
+.passo__azioni{display:flex;flex-wrap:wrap;gap:var(--sp-3);margin-top:var(--sp-5);}
+
+.passo__dati{
+  display:flex;flex-wrap:wrap;gap:.5rem var(--sp-4);
+  padding-inline:var(--gutter);
+  font-family:var(--font-data);font-size:.76rem;letter-spacing:.05em;
+  color:#A9B6BC;font-variant-numeric:tabular-nums;
+}
+.passo__dati b{color:var(--ottone-30);font-weight:400;}
+.passo__dati span{display:flex;align-items:center;gap:.5rem;}
+.passo__dati span+span::before{
+  content:"";width:1px;height:1em;background:rgba(231,237,239,.28);
+  margin-right:.5rem;flex:none;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .corsia__nastro{animation:none;}
+}
+
+/* Nota di lettura, solo in questa pagina di confronto */
+.commento{
+  background:var(--marmo-10);border-top:1px solid var(--rule);
+  padding-block:var(--sp-6);
+}
+.commento h2{font-size:1.5rem;}
+.commento p{margin-top:var(--sp-3);color:var(--on-surface-dim);max-width:68ch;}
+.commento ul{margin-top:var(--sp-3);display:grid;gap:.5rem;padding-left:1.1rem;list-style:disc;}
+.commento li{color:var(--on-surface-dim);}
+</style>
+</head>
+<body>
+
+<div class="selettore" role="group" aria-label="Scegli l'hero da vedere">
+  <span class="selettore__voce">Hero</span>
+  <button type="button" data-set="a" aria-pressed="true">A · attuale</button>
+  <button type="button" data-set="b" aria-pressed="false">B · il passo</button>
+</div>
+
+<main id="main">
+
+<div id="confronto" data-hero="a">
+
+  <!-- ============ HERO A — quello in produzione ============ -->
+  <section class="hero hero-a">
+    <div class="hero__bg">
+      <img src="uploads/sala-x-sapori-originale.webp" alt=""
+           width="300" height="225" class="is-provvisoria" decoding="async">
+    </div>
+    <div class="wrap hero__inner">
+      <p class="eyebrow">Gran Buffet · Savona · Nuova apertura</p>
+      <h1 class="hero__title">Quattro cucine, un solo prezzo <em>al vostro tavolo</em></h1>
+      <p class="hero__lead">
+        Niente fila al buffet: si ordina dal menu e i piatti arrivano caldi, uno alla volta,
+        quante volte volete. Italiana, brasiliana, cinese e giapponese sotto lo stesso tetto.
+      </p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="prenota.html">Prenota un tavolo</a>
+        <a class="btn btn--ghost" href="menu.html">Sfoglia il menu</a>
+      </div>
+      <p class="hero__prezzo">
+        <span>Pranzo da <b>14,90 €</b></span>
+        <span>Cena da <b>22,90 €</b></span>
+        <span>bevande escluse</span>
+      </p>
+      <p class="hero__meta">
+        <span>Via Luigi Pirandello, 2r — Savona</span>
+        <span>Tutti i giorni · 12:00–15:00 · 19:00–23:00</span>
+        <span>019 221 3138</span>
+      </p>
+      <div class="cucine">
+        <ul class="cucine__list">
+          <li><a class="cucina" href="menu.html#italiano">
+            <svg viewBox="0 0 200 22" aria-hidden="true"><path d="M2 20C40 3 160 3 198 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <b>Italia</b><small>Primi · mozzarella</small></a></li>
+          <li><a class="cucina" href="menu.html#brace">
+            <svg viewBox="0 0 200 22" aria-hidden="true"><path d="M2 20C40 3 160 3 198 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <b>Brasile</b><small>Brace · churrasco</small></a></li>
+          <li><a class="cucina" href="menu.html#wok">
+            <svg viewBox="0 0 200 22" aria-hidden="true"><path d="M2 20C40 3 160 3 198 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <b>Cina</b><small>Wok · vapore</small></a></li>
+          <li><a class="cucina" href="menu.html#sushi">
+            <svg viewBox="0 0 200 22" aria-hidden="true"><path d="M2 20C40 3 160 3 198 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <b>Giappone</b><small>Sushi · tartare</small></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HERO B — il passo delle cucine ============ -->
+  <section class="passo hero-b" aria-labelledby="passo-titolo">
+
+    <div class="corsie" aria-hidden="true">
+      <div class="corsia corsia--italia">
+        <span class="corsia__nome">Italia</span>
+        <div class="corsia__nastro" data-corsia="italia"></div>
+      </div>
+      <div class="corsia corsia--brasile corsia--indietro">
+        <span class="corsia__nome">Brasile</span>
+        <div class="corsia__nastro" data-corsia="brasile"></div>
+      </div>
+    </div>
+
+    <div class="passo__centro">
+      <div class="wrap passo__testo">
+        <p class="eyebrow" style="color:var(--ottone-30)">Gran Buffet · Savona</p>
+        <h1 class="passo__titolo" id="passo-titolo">
+          Quattro cucine lavorano <em>per un tavolo solo</em>
+        </h1>
+        <p class="passo__sotto">
+          Italiana, brasiliana, cinese e giapponese, tutte in funzione nello stesso
+          momento. Voi ordinate dal menu, loro cucinano. Quante volte volete.
+        </p>
+        <div class="passo__azioni">
+          <a class="btn btn--primary" href="prenota.html">Prenota un tavolo</a>
+          <a class="btn btn--ghost" href="menu.html">Sfoglia i 67 piatti</a>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="corsie corsie--sotto" aria-hidden="true">
+        <div class="corsia corsia--cina">
+          <span class="corsia__nome">Cina</span>
+          <div class="corsia__nastro" data-corsia="cina"></div>
+        </div>
+        <div class="corsia corsia--giappone corsia--indietro">
+          <span class="corsia__nome">Giappone</span>
+          <div class="corsia__nastro" data-corsia="giappone"></div>
+        </div>
+      </div>
+
+      <p class="passo__dati" style="margin-top:var(--sp-5)">
+        <span>Pranzo da <b>14,90 €</b></span>
+        <span>Cena da <b>22,90 €</b></span>
+        <span>Via Pirandello 2r</span>
+        <span>12:00–15:00 · 19:00–23:00</span>
+      </p>
+    </div>
+  </section>
+
+</div>
+
+  <!-- ============ nota di lettura ============ -->
+  <section class="commento">
+    <div class="wrap wrap--narrow">
+      <p class="eyebrow">Perché una seconda proposta</p>
+      <h2>Che cosa cambia, e che rischio mi prendo</h2>
+      <p>
+        L'hero A è ben fatto ma è la risposta da manuale: occhiello, titolo, sommario,
+        bottoni, prezzo, dati, barra delle cucine. Sette blocchi impilati, come su
+        qualsiasi sito di ristorante. Funziona, e non si ricorda.
+      </p>
+      <p>
+        L'hero B parte dalla cosa più insolita che avete: <strong>quattro cucine che
+        lavorano contemporaneamente per lo stesso tavolo</strong>. Le quattro corsie
+        sono i vostri piatti veri — tutti e 43 quelli delle quattro linee — che
+        scorrono lente in direzioni alterne. Il titolo sta in mezzo: voi sedete al
+        centro, le cucine lavorano attorno.
+      </p>
+      <ul>
+        <li>Il rosso dei sigilli smette di essere un ornamento sparso e diventa
+          <strong>la Cina</strong>: una tinta per cucina, con un significato.</li>
+        <li>Sparisce la barra delle quattro cucine: le corsie <em>sono</em> le quattro
+          cucine, tenerle entrambe sarebbe ripetersi.</li>
+        <li>Niente fotografie: il movimento e i nomi dei piatti fanno il lavoro che
+          normalmente farebbe una foto di sala.</li>
+        <li>Le corsie si fermano al passaggio del mouse, non entrano nella lettura
+          vocale e restano immobili con «riduci movimento» attivo.</li>
+      </ul>
+      <p>
+        <strong>Il rischio:</strong> il testo in movimento può distrarre dalla lettura
+        del titolo. L'ho contenuto tenendo le corsie molto lente (70-96 secondi a giro),
+        al 55% di opacità e con una vignetta scura dietro al titolo. Se vi sembra
+        ancora troppo, si rallenta ancora o si ferma del tutto: resta comunque una
+        composizione diversa da quella di chiunque altro a Savona.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  // Piatti veri, presi dal menu del sito.
+  var PIATTI = {
+    italia: ['Ravioli ricotta e spinaci','Caprese','Insalata mista di stagione','Insalata di pollo grigliato','Penne al pomodoro e basilico','Patatine fritte','Verdure grigliate','Pane e focaccia'],
+    brasile: ['Picanha alla brace','Spiedini di pollo','Linguiça','Filetto di maiale al miele','Gamberoni alla griglia','Salmone teriyaki','Costine di maiale','Capesante gratinate','Anatra croccante'],
+    cina: ['Ravioli al vapore di maiale','Ravioli di gamberi','Baozi al maiale caramellato','Siu mai','Riso alla cantonese','Riso saltato ai gamberi','Spaghetti di soia saltati','Udon al manzo','Verdure miste al wok','Tofu saltato piccante','Zuppa agropiccante'],
+    giappone: ['Nigiri salmone','Nigiri tonno','Nigiri branzino e limone','Uramaki California','Hosomaki cetriolo','Tartare di salmone','Tartare di tonno','Sashimi misto','Temaki gambero','Uramaki flambé']
+  };
+
+  // Il nastro contiene due volte la stessa sequenza: l'animazione lo
+  // sposta del 50% e riparte, così il ciclo non ha giunture visibili.
+  Object.keys(PIATTI).forEach(function (chiave) {
+    var nastro = document.querySelector('.corsia__nastro[data-corsia="' + chiave + '"]');
+    if (!nastro) { return; }
+    for (var giro = 0; giro < 2; giro++) {
+      var gruppo = document.createElement('div');
+      gruppo.className = 'corsia__gruppo';
+      PIATTI[chiave].forEach(function (piatto) {
+        var s = document.createElement('span');
+        s.className = 'corsia__piatto';
+        s.textContent = piatto;
+        gruppo.appendChild(s);
+      });
+      nastro.appendChild(gruppo);
+    }
+  });
+
+  var root = document.getElementById('confronto');
+  var bottoni = document.querySelectorAll('.selettore button');
+  bottoni.forEach(function (b) {
+    b.addEventListener('click', function () {
+      root.dataset.hero = b.dataset.set;
+      bottoni.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    });
+  });
+})();
+</script>
+</body>
+</html>
