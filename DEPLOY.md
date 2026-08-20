@@ -24,6 +24,23 @@ indirizzi che non esistono.
 I file da correggere: `index.html`, `menu.html`, `prenota.html`, `privacy.html`,
 `sitemap.xml`, `robots.txt` e le quattro pagine dentro `en/`.
 
+> ### ⚠️ E soprattutto: `allowed_origins` in `config.php`
+>
+> È il punto che fa fallire il modulo di prenotazione senza dire perché.
+> Il server confronta l'indirizzo da cui arriva la richiesta con quella lista,
+> **compresi protocollo e porta**, e se non combacia risponde 403: il cliente
+> legge «Richiesta non consentita» e non capisce cosa fare.
+>
+> Nella lista devono esserci il dominio vero **con e senza `www`**, in `https`.
+> Le righe con `localhost` servono solo alle prove: toglietele.
+>
+> Se dopo la pubblicazione il modulo dà quell'errore, aprite il log degli
+> errori del server e cercate `origine non permessa`: la riga contiene
+> esattamente l'indirizzo da aggiungere.
+>
+> Verificato sul campo il 21 agosto: con la porta mancante nella lista, il
+> modulo rifiutava ogni invio dal browser pur funzionando da riga di comando.
+
 Con un editor che sappia cercare e sostituire in tutti i file (VS Code,
 Notepad++) è un'operazione sola: cercate `www.x-sapori.it`, sostituite con il
 vostro dominio, in tutta la cartella.

@@ -6,7 +6,10 @@
 > strutturati FAQ. Restano **undici cose che solo tu puoi dirmi**, elencate qui
 > sotto in ordine di urgenza.
 >
-> 1. **Dominio definitivo** — oggi c'è il segnaposto `www.x-sapori.it`
+> 1. **Dominio definitivo** — oggi c'è il segnaposto `www.x-sapori.it`.
+>    Va messo anche in `allowed_origins` dentro `config.php`: se manca, il
+>    modulo di prenotazione risponde 403 a ogni invio e il cliente legge
+>    «Richiesta non consentita». Verificato: è successo davvero in prova.
 > 2. **Ragione sociale, P. IVA, provider di hosting, email privacy**
 > 3. **Bambini: altezza o età?** — il sito dice «sotto i 120 cm», le vecchie FAQ
 >    dicevano «gratis fino a 3 anni». Ne può restare una sola
@@ -35,7 +38,7 @@ Servono per essere in regola e per far funzionare SEO e condivisioni.
 
 | Dato | Dove viene usato | Stato |
 |---|---|---|
-| **Dominio definitivo** (es. `www.x-sapori.it`) | URL canonici, sitemap, JSON-LD, immagini social di tutte le pagine | ⛔ ora c'è il segnaposto `www.x-sapori.it` |
+| **Dominio definitivo** (es. `www.x-sapori.it`) | URL canonici, sitemap, JSON-LD, immagini social di tutte le pagine **e `allowed_origins` in `config.php`** | ⛔ ora c'è il segnaposto `www.x-sapori.it` |
 | **Ragione sociale** completa | Informativa privacy §1, footer | ⛔ `[DA COMPLETARE]` |
 | **Partita IVA** | Footer di ogni pagina, privacy §1 | ⛔ nel sito originale c'era `00000000000` |
 | **Indirizzo email** per le richieste privacy | Privacy §1 e §6 | ⛔ ora `privacy@xsapori.it`: esiste davvero? |

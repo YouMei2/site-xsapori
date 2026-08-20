@@ -182,7 +182,7 @@ function origin_allowed(array $allowed): bool
 }
 
 if (!empty($cfg['allowed_origins']) && !origin_allowed($cfg['allowed_origins'])) {
-    error_log('[booking] отклонён чужой origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? $_SERVER['HTTP_REFERER'] ?? '?'));
+    error_log('[booking] origine non permessa (controllare allowed_origins in config.php): ' . ($_SERVER['HTTP_ORIGIN'] ?? $_SERVER['HTTP_REFERER'] ?? '?'));
     fail(403, 'Richiesta non consentita.');
 }
 
@@ -258,7 +258,7 @@ $honeypotName = (string) ($cfg['honeypot_field'] ?? 'indirizzo_web');
 if (field($in, $honeypotName) !== '') {
     // Отвечаем как при успехе и ничего не пишем в базу.
     // Бот считает, что сработало, и не пробует другие пути.
-    error_log('[booking] honeypot сработал, заявка отброшена');
+    error_log('[booking] honeypot compilato: richiesta scartata come automatica');
     respond(200, ['ok' => true, 'id' => null]);
 }
 
