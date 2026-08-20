@@ -42,8 +42,17 @@
 # conserva il posizionamento già acquisito e non lascia link rotti.
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteRule ^chi-siamo\.html$ /index.html#la-sala [R=301,L]
-  RewriteRule ^contatti\.html$  /index.html#dove    [R=301,L]
+  # Il flag NE è indispensabile: senza, Apache trasforma il # in %23 e chi
+  # apre un vecchio link finisce su un indirizzo inesistente invece che
+  # sull'ancora giusta. Verificato: senza NE la destinazione diventa
+  # /index.html%23la-sala, cioè un 404.
+  #
+  # Le destinazioni sono assolute perché in produzione il sito sta nella
+  # radice del dominio. Se lo provate in una sottocartella (per esempio
+  # sotto XAMPP in htdocs/x-sapori) aggiungete qui sotto, SOLO nella copia
+  # di prova, la riga:  RewriteBase /x-sapori/
+  RewriteRule ^chi-siamo\.html$ /index.html#la-sala [R=301,L,NE]
+  RewriteRule ^contatti\.html$  /index.html#dove    [R=301,L,NE]
 </IfModule>
 
 # ---------------------------------------------------------------------
