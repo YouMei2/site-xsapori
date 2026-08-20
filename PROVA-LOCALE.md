@@ -1,5 +1,42 @@
 # Provare la prenotazione sul proprio computer
 
+> ## Stato al 21 agosto 2026: già fatto
+>
+> Questa guida descrive il percorso completo, ma **i passi 3-7 sono già stati
+> eseguiti** su questo computer. XAMPP è installato, il sito è copiato in
+> `C:\xampp\htdocs\x-sapori`, il database `xsapori` esiste con la tabella
+> `bookings`, e la prova è passata.
+>
+> **Il sito è già raggiungibile qui:**
+> `http://localhost:8080/x-sapori/index.html` — nota la porta **8080**.
+>
+> Cosa è stato verificato interrogando direttamente il server:
+>
+> | Prova | Esito |
+> |---|---|
+> | Prenotazione via API | `{"ok":true,"id":1}` in 164 ms |
+> | Riga nel database | corretta, telefono normalizzato da `019 221 3138` a `0192213138` |
+> | L'IP non viene salvato | nel database c'è un hash SHA-256 di 64 caratteri, non l'indirizzo |
+> | Campi vuoti, data passata, ora 03:00, 99 persone, niente consenso | tutti rifiutati con 422 e messaggio in italiano |
+> | Honeypot compilato | finto successo al bot, database pulito |
+> | `config.php`, `schema.sql`, `.md`, `api/notify.php` | tutti 403 |
+> | Intestazioni di sicurezza | CSP, X-Frame-Options, X-Content-Type-Options presenti |
+> | Pannello: login, elenco, CSV, cambio stato, CSRF | tutto funzionante, e senza token il cambio stato viene rifiutato |
+> | Reindirizzamenti `chi-siamo.html` e `contatti.html` | corretti dopo aver aggiunto il flag `NE` |
+>
+> **Resta una cosa sola, e la puoi fare solo tu:** compilare il modulo
+> **nel browser** e premere invio. Il lato server è provato, il lato pagina
+> anche, ma mai insieme in un unico clic. Vedi il passo 6.
+>
+> Il pannello è accessibile su `http://localhost:8080/x-sapori/admin/`
+> con la password di prova **ff8a08087b8c** — vale solo per questa copia
+> locale, il progetto vero ha il campo password vuoto.
+>
+> **Nota sull'email:** nel log di Apache non compare nessun errore `[notify]`,
+> che per come è scritto il codice significa invio riuscito. Ma la ricezione
+> non è stata verificata: quella la puoi vedere solo tu nella casella.
+
+
 Guida per far girare il sito completo — PHP, database e invio email — su
 Windows, senza hosting. Tempo previsto: **30-40 minuti** la prima volta.
 
@@ -9,7 +46,7 @@ le pagine ma non esegue nulla.
 
 ---
 
-## 1. Installare XAMPP
+## 1. Installare XAMPP  ✅ fatto da te
 
 XAMPP mette insieme le tre cose che mancano: Apache (il server web), PHP e
 MySQL (il database).
@@ -25,7 +62,7 @@ MySQL (il database).
 
 ---
 
-## 2. Accendere Apache e MySQL
+## 2. Accendere Apache e MySQL  ✅ fatto da te (porta 8080)
 
 Apri il **XAMPP Control Panel** (lo trovi nel menu Start) e premi **Start**
 accanto a **Apache** e poi accanto a **MySQL**. Devono diventare verdi.
@@ -44,7 +81,7 @@ Se cambi porta, **in tutti gli indirizzi qui sotto** scrivi
 
 ---
 
-## 3. Copiare il sito nella cartella di XAMPP
+## 3. Copiare il sito nella cartella di XAMPP  ✅ già fatto
 
 Copia l'intera cartella del progetto dentro `C:\xampp\htdocs\`, rinominandola
 `x-sapori`. Il risultato deve essere:
@@ -64,9 +101,9 @@ C:\xampp\htdocs\x-sapori\
 
 ---
 
-## 4. Creare il database
+## 4. Creare il database  ✅ già fatto
 
-1. Apri **http://localhost/phpmyadmin**
+1. Apri **http://localhost:8080/phpmyadmin**
 2. Colonna di sinistra → **Nuovo** (o *New*)
 3. Nome del database: **`xsapori`** — scritto esattamente così, minuscolo
 4. Codifica: **`utf8mb4_unicode_ci`**
@@ -83,18 +120,18 @@ Se è andata, nella colonna di sinistra sotto `xsapori` compare la tabella
 
 ---
 
-## 5. Aprire il sito
+## 5. Aprire il sito  ✅ pronto
 
-**http://localhost/x-sapori/index.html**
+**http://localhost:8080/x-sapori/index.html**
 
 Da qui gira tutto come sull'hosting vero: home, menu, prenotazione, versione
 inglese su `/en/`, pannello su `/admin/`.
 
 ---
 
-## 6. La prova vera: una prenotazione
+## 6. La prova vera: una prenotazione  ⬅️ QUESTO TOCCA A TE
 
-1. Vai su **http://localhost/x-sapori/prenota.html**
+1. Vai su **http://localhost:8080/x-sapori/prenota.html**
 2. Compila: una data fra qualche giorno, una fascia oraria, adulti e bambini,
    nome, cognome, telefono, e spunta il consenso privacy
 3. **Invia la richiesta**
@@ -119,9 +156,9 @@ Vale la pena vedere che il modulo si comporta bene quando qualcosa va storto:
 
 ---
 
-## 7. Attivare il pannello prenotazioni
+## 7. Attivare il pannello prenotazioni  ✅ già configurato per la prova
 
-1. Apri **http://localhost/x-sapori/admin/**
+1. Apri **http://localhost:8080/x-sapori/admin/**
 2. La pagina dice che manca la password: scrivine una (almeno 10 caratteri)
 3. Premi **Genera il codice** e copia il blocco che compare
 4. Incollalo in `config.php` al posto di:
