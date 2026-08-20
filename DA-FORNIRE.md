@@ -98,21 +98,59 @@ loro lavoro, ma non vendono una picanha.
 
 ---
 
-## 3. Video (li hai nominati tu)
+## 3. 🎬 Video per l'hero — l'impianto è già pronto
 
-Dimmi cosa hai e li integro. Le due possibilità sensate:
+L'hero sa già ospitare un video: il codice c'è, è stato provato e aspetta
+solo i file. Quando me li mandi, l'attivazione è **una riga di HTML**.
 
-1. **Video di sfondo nell'hero** (il wok in fiamma, il taglio della picanha,
-   la sala che si riempie). Requisiti: orizzontale, **6-10 secondi**, senza
-   audio, con un movimento lento. Lo comprimo sotto i 2 MB, parte in muto e in
-   loop, si ferma con "riduci movimento" attivo e non parte mai su rete lenta.
-2. **Video breve nelle card dei piatti** al passaggio del mouse. Più delicato:
-   su mobile non esiste il passaggio del mouse, quindi resta una foto.
+### Come funziona una volta acceso
 
-Se i video sono verticali (da Instagram o TikTok) dimmelo: cambia il modo in cui
-li inserisco, perché in un hero orizzontale un verticale non ci sta.
+- Il video parte **muto e in loop**, senza controlli, come sfondo del titolo.
+- La fotografia resta sotto e fa da **poster**: nell'istante prima che il video
+  parta non si vede mai un rettangolo nero.
+- Compare in basso a destra un **pulsante di pausa** da 44 px. Non è un vezzo:
+  il criterio WCAG 2.2.2 impone che un contenuto in movimento più lungo di
+  cinque secondi si possa fermare. Un video in loop senza pausa è una violazione.
+- Il video **non parte affatto** se: il visitatore ha attivato «riduci
+  movimento», il telefono è in risparmio dati, oppure la connessione è 2G o 3G
+  lenta. In quei casi resta la fotografia, che è già quella giusta.
+- Se il file manca o il browser rifiuta l'autoplay, si torna alla foto senza
+  lasciare buchi.
 
----
+### Che cosa filmare
+
+Un video di sfondo non deve raccontare: deve dare atmosfera dietro a un titolo.
+Le riprese che funzionano hanno **un solo movimento lento** e nessun stacco.
+
+| Soggetto | Perché funziona |
+|---|---|
+| **Il wok in fiamma**, ripreso di lato | movimento continuo, caldo, riconoscibile in mezzo secondo |
+| **La picanha tagliata al momento**, primo piano sulla lama | è il gesto più spettacolare che avete |
+| **Le mani del sushi chef** che formano un nigiri | lento, preciso, dice «fatto adesso» |
+| **Il vapore che esce dal cestello di bambù** | quasi immobile: ottimo dietro al testo |
+| **La sala che si riempie**, ripresa fissa in accelerato | racconta il locale senza mostrare volti |
+
+### Requisiti tecnici
+
+- **Orizzontale**, minimo 1920×1080. Un verticale in un hero orizzontale non ci sta.
+- **6-12 secondi.** Inizio e fine simili, così il loop non ha uno scatto.
+- **Nessun audio**: parte comunque muto, e l'audio è solo peso in più.
+- **Camera ferma o movimento lentissimo.** Niente zoom, niente stacchi, niente
+  effetti: dietro a un titolo diventano illeggibilità.
+- **Niente volti riconoscibili** senza il consenso scritto delle persone.
+- **Niente testo dentro al video**: non si traduce e non si legge da telefono.
+- Mandatemi **l'originale**, anche se pesa 200 MB: alla conversione penso io.
+
+### Cosa faccio io con i file
+
+Conversione in due formati — **WebM VP9** e **MP4 H.264** — perché nessuno dei
+due copre tutti i browser. Ritaglio a 16:9, estrazione del fotogramma migliore
+come poster, compressione con obiettivo **sotto 2 MB per file**. Sopra quel peso
+l'hero diventa più lento della pagina intera e il video fa più danni che bene.
+
+> Se avete video **verticali** (da Instagram o TikTok) ditemelo: si possono usare,
+> ma non come sfondo dell'hero. Starebbero bene in una sezione dedicata a metà
+> pagina, dove il formato verticale è un vantaggio invece che un problema.
 
 ## 4. Fatti da confermare
 

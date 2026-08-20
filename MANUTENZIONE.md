@@ -131,6 +131,35 @@ e si vede uguale.
 
 ---
 
+## 4-bis. Accendere il video nell'hero
+
+L'impianto è già nel sito e non serve toccare il JavaScript. Servono due file
+già convertiti — `hero.mp4` e `hero.webm` — dentro la cartella `uploads/`.
+
+Poi in `index.html` cercate `<div class="hero__bg">` e aggiungete i due
+attributi:
+
+```html
+<div class="hero__bg" data-video="uploads/hero.mp4" data-video-webm="uploads/hero.webm">
+```
+
+Tutto qui. Da quel momento:
+
+- il video parte muto e in loop, con la fotografia come poster;
+- compare il pulsante di pausa in basso a destra (è un obbligo di
+  accessibilità, non un optional: non toglietelo);
+- chi ha «riduci movimento» attivo, il risparmio dati acceso o una connessione
+  lenta continua a vedere la fotografia.
+
+Per **spegnerlo** basta togliere i due attributi: il sito torna alla foto.
+Ricordatevi di fare la stessa modifica in `en/index.html`.
+
+> Il video deve stare **sotto i 2 MB per file**. Sopra quel peso l'hero diventa
+> più lento di tutto il resto della pagina messo insieme, e su rete mobile il
+> visitatore se ne va prima di vederlo.
+
+---
+
 ## 5. Cambiare un testo
 
 Tutti i testi sono dentro i file `.html`, in chiaro. Cercate la frase con

@@ -361,6 +361,44 @@ button,input,select,textarea{font:inherit;color:inherit;}
     radial-gradient(130% 90% at 10% 85%,rgba(14,20,23,.72),transparent 62%);
 }
 
+/* --- Video di sfondo --------------------------------------
+   Si attiva solo quando js/site.js inserisce il <video>, cioè solo se
+   .hero__bg dichiara data-video. La foto resta sotto e fa da poster:
+   se il video non parte non si vede mai un buco nero. */
+.hero__video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center 45%;
+  opacity:0;transition:opacity 1.2s var(--ease-soft);
+}
+.hero__bg[data-video-attivo="true"] .hero__video{opacity:1;}
+/* Con il video attivo la foto sotto non serve più: la spegniamo dolcemente
+   invece di rimuoverla, così resta disponibile se il video viene messo in pausa. */
+.hero__bg[data-video-attivo="true"] img{opacity:.35;}
+.hero__bg img{transition:opacity 1.2s var(--ease-soft);}
+
+/* WCAG 2.2.2: il movimento che dura più di cinque secondi deve poter
+   essere fermato. Il pulsante compare solo se il video parte davvero. */
+.hero__video-pausa{
+  position:absolute;right:var(--gutter);bottom:var(--sp-4);z-index:2;
+  width:44px;height:44px;padding:0;
+  display:grid;place-items:center;
+  border:1px solid rgba(231,237,239,.4);border-radius:50%;
+  background:rgba(14,20,23,.6);backdrop-filter:blur(8px);
+  color:var(--carta);cursor:pointer;
+  transition:background-color var(--dur-fast) var(--ease-out),
+             border-color var(--dur-fast) var(--ease-out);
+}
+.hero__video-pausa:hover{background:rgba(14,20,23,.85);border-color:var(--ottone-30);}
+/* Due barre = in riproduzione (premi per fermare), triangolo = in pausa */
+.hero__video-pausa::before{
+  content:"";display:block;width:12px;height:13px;
+  background:currentColor;
+  clip-path:polygon(0 0,35% 0,35% 100%,0 100%,0 0,65% 0,100% 0,100% 100%,65% 100%);
+}
+.hero__video-pausa[data-fermo="true"]::before{
+  clip-path:polygon(12% 0,100% 50%,12% 100%);
+}
+
 /* La foto disponibile è larga 300 pixel: a tutto schermo si sgranerebbe.
    Sfocarla di proposito la trasforma in un fondale atmosferico.
    ISTRUZIONE: quando arriva lo scatto ad alta risoluzione, togliere la

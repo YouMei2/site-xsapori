@@ -47,6 +47,112 @@
     update();
   }
 
+  /* --- Video di sfondo nell'hero --------------------------
+   * Il video si attiva solo se il contenitore .hero__bg dichiara
+   * data-video. Finché quell'attributo non c'è, questa parte non fa
+   * nulla e l'hero resta esattamente com'è: una fotografia.
+   *
+   * Il video non parte mai quando:
+   *   - il visitatore ha chiesto di ridurre il movimento;
+   *   - il telefono è in risparmio dati;
+   *   - la connessione è 2G o 3G lenta.
+   * In tutti questi casi resta la foto, che è anche il poster.
+   *
+   * WCAG 2.2.2: un contenuto in movimento che dura più di cinque
+   * secondi deve poter essere fermato. Per questo compare il pulsante
+   * di pausa: senza, un video in loop sarebbe una violazione.
+   * ------------------------------------------------------ */
+  // Basta uno dei due formati: chi fornisce solo il WebM deve funzionare
+  // esattamente come chi fornisce solo l'MP4.
+  var sfondo = document.querySelector('.hero__bg[data-video], .hero__bg[data-video-webm]');
+  if (sfondo) {
+    var rete = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    var reteLenta = !!rete && (rete.saveData === true ||
+      ['slow-2g', '2g', '3g'].indexOf(rete.effectiveType) !== -1);
+
+    if (!reduced && !reteLenta) {
+      var poster = sfondo.querySelector('img');
+      var video = document.createElement('video');
+
+      video.className = 'hero__video';
+      video.muted = true;            // senza questo l'autoplay viene bloccato
+      video.defaultMuted = true;
+      video.autoplay = true;
+      video.loop = true;
+      video.playsInline = true;      // su iPhone evita l'apertura a tutto schermo
+      video.setAttribute('playsinline', '');
+      video.preload = 'auto';
+      video.tabIndex = -1;
+      video.setAttribute('aria-hidden', 'true');
+      if (poster) { video.poster = poster.currentSrc || poster.src; }
+
+      var sorgenti = 0;
+      [['data-video-webm', 'video/webm'], ['data-video', 'video/mp4']].forEach(function (coppia) {
+        var url = sfondo.getAttribute(coppia[0]);
+        if (!url) { return; }
+        var s = document.createElement('source');
+        s.src = url;
+        s.type = coppia[1];
+        // L'errore di caricamento arriva sul <source>, non sul <video>:
+        // ascoltarlo solo sul video lascerebbe in pagina un elemento morto.
+        s.addEventListener('error', function () {
+          sorgenti--;
+          if (sorgenti <= 0) { pulisci(); }
+        });
+        video.appendChild(s);
+        sorgenti++;
+      });
+
+      var comando = document.createElement('button');
+      comando.type = 'button';
+      comando.className = 'hero__video-pausa';
+      comando.hidden = true;
+
+      // Se il video non si carica si torna alla sola fotografia, senza
+      // lasciare in pagina elementi inutili.
+      var pulisci = function () {
+        delete sfondo.dataset.videoAttivo;
+        video.remove();
+        comando.remove();
+      };
+
+      var ETICHETTE = (document.documentElement.lang || 'it').toLowerCase().indexOf('en') === 0
+        ? { pausa: 'Pause the background video', riprendi: 'Play the background video' }
+        : { pausa: 'Metti in pausa il video di sfondo', riprendi: 'Riprendi il video di sfondo' };
+
+      var segnaStato = function () {
+        var fermo = video.paused;
+        comando.setAttribute('aria-label', fermo ? ETICHETTE.riprendi : ETICHETTE.pausa);
+        comando.dataset.fermo = String(fermo);
+      };
+
+      comando.addEventListener('click', function () {
+        if (video.paused) { video.play(); } else { video.pause(); }
+        segnaStato();
+      });
+      video.addEventListener('play', segnaStato);
+      video.addEventListener('pause', segnaStato);
+
+      // Il pulsante compare solo quando il video parte davvero: se il file
+      // manca o il browser rifiuta l'autoplay, resta la foto e nient'altro.
+      video.addEventListener('playing', function () {
+        sfondo.dataset.videoAttivo = 'true';
+        comando.hidden = false;
+        segnaStato();
+      }, { once: true });
+
+      video.addEventListener('error', pulisci);
+
+      sfondo.appendChild(video);
+      sfondo.appendChild(comando);
+
+      var avvio = video.play();
+      if (avvio && typeof avvio.catch === 'function') {
+        avvio.catch(function () { /* autoplay negato: resta la foto */ });
+      }
+    }
+  }
+
   /* --- Barra fissa su mobile ------------------------------ */
   // Appare quando l'hero è uscito dallo schermo e si ritira quando entra
   // il footer, così non copre mai indirizzo e telefono in fondo.
