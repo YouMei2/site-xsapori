@@ -113,13 +113,23 @@ Caricate nella cartella pubblica tutto **tranne** questi, che servono solo allo
 sviluppo:
 
 ```
-.dev-server.js          server locale di anteprima
+.dev-server.js             server locale di anteprima
+_audit.js                  script di controllo accessibilità
 anteprima-direzione.html   confronto fra le due varianti grafiche
-_audit.js               script di controllo accessibilità
-design-system/          documentazione di progetto
-DA-FORNIRE.md  MANUTENZIONE.md  DEPLOY.md  README.md
+anteprima-home.html        anteprima di lavorazione — 265 KB, la più pesante
+audit-miglioramenti.html   report di audit
+.thumbnail                 miniatura di lavorazione
+design-system/             documentazione di progetto
+DA-FORNIRE.md  MANUTENZIONE.md  DEPLOY.md  README.md  PROVA-LOCALE.md
+ACCESSIBILITA.md  ALLERGENI-DA-COMPILARE.md  STATO-PROGETTO.md
 .git/
 ```
+
+Questi quattro — le due anteprime, il report di audit e `.thumbnail` — pesano
+**336 KB**, e caricarli significherebbe pubblicare il dietro le quinte a
+chiunque indovini l'indirizzo. Sono fuori dal repo (`.gitignore`) e bloccati
+da `.htaccess` anche se finissero sul server per sbaglio: **tre difese, perché
+la prima che salta è sempre quella che dipende da uno che si ricorda.**
 
 Il `.htaccess` blocca comunque i file `.md` e quelli che iniziano con un punto,
 ma non caricarli è più pulito.

@@ -31,7 +31,7 @@
 
 # Server di sviluppo, anteprime e strumenti interni: se per errore
 # finiscono sull'hosting, restano comunque irraggiungibili.
-<FilesMatch "(?i)^(anteprima-|_audit|_frammenti)">
+<FilesMatch "(?i)^(anteprima-|audit-|_audit|_frammenti)">
   Require all denied
 </FilesMatch>
 

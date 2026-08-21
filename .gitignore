@@ -8,3 +8,9 @@ config.php
 # Sistema
 Thumbs.db
 .DS_Store
+
+# Anteprime e report di lavorazione: restano sul disco, fuori dal repo
+# e fuori dall'FTP. Bloccati anche da .htaccess, per sicurezza doppia.
+anteprima-*.html
+audit-*.html
+.thumbnail
