@@ -29,7 +29,8 @@
     vuoto: 'Nessun piatto corrisponde'
   };
 
-  var chips = Array.prototype.slice.call(document.querySelectorAll('.chip[data-filter]'));
+  var chips = Array.prototype.slice.call(document.querySelectorAll(".chip[data-filter]"));
+  var chipsCucina = Array.prototype.slice.call(document.querySelectorAll(".chip[data-cucina]"));
   var search = document.getElementById('menu-search');
   var status = document.getElementById('menu-status');
   var conteggio = document.getElementById('menu-conteggio');
@@ -37,13 +38,21 @@
   var reset = document.getElementById('reset-filters');
   var courses = Array.prototype.slice.call(document.querySelectorAll('.menu-course'));
 
-  // Testo cercabile calcolato una volta sola
+  // Testo cercabile calcolato una volta sola.
+  // La cucina sta sul piatto quando la sezione e mista (antipasti, dessert),
+  // altrimenti la eredita dalla sezione. Le bevande non ne hanno nessuna:
+  // accompagnano qualunque cucina e non spariscono mai per quel filtro.
   dishes.forEach(function (d) {
     d._testo = (d.textContent || '').toLowerCase();
     d._tags = (d.getAttribute('data-tags') || '').split(/\s+/);
+    var corso = d.closest ? d.closest('.menu-course') : null;
+    var c = d.getAttribute('data-cucina') ||
+            (corso && corso.getAttribute('data-cucina')) || '';
+    d._cucine = c ? c.split(/\s+/) : [];
   });
 
   var attivi = [];
+  var cucine = [];
   var query = '';
 
   var normalizza = function (s) {
@@ -57,8 +66,11 @@
 
     dishes.forEach(function (d) {
       var okTag = attivi.every(function (t) { return d._tags.indexOf(t) !== -1; });
+      // OR fra le cucine scelte; un piatto senza cucina (le bevande) passa sempre
+      var okCucina = !cucine.length || !d._cucine.length ||
+        cucine.some(function (c) { return d._cucine.indexOf(c) !== -1; });
       var okTesto = !query || normalizza(d._testo).indexOf(query) !== -1;
-      var mostra = okTag && okTesto;
+      var mostra = okTag && okCucina && okTesto;
       d.hidden = !mostra;
       if (mostra) visibili++;
     });
@@ -71,7 +83,7 @@
 
     if (noResults) noResults.hidden = visibili !== 0;
 
-    var senzaFiltri = !attivi.length && !query;
+    var senzaFiltri = !attivi.length && !cucine.length && !query;
 
     if (status) {
       if (senzaFiltri) status.textContent = T.completo(dishes.length);
@@ -99,6 +111,16 @@
     });
   });
 
+  chipsCucina.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var c = chip.getAttribute('data-cucina');
+      var i = cucine.indexOf(c);
+      if (i === -1) { cucine.push(c); chip.setAttribute('aria-pressed', 'true'); }
+      else { cucine.splice(i, 1); chip.setAttribute('aria-pressed', 'false'); }
+      applica();
+    });
+  });
+
   if (search) {
     var timer = null;
     search.addEventListener('input', function () {
@@ -113,8 +135,10 @@
   if (reset) {
     reset.addEventListener('click', function () {
       attivi = [];
+      cucine = [];
       query = '';
       chips.forEach(function (c) { c.setAttribute('aria-pressed', 'false'); });
+      chipsCucina.forEach(function (c) { c.setAttribute('aria-pressed', 'false'); });
       if (search) search.value = '';
       applica();
       if (search) search.focus();

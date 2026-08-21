@@ -96,6 +96,19 @@ php -r "echo bin2hex(random_bytes(32));"
 
 ## 4. Caricare i file
 
+> ### 🔴 A ogni pubblicazione: alzare il numero di versione
+>
+> Nelle pagine, il foglio di stile e gli script sono richiamati come
+> `styles.css?v=9` e `js/site.js?v=9`. **Quel numero va aumentato ogni volta
+> che modificate CSS o JavaScript**, con un cerca-e-sostituisci su tutti i
+> file `.html` (italiani e inglesi).
+>
+> Non è una formalità. `.htaccess` dice ai browser di tenere CSS e JavaScript
+> in memoria per **sette giorni**. Senza cambiare il numero, chi ha già
+> visitato il sito riceve l'HTML nuovo e il CSS vecchio: un mescolamento che
+> non si vede con `curl`, non si vede in una finestra anonima, e si vede solo
+> sul telefono di un cliente che era passato la settimana prima.
+
 Caricate nella cartella pubblica tutto **tranne** questi, che servono solo allo
 sviluppo:
 

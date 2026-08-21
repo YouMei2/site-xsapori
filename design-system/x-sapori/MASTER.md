@@ -14,9 +14,17 @@ Tre conseguenze non negoziabili:
 
 1. **Il petrolio è il colore delle azioni**, non l'oro. L'oro nella sala vera è
    solo un filetto sui bordi dei tavoli: nel sito resta filetto.
-2. **Il chiaro è il registro dominante.** Le sezioni alternano marmo chiaro e
-   sala scura. Un sito interamente scuro appiattisce la gerarchia dopo due
-   schermate ed è il difetto principale della versione precedente.
+2. **Lo scuro è il registro base, il chiaro è il tavolo.** *(Rovesciato il
+   21 agosto 2026, guardando la fotografia ad alta risoluzione della sala:
+   pareti in marmo quasi nero, lamelle retroilluminate, buffet come pozza di
+   luce calda. Prima questo punto diceva l'opposto e il sito non somigliava
+   al locale.)* Le superfici chiare sono riservate a dove si legge o si
+   scrive a lungo — menu, prezzi, modulo, testi legali — perché nella sala
+   vera il chiaro non è l'ambiente: è il piano del tavolo, col suo filetto
+   d'ottone. Resta vero che un sito interamente scuro appiattisce la
+   gerarchia dopo due schermate: le isole chiare e i tre livelli di
+   elevazione (`sala-90/80/70`) esistono per impedirlo. Mai più di tre
+   sezioni scure di fila senza un cambio di elevazione.
 3. **L'arco è il motivo grafico ricorrente**: le quattro cucine sotto l'hero,
    i divisori. Sottile, mai decorativo e basta.
 
@@ -39,8 +47,24 @@ Tre conseguenze non negoziabili:
 | `--carta` | `#E7EDEF` | testo su scuro |
 
 I nomi semantici (`--surface`, `--on-surface`, `--accent`, `--detail`, `--rule`)
-sono l'unica cosa che i componenti possono usare. La classe `.on-dark`
-ridefinisce **solo i semantici**: nessun componente va riscritto per il tema scuro.
+sono l'unica cosa che i componenti possono usare.
+
+**I due registri sono entrambi espliciti.** `body, .on-dark, .hero, .drawer,
+.site-footer` ridefiniscono il blocco intero verso la sala; `:root, .cornice,
+.on-light` lo ridefiniscono verso il tavolo. Nessuno dei due può cambiare solo
+il fondo: ogni semantico va riscritto, `--sigillo` e `--success-text` compresi.
+Chi aggiunge una superficie la aggiunge a uno dei due elenchi, mai per conto suo.
+
+Token nati con l'inversione:
+
+| Token | Chiaro | Scuro | Perché esiste |
+|---|---|---|---|
+| `--accent-fill` | `--petrolio-70` | `--petrolio-60` | il petrolio scuro come riempimento su fondo sala dà 2,71:1, sotto il 3:1 di WCAG 1.4.11 |
+| `--arc` | `--ottone-50` | `--petrolio-20` | nella sala le lamelle sono petrolio; l'ottone è il filetto dei tavoli |
+| `--surface-blur` | `rgba(251,249,245,.94)` | `rgba(14,20,23,.92)` | header e barra del menu sono traslucidi e devono seguire il registro |
+| `--success-text` / `--error-text` | pieni | schiariti | verde e rosso di stato su fondo sala scendevano a 2,6:1 |
+| `--header-h` | `4.25rem` | — | tre cose devono conoscerla: ancore, barra del menu, intestazioni |
+| `--luce-calda` / `--luce-fredda` | — | — | **mai testo, mai fondo pieno**: solo gradienti e aloni |
 
 ### Contrasti verificati
 
@@ -54,6 +78,19 @@ ridefinisce **solo i semantici**: nessun componente va riscritto per il tema scu
 | `--ottone-30` su `--sala-90` | 10,8:1 | AAA |
 | `--ottone-70` su `--marmo-10` | 4,86:1 | AA |
 | `--ottone-50` su `--marmo-00` | 2,9:1 | **solo elementi non testuali** |
+| `--petrolio-20` su `--sala-90` / `-80` / `-70` | 10,87 / 9,77 / 8,13:1 | AAA |
+| `--carta` su `--sala-80` / `-70` | 14,12 / 11,75:1 | AAA |
+| `--on-surface-dim` scuro su `--sala-80` / `-70` | 8,03 / 6,68:1 | AAA / AA |
+| `--petrolio-60` come riempimento su `--sala-90` | 4,04:1 | AA non testuale |
+| bianco su `--petrolio-60` | 4,59:1 | AA |
+| `--ottone-50` (filetto del bottone) su `--sala-90` | 6,16:1 | percepibile sempre |
+| `--success-text` scuro `#7FD1AC` su `--sala-80` | 9,24:1 | AAA |
+| **`--petrolio-70` come testo o riempimento su `--sala-90`** | **2,71:1** | ❌ **da non usare mai**: è il motivo di `--accent-fill` |
+
+Misurato nel browser sul rendering reale (non stimato) dopo l'inversione:
+**148 elementi sulla home, 232 sul menu, 75 sulla prenotazione — nessuno sotto
+soglia.** Lo stesso giro aveva trovato 6 regressioni sulla home e 4 sul menu,
+tutte dovute a primitivi usati al posto dei semantici.
 
 ## Tipografia
 
@@ -65,6 +102,29 @@ ridefinisce **solo i semantici**: nessun componente va riscritto per il tema scu
 
 Self-hostati in `assets/fonts/`, sottoinsieme latino, **104 KB in tutto**.
 Nessuna chiamata a Google Fonts: prestazioni e GDPR.
+
+### Sostituire un font
+
+Le tre famiglie sono nominate **solo** nei tre blocchi `@font-face` e nei tre
+token `--font-display/body/data`: nessuna regola le chiama per nome. Cambiare
+font significa sostituire un file `.woff2` e una riga.
+
+Le regolazioni ottiche legate alle proporzioni del carattere sono token, non
+letterali sparsi: `--track-display`, `--lh-tight`, `--wght-body/strong/display`.
+
+Restano tre punti da ricontrollare a occhio con ogni famiglia nuova:
+
+1. **`--lh-tight:1.05`** è molto stretta. Un display con ascendenti lunghe fa
+   toccare le righe dei titoli su due o tre righe.
+2. **`.hero__title em{font-size:.6em}`** è proporzionale al titolo: con un
+   carattere di corpo ottico diverso il secondo verso cambia peso relativo.
+3. **`font-synthesis-weight:none`** è voluto (niente grassetti finti), ma se la
+   famiglia nuova non ha un 600 vero, tutti i `--wght-strong` scendono a 400
+   **senza nessun errore visibile**. Controllare prima di sostituire.
+
+Vincoli non negoziabili per i candidati: self-hostati in `assets/fonts/`,
+sottoinsieme latino, nessuna chiamata esterna, peso complessivo paragonabile
+ai 104 KB attuali.
 
 Scala fluida: `--fs-display` → `--fs-micro`. Corpo del testo 17px, interlinea
 1,62. Cifre tabulari su prezzi e orari, per non far ballare le colonne.

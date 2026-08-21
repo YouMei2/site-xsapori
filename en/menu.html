@@ -24,7 +24,7 @@
 <link rel="manifest" href="../site.webmanifest">
 <link rel="preload" href="../assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../styles.css?v=1">
 <script>document.documentElement.classList.add('js');</script>
 
 <script type="application/ld+json">
@@ -121,6 +121,9 @@
     </div>
   </section>
 
+
+  <!-- Il tavolo: registro chiaro fino alla fine dell'elenco. -->
+  <div class="on-light">
   <!-- Barra di navigazione del menu: corsi, filtri, ricerca -->
   <div class="menu-bar" id="menu-bar">
     <div class="wrap menu-bar__inner">
@@ -134,6 +137,14 @@
         <a href="#dessert">Desserts</a>
         <a href="#bevande">Drinks</a>
       </nav>
+
+      <div class="filters" role="group" aria-label="Filter by kitchen">
+        <span class="filters__label" id="cucine-label">Kitchen</span>
+        <button class="chip chip--cucina" type="button" data-cucina="italia" aria-pressed="false">Italy</button>
+        <button class="chip chip--cucina" type="button" data-cucina="brasile" aria-pressed="false">Brazil</button>
+        <button class="chip chip--cucina" type="button" data-cucina="cina" aria-pressed="false">China</button>
+        <button class="chip chip--cucina" type="button" data-cucina="giappone" aria-pressed="false">Japan</button>
+      </div>
 
       <div class="filters" role="group" aria-label="Filter the dishes">
         <span class="filters__label" id="filtri-label">Filter</span>
@@ -175,7 +186,7 @@
       </p>
     </aside>
 
-    <section class="menu-course" id="antipasti" aria-labelledby="antipasti-t">
+    <section class="menu-course" data-cucina="cina" id="antipasti" aria-labelledby="antipasti-t">
       <div class="menu-course__head">
         <p class="eyebrow">To begin</p>
         <h2 id="antipasti-t">Starters</h2>
@@ -185,15 +196,15 @@
         <div class="dish"><div><span class="dish__name">Spring rolls</span><span class="dish__desc">Crisp vegetables, thin pastry, sweet and sour sauce.</span></div></div>
         <div class="dish" data-tags="pesce"><div><span class="dish__name">Battered prawns</span><span class="dish__desc">Whole prawns, light batter, sesame mayonnaise.</span></div></div>
         <div class="dish" data-tags="pesce"><div><span class="dish__name">Prawn crackers</span><span class="dish__desc">Puffed prawn crisps, served warm.</span></div></div>
-        <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Wakame seaweed</span><span class="dish__desc">Marinated seaweed salad with sesame.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegan</span></div></div>
-        <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Salted edamame</span><span class="dish__desc">Blanched soy beans with sea salt.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegan</span></div></div>
-        <div class="dish" data-tags="pesce"><div><span class="dish__name">Octopus salad</span><span class="dish__desc">Octopus, celery and chilli oil.</span></div></div>
+        <div class="dish" data-cucina="giappone" data-tags="veg vegano"><div><span class="dish__name">Wakame seaweed</span><span class="dish__desc">Marinated seaweed salad with sesame.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegan</span></div></div>
+        <div class="dish" data-cucina="giappone" data-tags="veg vegano"><div><span class="dish__name">Salted edamame</span><span class="dish__desc">Blanched soy beans with sea salt.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegan</span></div></div>
+        <div class="dish" data-cucina="italia" data-tags="pesce"><div><span class="dish__name">Octopus salad</span><span class="dish__desc">Octopus, celery and chilli oil.</span></div></div>
         <div class="dish"><div><span class="dish__name">Fried sweet potato</span><span class="dish__desc">Sweet potato sticks with honey.</span></div></div>
         <div class="dish" data-tags="carne"><div><span class="dish__name">Crispy sesame chicken</span><span class="dish__desc">Battered bites, sweet and sour sauce, sesame seeds.</span></div></div>
       </div>
     </section>
 
-    <section class="menu-course" id="italiano" aria-labelledby="italiano-t">
+    <section class="menu-course" data-cucina="italia" id="italiano" aria-labelledby="italiano-t">
       <div class="menu-course__head">
         <p class="eyebrow">Italian kitchen</p>
         <h2 id="italiano-t">Pasta, salads and mozzarella</h2>
@@ -211,7 +222,7 @@
       </div>
     </section>
 
-    <section class="menu-course" id="vapore" aria-labelledby="vapore-t">
+    <section class="menu-course" data-cucina="cina" id="vapore" aria-labelledby="vapore-t">
       <div class="menu-course__head">
         <p class="eyebrow eyebrow--cina">From the basket</p>
         <h2 id="vapore-t">Steamed</h2>
@@ -227,7 +238,7 @@
       </div>
     </section>
 
-    <section class="menu-course" id="sushi" aria-labelledby="sushi-t">
+    <section class="menu-course" data-cucina="giappone" id="sushi" aria-labelledby="sushi-t">
       <div class="menu-course__head">
         <p class="eyebrow">Sushi counter</p>
         <h2 id="sushi-t">Sushi and tartare</h2>
@@ -249,7 +260,7 @@
       </div>
     </section>
 
-    <section class="menu-course" id="wok" aria-labelledby="wok-t">
+    <section class="menu-course" data-cucina="cina" id="wok" aria-labelledby="wok-t">
       <div class="menu-course__head">
         <p class="eyebrow eyebrow--cina">High flame</p>
         <h2 id="wok-t">Wok and noodles</h2>
@@ -267,7 +278,7 @@
       </div>
     </section>
 
-    <section class="menu-course" id="brace" aria-labelledby="brace-t">
+    <section class="menu-course" data-cucina="brasile" id="brace" aria-labelledby="brace-t">
       <div class="menu-course__head">
         <p class="eyebrow">Churrasco</p>
         <h2 id="brace-t">Brazilian barbecue</h2>
@@ -286,7 +297,7 @@
       </div>
     </section>
 
-    <section class="menu-course" id="dessert" aria-labelledby="dessert-t">
+    <section class="menu-course" data-cucina="italia" id="dessert" aria-labelledby="dessert-t">
       <div class="menu-course__head">
         <p class="eyebrow">The finish</p>
         <h2 id="dessert-t">Desserts</h2>
@@ -295,10 +306,10 @@
       <div class="dish-list">
         <div class="dish"><div><span class="dish__name">Tiramisù</span><span class="dish__desc">Ladyfingers, mascarpone and bitter cocoa on top.</span></div><div class="dish__tags"><span class="tag">House-made</span></div></div>
         <div class="dish" data-tags="veg"><div><span class="dish__name">Artisan ice cream</span><span class="dish__desc">A bowl with several flavours: fiordilatte, strawberry, chocolate, lemon.</span></div><div class="dish__tags"><span class="tag tag--veg">Veg</span></div></div>
-        <div class="dish"><div><span class="dish__name">Fried ice cream</span><span class="dish__desc">The classic: warm crust, cold centre.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Assorted mochi</span><span class="dish__desc">Green tea, mango, chocolate.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Fried banana with honey</span><span class="dish__desc">Served warm with sesame.</span></div></div>
-        <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Fresh pineapple</span><span class="dish__desc">Cut to order.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegan</span></div></div>
+        <div class="dish" data-cucina="cina"><div><span class="dish__name">Fried ice cream</span><span class="dish__desc">The classic: warm crust, cold centre.</span></div></div>
+        <div class="dish" data-cucina="giappone"><div><span class="dish__name">Assorted mochi</span><span class="dish__desc">Green tea, mango, chocolate.</span></div></div>
+        <div class="dish" data-cucina="cina"><div><span class="dish__name">Fried banana with honey</span><span class="dish__desc">Served warm with sesame.</span></div></div>
+        <div class="dish" data-cucina="brasile" data-tags="veg vegano"><div><span class="dish__name">Fresh pineapple</span><span class="dish__desc">Cut to order.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegan</span></div></div>
         <div class="dish"><div><span class="dish__name">Fried custard</span><span class="dish__desc">Golden cubes, icing sugar.</span></div></div>
         <div class="dish"><div><span class="dish__name">Chocolate fondant</span><span class="dish__desc">Molten centre, vanilla ice cream.</span></div></div>
       </div>
@@ -329,6 +340,8 @@
 
   </div>
 
+  </div><!-- /on-light: fine del tavolo -->
+
   <!-- Formule, ripetute qui perché è la domanda che nasce leggendo il menu -->
   <section class="section on-dark" aria-labelledby="formule-menu">
     <div class="wrap">
@@ -349,7 +362,7 @@
     </div>
   </section>
 
-  <section class="cta-band section--alt">
+  <section class="cta-band on-dark">
     <div class="wrap cta-band__inner">
       <div class="reveal">
         <p class="eyebrow">Decided where to start?</p>
@@ -363,6 +376,11 @@
   </section>
 
 </main>
+
+<nav class="barra-fissa" id="barra-fissa" aria-label="Quick actions">
+  <a class="btn btn--primary" href="book.html">Book</a>
+  <a class="btn btn--ghost" href="tel:+390192213138">Call</a>
+</nav>
 
 <footer class="site-footer">
   <div class="wrap">
@@ -406,7 +424,7 @@
   </div>
 </footer>
 
-<script src="../js/site.js" defer></script>
-<script src="../js/menu.js" defer></script>
+<script src="../js/site.js?v=1" defer></script>
+<script src="../js/menu.js?v=1" defer></script>
 </body>
 </html>

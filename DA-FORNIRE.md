@@ -76,6 +76,22 @@ loro lavoro, ma non vendono una picanha.
 - **Luce**: quella vera del locale, la sera con le luci accese. Niente flash
   frontale: appiattisce e ingiallisce il marmo.
 
+### I contenitori sono già pronti e provati
+
+Verificato il 21 agosto 2026, **prima** che le foto esistano, proprio perché il
+giorno dello scambio non si scopra che il riquadro cambia altezza:
+
+| Contenitore | Proporzioni | Pixel da consegnare | Peso massimo | Come si sostituisce |
+|---|---|---|---|---|
+| Hero | 16:9 | 2400×1350 | 320 KB | l'`<img>` c'è già: si cambia `src` e si toglie `class="is-provvisoria"` |
+| Card delle quattro cucine (×4) | 4:3 | 1200×900 | 160 KB | `<div class="plate">` → `<img>`; la regola `.card__media img` esiste già |
+| Sezione «La sala» (×2) | 16:10 | 1600×1000 | 200 KB | `<div class="plate plate--wide">` → `<img class="plate plate--wide">`; la regola `img.plate` esiste già |
+| Cornice della sala | libere | lato lungo 1600 | 200 KB | si alza il `max-width:380px` di `.cornice` |
+
+Consegnate gli originali: al ritaglio, alla conversione in AVIF/WebP e ai pesi
+penso io. Ogni `<img>` avrà `width` e `height` dichiarati, così la pagina non
+si sposta al caricamento, e un `alt` scritto a mano.
+
 ### Elenco degli scatti
 
 | # | Soggetto | Formato | Dove finisce |
@@ -154,6 +170,31 @@ l'hero diventa più lento della pagina intera e il video fa più danni che bene.
 > Se avete video **verticali** (da Instagram o TikTok) ditemelo: si possono usare,
 > ma non come sfondo dell'hero. Starebbero bene in una sezione dedicata a metà
 > pagina, dove il formato verticale è un vantaggio invece che un problema.
+
+## 3-bis. 🔴 A quale cucina appartiene ogni piatto
+
+Il menu ora si può filtrare per cucina — Italia, Brasile, Cina, Giappone —
+perché la home promette quattro cucine e prima non c'era modo di isolarne una.
+Le sezioni chiare le ho assegnate da solo (Sushi → Giappone, Brace → Brasile,
+Wok e Al vapore → Cina, Primi → Italia). **Undici piatti sono ambigui e li ho
+decisi a occhio: confermali o correggili**, perché un filtro che sbaglia è
+peggio di un filtro assente.
+
+| Piatto | Assegnato a | Perché ho dubitato |
+|---|---|---|
+| Insalata di polpo | Italia | sta fra gli antipasti cinesi ma è mediterranea |
+| Alghe wakame, Edamame | Giappone | in una sezione altrimenti cinese |
+| Gelato fritto, Banana fritta e miele | Cina | in una sezione dessert altrimenti italiana |
+| Mochi assortiti | Giappone | idem |
+| Ananas fresco | Brasile | è il classico della churrascaria, ma può essere solo frutta |
+| **Salmone teriyaki** | Brasile | è nella sezione Brace: nome giapponese, cottura brasiliana |
+| **Anatra croccante** | Brasile | è nella sezione Brace ma il piatto è cinese |
+| Gamberoni, Capesante | Brasile | sono alla griglia, quindi in Brace |
+
+Le **bevande non hanno cucina**: restano visibili con qualunque filtro, perché
+accompagnano tutto. Se preferisci che spariscano, si cambia una riga.
+
+---
 
 ## 4. Fatti da confermare
 

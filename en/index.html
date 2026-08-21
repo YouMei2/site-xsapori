@@ -27,7 +27,7 @@
 <link rel="manifest" href="../site.webmanifest">
 <link rel="preload" href="../assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../styles.css?v=1">
 <!-- Segna che il JavaScript è attivo: solo in quel caso le sezioni
      partono nascoste per poi comparire. Senza JS il sito resta leggibile. -->
 <script>document.documentElement.classList.add('js');</script>
@@ -196,7 +196,7 @@
       <p class="hero__meta enter" style="--d:600ms">
         <span>Via Luigi Pirandello, 2r — Savona</span>
         <span>Every day · 12:00–15:00 · 19:00–23:00</span>
-        <span><a href="tel:+390192213138" style="color:inherit">019 221 3138</a></span>
+        <span><a class="hero__tel" href="tel:+390192213138">019 221 3138</a></span>
       </p>
 
       <div class="cucine enter" style="--d:720ms">
@@ -220,7 +220,7 @@
   </section>
 
   <!-- =============== COME FUNZIONA =============== -->
-  <section class="section" id="come-funziona" aria-labelledby="come-t">
+  <section class="section section--alt" id="come-funziona" aria-labelledby="come-t">
     <div class="wrap">
       <div class="section__head reveal">
         <p class="eyebrow">How it works</p>
@@ -266,7 +266,7 @@
   </section>
 
   <!-- =============== LE QUATTRO CUCINE =============== -->
-  <section class="section section--alt" aria-labelledby="cucine-t">
+  <section class="section" aria-labelledby="cucine-t">
     <div class="wrap">
       <div class="section__head reveal">
         <p class="eyebrow">From the menu</p>
@@ -334,7 +334,7 @@
   </section>
 
   <!-- =============== FORMULE E PREZZI =============== -->
-  <section class="section on-dark" id="formule" aria-labelledby="formule-t">
+  <section class="section on-light" id="formule" aria-labelledby="formule-t">
     <div class="wrap">
       <div class="section__head reveal">
         <p class="eyebrow">Set menus</p>
@@ -385,7 +385,7 @@
 
       <div class="reveal" style="margin-top:var(--sp-5);display:flex;flex-wrap:wrap;gap:var(--sp-4);align-items:center;justify-content:space-between">
         <p class="lead" style="margin:0">
-          <strong style="color:var(--ottone-30)">Children under 120 cm:</strong>
+          <strong class="testo-dettaglio">Children under 120 cm:</strong>
           €9.90 at lunch and €12.90 at dinner, every day.
         </p>
         <a class="btn btn--primary" href="book.html">Book a table</a>
@@ -444,7 +444,8 @@
       <div class="split" style="margin-top:var(--sp-5)">
         <div class="reveal">
           <p class="stato" id="stato-apertura" data-open="false">
-            <span id="stato-testo">Checking opening hours…</span>
+            <!-- No-JavaScript fallback: this is information, not decoration. -->
+            <span id="stato-testo">Open every day · 12:00–15:00 and 19:00–23:00</span>
           </p>
 
           <ul class="orari">
@@ -474,7 +475,7 @@
             <div class="mappa__consent" id="mappa-consent">
               <p>The map is provided by Google and sets third-party cookies. We load it only if you ask.</p>
               <p style="margin-inline:auto">
-                <button class="btn btn--primary" type="button" id="mappa-load">Load the map</button>
+                <button class="btn btn--ghost" type="button" id="mappa-load">Load the map</button>
               </p>
               <p style="margin-inline:auto">
                 <a class="btn btn--ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=Via+Luigi+Pirandello+2r,+17100+Savona" target="_blank" rel="noopener">Directions</a>
@@ -487,7 +488,7 @@
   </section>
 
   <!-- =============== DOMANDE =============== -->
-  <section class="section" id="domande" aria-labelledby="domande-t">
+  <section class="section on-light" id="domande" aria-labelledby="domande-t">
     <div class="wrap wrap--narrow">
       <div class="section__head reveal" style="max-width:none">
         <p class="eyebrow">Frequently asked</p>
@@ -597,6 +598,6 @@
   </div>
 </footer>
 
-<script src="../js/site.js" defer></script>
+<script src="../js/site.js?v=1" defer></script>
 </body>
 </html>

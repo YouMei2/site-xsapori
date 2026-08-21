@@ -24,7 +24,7 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=1">
 <script>document.documentElement.classList.add('js');</script>
 
 <script type="application/ld+json">
@@ -121,6 +121,10 @@
     </div>
   </section>
 
+
+  <!-- Il tavolo: da qui alla fine dell'elenco il registro è chiaro.
+       È la lettura più lunga del sito, 67 piatti. -->
+  <div class="on-light">
   <!-- Barra di navigazione del menu: corsi, filtri, ricerca -->
   <div class="menu-bar" id="menu-bar">
     <div class="wrap menu-bar__inner">
@@ -134,6 +138,19 @@
         <a href="#dessert">Dessert</a>
         <a href="#bevande">Bevande</a>
       </nav>
+
+      <!-- La home promette quattro cucine e i quattro archi dell'hero puntano
+           qui: senza questi chip non c'era modo di isolarne una, perché la
+           Cina è divisa fra "Al vapore" e "Wok" e gli antipasti sono misti.
+           Fra loro sono in OR (Cina + Giappone = tutte e due), con i filtri
+           dietetici in AND. Le bevande non hanno cucina e restano sempre. -->
+      <div class="filters" role="group" aria-label="Filtra per cucina">
+        <span class="filters__label" id="cucine-label">Cucina</span>
+        <button class="chip chip--cucina" type="button" data-cucina="italia" aria-pressed="false">Italia</button>
+        <button class="chip chip--cucina" type="button" data-cucina="brasile" aria-pressed="false">Brasile</button>
+        <button class="chip chip--cucina" type="button" data-cucina="cina" aria-pressed="false">Cina</button>
+        <button class="chip chip--cucina" type="button" data-cucina="giappone" aria-pressed="false">Giappone</button>
+      </div>
 
       <div class="filters" role="group" aria-label="Filtra i piatti">
         <span class="filters__label" id="filtri-label">Filtra</span>
@@ -176,7 +193,7 @@
       </p>
     </aside>
 
-    <section class="menu-course" id="antipasti" aria-labelledby="antipasti-t">
+    <section class="menu-course" data-cucina="cina" id="antipasti" aria-labelledby="antipasti-t">
       <div class="menu-course__head">
         <p class="eyebrow">Per cominciare</p>
         <h2 id="antipasti-t">Antipasti</h2>
@@ -186,15 +203,15 @@
         <div class="dish"><div><span class="dish__name">Involtini primavera</span><span class="dish__desc">Verdure croccanti, sfoglia sottile, salsa agrodolce.</span></div></div>
         <div class="dish" data-tags="pesce"><div><span class="dish__name">Gamberi in pastella</span><span class="dish__desc">Gamberi interi fritti leggeri, maionese al sesamo.</span></div></div>
         <div class="dish" data-tags="pesce"><div><span class="dish__name">Nuvole di drago</span><span class="dish__desc">Chips di gambero soffiate, servite calde.</span></div></div>
-        <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Alghe wakame</span><span class="dish__desc">Insalata di alghe marinate al sesamo.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span></div></div>
-        <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Edamame al sale</span><span class="dish__desc">Baccelli di soia scottati e salati.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span></div></div>
-        <div class="dish" data-tags="pesce"><div><span class="dish__name">Insalata di polpo</span><span class="dish__desc">Polpo, sedano e olio al peperoncino.</span></div></div>
+        <div class="dish" data-cucina="giappone" data-tags="veg vegano"><div><span class="dish__name">Alghe wakame</span><span class="dish__desc">Insalata di alghe marinate al sesamo.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span></div></div>
+        <div class="dish" data-cucina="giappone" data-tags="veg vegano"><div><span class="dish__name">Edamame al sale</span><span class="dish__desc">Baccelli di soia scottati e salati.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span></div></div>
+        <div class="dish" data-cucina="italia" data-tags="pesce"><div><span class="dish__name">Insalata di polpo</span><span class="dish__desc">Polpo, sedano e olio al peperoncino.</span></div></div>
         <div class="dish"><div><span class="dish__name">Patatine dolci fritte</span><span class="dish__desc">Bastoncini di patata americana con miele.</span></div></div>
         <div class="dish" data-tags="carne"><div><span class="dish__name">Pollo croccante al sesamo</span><span class="dish__desc">Bocconcini in pastella, salsa agrodolce e semi di sesamo.</span></div></div>
       </div>
     </section>
 
-    <section class="menu-course" id="italiano" aria-labelledby="italiano-t">
+    <section class="menu-course" data-cucina="italia" id="italiano" aria-labelledby="italiano-t">
       <div class="menu-course__head">
         <p class="eyebrow">Cucina italiana</p>
         <h2 id="italiano-t">Primi, insalate e mozzarella</h2>
@@ -212,7 +229,7 @@
       </div>
     </section>
 
-    <section class="menu-course" id="vapore" aria-labelledby="vapore-t">
+    <section class="menu-course" data-cucina="cina" id="vapore" aria-labelledby="vapore-t">
       <div class="menu-course__head">
         <p class="eyebrow eyebrow--cina">Dal cestello</p>
         <h2 id="vapore-t">Al vapore</h2>
@@ -228,7 +245,7 @@
       </div>
     </section>
 
-    <section class="menu-course" id="sushi" aria-labelledby="sushi-t">
+    <section class="menu-course" data-cucina="giappone" id="sushi" aria-labelledby="sushi-t">
       <div class="menu-course__head">
         <p class="eyebrow">Banco sushi</p>
         <h2 id="sushi-t">Sushi e tartare</h2>
@@ -250,7 +267,7 @@
       </div>
     </section>
 
-    <section class="menu-course" id="wok" aria-labelledby="wok-t">
+    <section class="menu-course" data-cucina="cina" id="wok" aria-labelledby="wok-t">
       <div class="menu-course__head">
         <p class="eyebrow eyebrow--cina">Fuoco vivo</p>
         <h2 id="wok-t">Wok e primi</h2>
@@ -268,7 +285,7 @@
       </div>
     </section>
 
-    <section class="menu-course" id="brace" aria-labelledby="brace-t">
+    <section class="menu-course" data-cucina="brasile" id="brace" aria-labelledby="brace-t">
       <div class="menu-course__head">
         <p class="eyebrow">Churrasco</p>
         <h2 id="brace-t">Brace brasiliana</h2>
@@ -287,7 +304,7 @@
       </div>
     </section>
 
-    <section class="menu-course" id="dessert" aria-labelledby="dessert-t">
+    <section class="menu-course" data-cucina="italia" id="dessert" aria-labelledby="dessert-t">
       <div class="menu-course__head">
         <p class="eyebrow">Il finale</p>
         <h2 id="dessert-t">Dessert</h2>
@@ -296,10 +313,10 @@
       <div class="dish-list">
         <div class="dish"><div><span class="dish__name">Tiramisù</span><span class="dish__desc">Savoiardi, mascarpone e cacao amaro in superficie.</span></div><div class="dish__tags"><span class="tag">Fatto in casa</span></div></div>
         <div class="dish" data-tags="veg"><div><span class="dish__name">Gelato artigianale</span><span class="dish__desc">Coppetta con più gusti: fiordilatte, fragola, cioccolato, limone.</span></div><div class="dish__tags"><span class="tag tag--veg">Veg</span></div></div>
-        <div class="dish"><div><span class="dish__name">Gelato fritto</span><span class="dish__desc">Il classico: crosta calda, cuore freddo.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Mochi assortiti</span><span class="dish__desc">Tè verde, mango, cioccolato.</span></div></div>
-        <div class="dish"><div><span class="dish__name">Banana fritta e miele</span><span class="dish__desc">Servita calda con sesamo.</span></div></div>
-        <div class="dish" data-tags="veg vegano"><div><span class="dish__name">Ananas fresco</span><span class="dish__desc">Tagliato al momento.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span></div></div>
+        <div class="dish" data-cucina="cina"><div><span class="dish__name">Gelato fritto</span><span class="dish__desc">Il classico: crosta calda, cuore freddo.</span></div></div>
+        <div class="dish" data-cucina="giappone"><div><span class="dish__name">Mochi assortiti</span><span class="dish__desc">Tè verde, mango, cioccolato.</span></div></div>
+        <div class="dish" data-cucina="cina"><div><span class="dish__name">Banana fritta e miele</span><span class="dish__desc">Servita calda con sesamo.</span></div></div>
+        <div class="dish" data-cucina="brasile" data-tags="veg vegano"><div><span class="dish__name">Ananas fresco</span><span class="dish__desc">Tagliato al momento.</span></div><div class="dish__tags"><span class="tag tag--veg">Vegano</span></div></div>
         <div class="dish"><div><span class="dish__name">Crema fritta</span><span class="dish__desc">Cubetti dorati, zucchero a velo.</span></div></div>
         <div class="dish"><div><span class="dish__name">Tortino al cioccolato</span><span class="dish__desc">Cuore morbido, gelato alla vaniglia.</span></div></div>
       </div>
@@ -330,6 +347,8 @@
 
   </div>
 
+  </div><!-- /on-light: fine del tavolo -->
+
   <!-- Formule, ripetute qui perché è la domanda che nasce leggendo il menu -->
   <section class="section on-dark" aria-labelledby="formule-menu">
     <div class="wrap">
@@ -350,7 +369,7 @@
     </div>
   </section>
 
-  <section class="cta-band section--alt">
+  <section class="cta-band on-dark">
     <div class="wrap cta-band__inner">
       <div class="reveal">
         <p class="eyebrow">Avete già scelto da dove partire?</p>
@@ -364,6 +383,13 @@
   </section>
 
 </main>
+
+<!-- Stessa barra della home: su telefono il menu è la pagina dove la
+     decisione matura, e finora non aveva nessuna azione a portata di pollice. -->
+<nav class="barra-fissa" id="barra-fissa" aria-label="Azioni rapide">
+  <a class="btn btn--primary" href="prenota.html">Prenota</a>
+  <a class="btn btn--ghost" href="tel:+390192213138">Chiama</a>
+</nav>
 
 <footer class="site-footer">
   <div class="wrap">
@@ -407,7 +433,7 @@
   </div>
 </footer>
 
-<script src="js/site.js" defer></script>
-<script src="js/menu.js" defer></script>
+<script src="js/site.js?v=1" defer></script>
+<script src="js/menu.js?v=1" defer></script>
 </body>
 </html>
