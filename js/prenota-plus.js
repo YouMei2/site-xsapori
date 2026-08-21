@@ -191,8 +191,17 @@
       // Prima si applica il nuovo valore, poi si ricalcolano i limiti di
       // entrambi i contatori: al contrario il pulsante «+» resterebbe
       // attivo per un giro di troppo al raggiungimento del massimo.
-      var mostra = function () {
+      // `verso` serve solo all'animazione: il numero scatta nella direzione
+      // del comando, cosi' si capisce che il tocco e' andato a segno senza
+      // dover guardare la cifra. L'attributo si toglie da solo, altrimenti
+      // due tocchi di fila nella stessa direzione non rianimerebbero nulla.
+      var mostra = function (verso) {
         numero.textContent = String(stato);
+        if (verso) {
+          numero.removeAttribute('data-mosso');
+          void numero.offsetWidth;          // forza il riavvio dell'animazione
+          numero.setAttribute('data-mosso', verso);
+        }
         alCambio(stato);
         aggiornaLimiti();
       };
@@ -203,10 +212,10 @@
       };
 
       meno.addEventListener('click', function () {
-        if (stato > minimo) { stato--; mostra(); }
+        if (stato > minimo) { stato--; mostra('giu'); }
       });
       piu.addEventListener('click', function () {
-        if (adulti + bambini < 40) { stato++; mostra(); }
+        if (adulti + bambini < 40) { stato++; mostra('su'); }
       });
 
       comandi.appendChild(meno);
@@ -269,7 +278,7 @@
 
     etichettaTotale.innerHTML =
       '<span class="stima__voci">' + pezzi.join(' + ') + '</span>' +
-      '<strong class="stima__totale">' + T.totale + ' ' + euro(totale) + '</strong>' +
+      '<strong class="stima__totale" data-aggiornato="true">' + T.totale + ' ' + euro(totale) + '</strong>' +
       '<span class="stima__nota">' + T.bevande + '</span>';
   }
 

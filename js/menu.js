@@ -17,14 +17,14 @@
     nessuno: 'No dish matches the filters.',
     trovati: function (n) { return n + (n === 1 ? ' dish found.' : ' dishes found.'); },
     // Contatore a schermo: senza filtri racconta la varietà, con i filtri conta.
-    vetrina: function (n) { return n + ' dishes · ' + SEZIONI + ' sections · 4 kitchens'; },
+    vetrina: function (n) { return n + ' dishes · ' + SEZIONI + ' sections · usually available'; },
     parziale: function (v, t) { return v + ' of ' + t + ' dishes'; },
     vuoto: 'No dish matches'
   } : {
     completo: function (n) { return 'Menu completo, ' + n + ' piatti.'; },
     nessuno: 'Nessun piatto corrisponde ai filtri.',
     trovati: function (n) { return n + (n === 1 ? ' piatto trovato.' : ' piatti trovati.'); },
-    vetrina: function (n) { return n + ' piatti · ' + SEZIONI + ' sezioni · 4 cucine'; },
+    vetrina: function (n) { return n + ' piatti · ' + SEZIONI + ' sezioni · di solito al banco'; },
     parziale: function (v, t) { return v + ' piatti su ' + t; },
     vuoto: 'Nessun piatto corrisponde'
   };

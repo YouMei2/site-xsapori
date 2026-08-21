@@ -1173,6 +1173,99 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
 }
 
 /* --- 14. Stampa (il menu si stampa spesso) ---------------- */
+/* =========================================================
+   PRENOTAZIONE — le micro-interazioni
+
+   Un modulo e' l'unica pagina in cui il visitatore lavora invece di
+   leggere. Le animazioni qui non servono a decorare: servono a dire
+   "ho ricevuto quello che hai fatto". Sono tutte su transform e opacity,
+   durano un token, e spariscono con prefers-reduced-motion.
+   ========================================================= */
+
+/* La fascia oraria scelta si abbassa come un tasto premuto davvero, e il
+   segno di spunta cresce dal nulla invece di comparire di scatto. */
+.fascia{position:relative;}
+.fascia:active{transform:translateY(1px);}
+.fascia[aria-pressed="true"]{transform:translateY(-1px);}
+.fascia[aria-pressed="true"]::after{
+  content:"";position:absolute;top:-4px;right:-4px;
+  width:9px;height:9px;border-radius:50%;
+  background:var(--detail);
+  transform:scale(0);
+  animation:spunta var(--dur-fast) var(--ease-out) forwards;
+}
+@keyframes spunta{ to{transform:scale(1);} }
+
+/* I contatori: il numero scatta appena, nella direzione del comando.
+   E' l'unico modo per capire se il tocco e' andato a segno senza guardare. */
+.contatore__valore{
+  display:inline-block;
+  transition:transform var(--dur-fast) var(--ease-out);
+}
+.contatore__valore[data-mosso="su"]{animation:salta-su var(--dur-fast) var(--ease-out);}
+.contatore__valore[data-mosso="giu"]{animation:salta-giu var(--dur-fast) var(--ease-out);}
+@keyframes salta-su{ 50%{transform:translateY(-4px);} }
+@keyframes salta-giu{ 50%{transform:translateY(4px);} }
+.contatore__btn:active:not(:disabled){transform:scale(.92);}
+.contatore__btn{transition:border-color var(--dur-fast) var(--ease-out),
+                           opacity var(--dur-fast) var(--ease-out),
+                           transform var(--dur-fast) var(--ease-out);}
+
+/* Il campo attivo si stacca dagli altri: il bordo si accende e la riga
+   respira di un pelo. Serve a non perdere il segno in un modulo lungo. */
+.field{transition:transform var(--dur-fast) var(--ease-out);}
+.field:focus-within{transform:translateX(2px);}
+
+/* Il totale stimato cambia mentre il cliente muove i contatori: se cambiasse
+   in silenzio non si noterebbe che il conto si e' aggiornato. */
+.stima__totale{
+  display:inline-block;
+  transition:transform var(--dur-fast) var(--ease-out);
+}
+.stima__totale[data-aggiornato="true"]{animation:conta var(--dur-mid) var(--ease-out);}
+@keyframes conta{ 0%{transform:scale(1);} 35%{transform:scale(1.06);} 100%{transform:scale(1);} }
+
+/* I messaggi del modulo entrano dal basso invece di apparire: un errore che
+   compare di colpo si legge come un difetto della pagina. */
+.form-msg{animation:entra-dal-basso var(--dur-mid) var(--ease-out);}
+@keyframes entra-dal-basso{
+  from{opacity:0;transform:translateY(8px);}
+  to{opacity:1;transform:none;}
+}
+
+/* Il campo appena segnalato come non valido tremola una volta sola.
+   Una volta: ripeterlo diventa un rimprovero. */
+.field--invalid input,.field--invalid select,.field--invalid textarea{
+  animation:scuoti var(--dur-mid) var(--ease-out);
+}
+@keyframes scuoti{
+  0%,100%{transform:translateX(0);}
+  25%{transform:translateX(-3px);}
+  75%{transform:translateX(3px);}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .fascia:active,.fascia[aria-pressed="true"],.field:focus-within,
+  .contatore__btn:active:not(:disabled){transform:none;}
+  .fascia[aria-pressed="true"]::after{animation:none;transform:scale(1);}
+  .contatore__valore[data-mosso],.stima__totale[data-aggiornato="true"],
+  .form-msg,.field--invalid input,.field--invalid select,
+  .field--invalid textarea{animation:none;}
+}
+
+/* Avviso "il banco cambia": non e' un errore e non e' una nota a pie' di
+   pagina. Sta in evidenza perche' e' la cosa che evita la delusione di chi
+   arriva per un piatto preciso e non lo trova. */
+.avviso-banco{
+  max-width:62ch;
+  padding:var(--sp-3) var(--sp-4);
+  border-left:2px solid var(--detail);
+  background:var(--surface-2);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;
+  font-size:.97rem;
+}
+.avviso-banco strong{color:var(--detail-text);}
+
 /* --- 14. Dettagli ----------------------------------------- */
 
 /* Messa a fuoco su fondo misto. Il sito ora alterna marmo e sala, e un

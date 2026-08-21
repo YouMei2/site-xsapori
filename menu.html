@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Menu · X-Sapori, gran buffet all you can eat a Savona</title>
-<meta name="description" content="Il menu completo di X-Sapori a Savona: antipasti, primi italiani, ravioli al vapore, sushi e tartare, wok, brace brasiliana e dessert. Tutto compreso nella formula, ordinato dal menu e servito al tavolo.">
+<title>Cosa si trova · X-Sapori, gran buffet all you can eat a Savona</title>
+<meta name="description" content="Cosa si trova di solito al buffet di X-Sapori a Savona: antipasti, primi italiani, ravioli al vapore, sushi e tartare, wok, brace brasiliana e dessert. Il banco cambia ogni giorno: questo è l'elenco delle cose che tornano più spesso.">
 <meta name="theme-color" content="#0E1417">
 
 <link rel="canonical" href="https://www.x-sapori.it/menu.html">
@@ -13,8 +13,8 @@
 <link rel="alternate" hreflang="x-default" href="https://www.x-sapori.it/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="X-Sapori">
-<meta property="og:title" content="Menu · X-Sapori, gran buffet all you can eat a Savona">
-<meta property="og:description" content="Otto sezioni, quattro cucine, un solo prezzo. Sushi, wok, brace brasiliana e primi italiani serviti al tavolo.">
+<meta property="og:title" content="Cosa si trova · X-Sapori, gran buffet all you can eat a Savona">
+<meta property="og:description" content="Cosa si trova di solito al banco: sushi, wok, brace brasiliana, primi italiani e dolci. Un prezzo solo, giri illimitati.">
 <meta property="og:url" content="https://www.x-sapori.it/menu.html">
 <meta property="og:image" content="https://www.x-sapori.it/uploads/og-menu.jpg">
 <meta property="og:locale" content="it_IT">
@@ -24,7 +24,7 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=1">
+<link rel="stylesheet" href="styles.css?v=3">
 <script>document.documentElement.classList.add('js');</script>
 
 <script type="application/ld+json">
@@ -109,14 +109,20 @@
   <section class="page-head">
     <div class="wrap">
       <p class="breadcrumb"><a href="index.html">Home</a> · Menu</p>
-      <h1 style="margin-top:var(--sp-3)">Quattro cucine, un menu solo</h1>
+      <h1 style="margin-top:var(--sp-3)">Cosa si trova al banco</h1>
       <p class="lead" style="margin-top:var(--sp-4)">
-        Tutto quello che vedete qui è compreso nella formula, bevande escluse.
-        Si ordina dal menu quante volte si vuole: i piatti arrivano caldi, in porzioni da assaggio.
+        Tutto quello che vedete qui è compreso nel prezzo, bevande escluse, e si può
+        tornare a prendere quante volte volete.
+      </p>
+      <p class="avviso-banco" style="margin-top:var(--sp-4)">
+        <strong>Il banco cambia ogni giorno.</strong> Questo è l'elenco delle cose che
+        tornano più spesso, non una promessa: certi piatti dipendono dal mercato e
+        non tutte le sere c'è tutto. Se venite per qualcosa in particolare,
+        <a href="tel:+390192213138">chiamateci prima</a>.
       </p>
       <p style="margin-top:var(--sp-4);display:flex;flex-wrap:wrap;gap:var(--sp-3)">
         <a class="btn btn--primary" href="prenota.html">Prenota un tavolo</a>
-        <button class="btn btn--ghost" type="button" onclick="window.print()">Stampa il menu</button>
+        <button class="btn btn--ghost" type="button" onclick="window.print()">Stampa l'elenco</button>
       </p>
     </div>
   </section>
@@ -139,9 +145,9 @@
         <a href="#bevande">Bevande</a>
       </nav>
 
-      <!-- La home promette quattro cucine e i quattro archi dell'hero puntano
-           qui: senza questi chip non c'era modo di isolarne una, perché la
-           Cina è divisa fra "Al vapore" e "Wok" e gli antipasti sono misti.
+      <!-- Gli archi dell'hero puntano qui: i chip servono a isolare un tipo
+           di cucina, perché al banco la parte cinese sta in due punti diversi
+           ("Al vapore" e "Wok") e gli antipasti sono misti.
            Fra loro sono in OR (Cina + Giappone = tutte e due), con i filtri
            dietetici in AND. Le bevande non hanno cucina e restano sempre. -->
       <div class="filters" role="group" aria-label="Filtra per cucina">
@@ -174,7 +180,7 @@
   <p class="visually-hidden" role="status" aria-live="polite" id="menu-status"></p>
 
   <div class="wrap">
-    <p class="conteggio" id="menu-conteggio" aria-hidden="true">67 piatti · 8 sezioni · 4 cucine</p>
+    <p class="conteggio" id="menu-conteggio" aria-hidden="true">67 piatti · 8 sezioni · di solito al banco</p>
   </div>
 
   <div class="wrap">
@@ -234,7 +240,7 @@
         <p class="eyebrow eyebrow--cina">Dal cestello</p>
         <h2 id="vapore-t">Al vapore</h2>
       </div>
-      <p class="lead" style="margin-top:var(--sp-3)">La parte più tradizionale della tavola cinese. I ravioli escono dal cestello di bambù quando li ordinate, mai prima.</p>
+      <p class="lead" style="margin-top:var(--sp-3)">La parte più tradizionale della tavola cinese. I ravioli restano nel cestello di bambù e si prendono caldi.</p>
       <div class="dish-list">
         <div class="dish" data-tags="carne"><div><span class="dish__name">Ravioli al vapore di maiale</span><span class="dish__desc">Ripieno classico con zenzero e cipollotto.</span></div></div>
         <div class="dish" data-tags="pesce"><div><span class="dish__name">Ravioli di gamberi (har gow)</span><span class="dish__desc">Sfoglia traslucida, gambero intero.</span></div></div>
@@ -327,7 +333,7 @@
         <p class="eyebrow">Da bere</p>
         <h2 id="bevande-t">Bevande</h2>
       </div>
-      <p class="lead" style="margin-top:var(--sp-3)">Le bevande <strong>non sono incluse</strong> nella formula: si ordinano alla carta e si pagano a parte. Il listino con i prezzi è al tavolo.</p>
+      <p class="lead" style="margin-top:var(--sp-3)">Le bevande <strong>non sono incluse</strong> nel prezzo: si ordinano al tavolo e si pagano a parte. Il listino è al tavolo.</p>
       <div class="dish-list">
         <div class="dish"><div><span class="dish__name">Acqua naturale o frizzante</span><span class="dish__desc">Bottiglia servita al tavolo.</span></div></div>
         <div class="dish"><div><span class="dish__name">Bibite in lattina</span><span class="dish__desc">Cola, aranciata, tè freddo.</span></div></div>
@@ -355,7 +361,7 @@
       <div class="section__head reveal">
         <p class="eyebrow">Quanto costa</p>
         <h2 id="formule-menu">Lo stesso menu, quattro fasce di prezzo</h2>
-        <p class="lead">Cambia solo il momento in cui venite. Bevande escluse, portate illimitate.</p>
+        <p class="lead">Cambia solo il momento in cui venite. Bevande escluse, giri illimitati.</p>
       </div>
       <dl class="prezzi">
         <div class="prezzo reveal"><dt>Pranzo · lun–ven</dt><dd>14,90 €<small>a persona</small></dd></div>
@@ -403,7 +409,7 @@
           <span>X-Sapori<small>Savona</small></span>
         </a>
         <p style="margin-top:var(--sp-3);max-width:42ch">
-          Gran buffet all you can eat: quattro cucine ordinate dal menu e servite al tavolo.
+          Gran buffet all you can eat a Savona: ci si serve al banco, e ogni tanto passiamo ai tavoli.
           Solo servizio in sala.
         </p>
       </div>
@@ -433,7 +439,7 @@
   </div>
 </footer>
 
-<script src="js/site.js?v=1" defer></script>
-<script src="js/menu.js?v=1" defer></script>
+<script src="js/site.js?v=3" defer></script>
+<script src="js/menu.js?v=3" defer></script>
 </body>
 </html>
