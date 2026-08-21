@@ -68,8 +68,8 @@ return [
     // Этот список — дополнительная проверка Origin/Referer.
     // Укажите все варианты, по которым реально открывается сайт.
     'allowed_origins' => [
-        'https://xsapori.it',
-        'https://www.xsapori.it',
+        'https://x-sapori.it',
+        'https://www.x-sapori.it',
         // 'http://localhost:8000',   // раскомментировать для локальной отладки
     ],
 
@@ -184,13 +184,13 @@ return [
         // Получатели. Каждому уходит отдельное письмо: адреса
         // не видны друг другу, и отказ одного не топит остальных.
         'to' => [
-            'prenotazioni@xsapori.it',
-            // 'cucina@xsapori.it',
+            'prenotazioni@x-sapori.it',
+            // 'cucina@x-sapori.it',
         ],
 
         // From ОБЯЗАН быть на вашем домене. Письмо с чужого адреса
         // не пройдёт проверку SPF/DMARC у получателя и уедет в спам.
-        'from'      => 'no-reply@xsapori.it',
+        'from'      => 'no-reply@x-sapori.it',
         'from_name' => 'Sito X-Sapori',
 
         // Ставить ли Reply-To на email гостя, если тот его указал.
@@ -232,7 +232,7 @@ return [
             'host'   => '',        // напр. smtps.aruba.it, mail.вашдомен.it
             'port'   => 587,       // 587 для TLS/STARTTLS, 465 для SSL
             'secure' => 'tls',     // 'tls' | 'ssl' | '' (без шифрования — не надо)
-            'user'   => '',        // обычно полный адрес: no-reply@xsapori.it
+            'user'   => '',        // обычно полный адрес: no-reply@x-sapori.it
             'pass'   => '',        // пароль почтового ящика
             'timeout' => 8,        // секунд на всю сессию
 

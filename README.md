@@ -196,7 +196,7 @@ window stays open.
 > **Only `localhost:8080`.** Any other port or address and the form
 > gets a **403**. `config.php` lists exactly `http://localhost:8080`
 > and `http://127.0.0.1:8080` in `allowed_origins`. This is the same
-> protection that on hosting will only allow `xsapori.it`.
+> protection that on hosting will only allow `x-sapori.it`.
 
 ### Worth trying
 
@@ -445,7 +445,7 @@ A direct connection to your domain's mailbox. The message goes through
 your domain's real server, is signed by its SPF/DKIM, and lands in the
 inbox rather than in spam.
 
-1. Create a mailbox in the hosting panel, e.g. `no-reply@xsapori.it`.
+1. Create a mailbox in the hosting panel, e.g. `no-reply@x-sapori.it`.
 2. Find the SMTP settings — the same ones you would enter into a phone
    mail client.
 3. Fill in:
@@ -456,7 +456,7 @@ inbox rather than in spam.
     'host'   => 'smtps.aruba.it',      // from the hosting panel
     'port'   => 587,                    // 587 for STARTTLS, 465 for SSL
     'secure' => 'tls',                  // 'tls' for 587, 'ssl' for 465
-    'user'   => 'no-reply@xsapori.it',  // usually the full address
+    'user'   => 'no-reply@x-sapori.it',  // usually the full address
     'pass'   => 'mailbox password',
     'timeout' => 8,
     'verify_peer' => true,
@@ -546,7 +546,7 @@ Temporarily place `info.php` in `public_html`:
 <?php phpinfo();
 ```
 
-Open `https://xsapori.it/info.php` and check:
+Open `https://x-sapori.it/info.php` and check:
 
 - **PHP Version** — 8.1 or higher
 - **Server API** — `FPM/FastCGI` (meaning `fastcgi_finish_request`
@@ -560,10 +560,10 @@ settings.
 ### 7.2. Service files are blocked
 
 ```
-https://xsapori.it/schema.sql          → must be 403 or 404
-https://xsapori.it/config.php          → 403 or 404
-https://xsapori.it/README.md           → 403 or 404
-https://xsapori.it/api/notify.php      → 403
+https://x-sapori.it/schema.sql          → must be 403 or 404
+https://x-sapori.it/config.php          → 403 or 404
+https://x-sapori.it/README.md           → 403 or 404
+https://x-sapori.it/api/notify.php      → 403
 ```
 
 If `schema.sql` **downloads**, `.htaccess` is not working. Either the
@@ -572,7 +572,7 @@ simply delete `schema.sql` from the server.
 
 ### 7.3. The API responds
 
-Open `https://xsapori.it/api/booking.php` in a browser. A plain GET.
+Open `https://x-sapori.it/api/booking.php` in a browser. A plain GET.
 
 Expected:
 
@@ -697,12 +697,12 @@ Two points need a lawyer or a *commercialista*:
   rather than the general checkbox. The text frames this as «consent
   expressed by voluntarily filling in the field» — a common wording,
   but a debatable one.
-- **The address `privacy@xsapori.it`** must exist and be monitored.
+- **The address `privacy@x-sapori.it`** must exist and be monitored.
   Under GDPR, a request must be answered within a month.
 
 ### 9.2. The notification mailbox
 
-`mail.to` currently points at `prenotazioni@xsapori.it`. The mailbox
+`mail.to` currently points at `prenotazioni@x-sapori.it`. The mailbox
 must exist and be checked regularly. Two addresses are better — if one
 fills up, the other still works.
 

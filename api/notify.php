@@ -43,7 +43,7 @@ const XS_PHONE    = '+39 019 221 3138';
 const XS_PHONE_HREF = '+390192213138';
 const XS_ADDRESS  = 'Via Luigi Pirandello 2r, 17100 Savona (SV)';
 const XS_HOURS    = 'Aperti tutti i giorni: 12:00–15:00 e 19:00–23:00.';
-const XS_SITE     = 'https://xsapori.it';
+const XS_SITE     = 'https://x-sapori.it';
 
 
 // =====================================================================

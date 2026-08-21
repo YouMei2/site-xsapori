@@ -41,7 +41,7 @@ Servono per essere in regola e per far funzionare SEO e condivisioni.
 | **Dominio definitivo** (es. `www.x-sapori.it`) | URL canonici, sitemap, JSON-LD, immagini social di tutte le pagine **e `allowed_origins` in `config.php`** | ⛔ ora c'è il segnaposto `www.x-sapori.it` |
 | **Ragione sociale** completa | Informativa privacy §1, footer | ⛔ `[DA COMPLETARE]` |
 | **Partita IVA** | Footer di ogni pagina, privacy §1 | ⛔ nel sito originale c'era `00000000000` |
-| **Indirizzo email** per le richieste privacy | Privacy §1 e §6 | ⛔ ora `privacy@xsapori.it`: esiste davvero? |
+| **Indirizzo email** per le richieste privacy | Privacy §1 e §6 | ⛔ ora `privacy@x-sapori.it` (allineata al dominio): la casella va creata davvero |
 | **Nome del provider di hosting** | Privacy §4 (responsabile del trattamento) | ⛔ `[DA COMPLETARE]` |
 | **Data di ultimo aggiornamento** della privacy | Privacy, in fondo | ⛔ `[DA COMPLETARE]` |
 | **Password del pannello prenotazioni** | `/admin/` la genera al primo avvio, poi va incollata in `config.php` | ⛔ da creare |
