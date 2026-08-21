@@ -13,8 +13,13 @@ declare(strict_types=1);
  *   - esportazione in CSV di quello che si sta guardando.
  *
  * Cosa NON fa di proposito:
- *   - non crea né cancella prenotazioni: si annullano, non si eliminano,
- *     perché lo storico serve a ricostruire le contestazioni;
+ *   - non crea prenotazioni: quelle arrivano solo dal sito;
+ *   - di norma le prenotazioni si ANNULLANO, non si eliminano: lo storico
+ *     serve a ricostruire eventuali contestazioni. L'eliminazione
+ *     definitiva esiste per le richieste di cancellazione dei dati
+ *     (art. 17 GDPR) e chiede sempre conferma;
+ *   - cancella da sé le prenotazioni più vecchie di 24 mesi, come
+ *     dichiarato nell'informativa privacy;
  *   - non mostra l'indirizzo IP: nel database c'è solo un hash irreversibile.
  *
  * La password sta in config.php, salvata come hash. Se manca, la pagina
@@ -242,6 +247,7 @@ try {
 //  Cambio di stato
 // ---------------------------------------------------------------------
 $messaggio = '';
+$daConfermare = 0;   // id della prenotazione per cui si sta chiedendo conferma
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['azione'])) {
     if (!csrf_valido()) {
@@ -255,8 +261,54 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['azione'])) {
             $q = $pdo->prepare('UPDATE bookings SET status = ? WHERE id = ?');
             $q->execute([$nuovo, $id]);
             $messaggio = 'Prenotazione #' . $id . ' segnata come ' . $stati[$nuovo] . '.';
+
+        } elseif ($id > 0 && $nuovo === 'elimina') {
+            // Primo passo: si chiede conferma. La conferma è una seconda POST,
+            // non un avviso del browser, così funziona anche senza JavaScript.
+            $daConfermare = $id;
+
+        } elseif ($id > 0 && $nuovo === 'elimina_certo') {
+            // Cancellazione definitiva. Serve per le richieste di
+            // cancellazione dei dati (art. 17 GDPR): l'annullamento non
+            // basta, perché lascia nome e telefono nel database.
+            $q = $pdo->prepare('DELETE FROM bookings WHERE id = ?');
+            $q->execute([$id]);
+            $messaggio = 'Prenotazione #' . $id . ' eliminata definitivamente.';
+            error_log('[admin] prenotazione ' . $id . ' eliminata su richiesta');
         }
     }
+}
+
+// ---------------------------------------------------------------------
+//  Conservazione dei dati: cancellazione automatica dopo 24 mesi
+// ---------------------------------------------------------------------
+// L'informativa privacy dichiara che le prenotazioni si conservano per
+// 24 mesi e poi vengono cancellate. Senza questa parte sarebbe una
+// promessa non mantenuta: i dati resterebbero lì per sempre.
+//
+// Gira all'apertura del pannello invece che con un'attività pianificata,
+// perché sugli hosting condivisi il cron spesso non è disponibile.
+// La query usa l'indice su created_at ed è quindi rapidissima.
+try {
+    $mesi = (int) ($cfg['retention_months'] ?? 24);
+    if ($mesi > 0) {
+        $scaduti = $pdo->prepare(
+            'DELETE FROM bookings WHERE created_at < (NOW() - INTERVAL :m MONTH)'
+        );
+        $scaduti->bindValue(':m', $mesi, PDO::PARAM_INT);
+        $scaduti->execute();
+        $quante = $scaduti->rowCount();
+
+        if ($quante > 0) {
+            $messaggio = trim($messaggio . ' ' . $quante . ($quante === 1
+                ? ' prenotazione più vecchia di ' . $mesi . ' mesi cancellata'
+                : ' prenotazioni più vecchie di ' . $mesi . ' mesi cancellate')
+                . ', come previsto dall\'informativa privacy.');
+            error_log('[admin] conservazione dati: cancellate ' . $quante . ' prenotazioni oltre i ' . $mesi . ' mesi');
+        }
+    }
+} catch (PDOException $e) {
+    error_log('[admin] pulizia per conservazione non riuscita: ' . $e->getMessage());
 }
 
 // ---------------------------------------------------------------------
@@ -460,7 +512,24 @@ pagina_inizio('Prenotazioni');
           <?php if ($r['status'] !== 'new'): ?>
             <button type="submit" name="azione" value="new" class="bottone--vuoto">Riapri</button>
           <?php endif; ?>
+          <button type="submit" name="azione" value="elimina" class="bottone--elimina"
+                  title="Cancella definitivamente i dati di questa prenotazione">Elimina</button>
         </form>
+
+        <?php if ($daConfermare === (int) $r['id']): ?>
+          <div class="conferma-elimina" role="alert">
+            <p><strong>Eliminare per sempre?</strong> Nome, telefono, email e note
+               spariscono e non si recuperano. Per liberare il tavolo basta
+               <em>Annulla</em>: questa serve solo se il cliente chiede la
+               cancellazione dei suoi dati.</p>
+            <form method="post">
+              <input type="hidden" name="csrf" value="<?= esc(token_csrf()) ?>">
+              <input type="hidden" name="id" value="<?= (int) $r['id'] ?>">
+              <button type="submit" name="azione" value="elimina_certo" class="bottone--elimina">Sì, elimina</button>
+              <a class="bottone bottone--vuoto" href="index.php">Lascia stare</a>
+            </form>
+          </div>
+        <?php endif; ?>
       </td>
     </tr>
   <?php endforeach; ?>
@@ -568,6 +637,16 @@ function pagina_inizio(string $titolo): void
   .pillola--cancelled{border-color:var(--bordo);color:var(--tenue);}
   .azioni form{display:flex;gap:.35rem;flex-wrap:wrap;}
   .azioni button{min-height:38px;padding:.35rem .7rem;font-size:.85rem;}
+  .bottone--elimina,button.bottone--elimina{
+    background:var(--carta);color:var(--rosso);border-color:var(--rosso);
+  }
+  .bottone--elimina:hover,button.bottone--elimina:hover{background:var(--rosso);color:#fff;filter:none;}
+  .conferma-elimina{
+    margin-top:.5rem;padding:.7rem .85rem;max-width:22rem;
+    border:1px solid var(--rosso);border-radius:6px;background:#FBEDEB;
+  }
+  .conferma-elimina p{margin:0 0 .6rem;font-size:.85rem;line-height:1.45;color:var(--rosso);}
+  .conferma-elimina form{display:flex;gap:.4rem;flex-wrap:wrap;}
   .etichetta{font-size:.75rem;color:#8A6A2F;}
   .avviso{
     background:#E9F4EE;border:1px solid rgba(30,107,79,.4);color:var(--verde);
