@@ -94,12 +94,22 @@ php -r "echo bin2hex(random_bytes(32));"
 
 ---
 
+## 3-bis. Tradurre i commenti in italiano
+
+Circa 700 righe di commenti nel codice sono in russo. Non si vedono dal sito
+— sono tutti commenti — ma chi manterrà il progetto dopo di voi non li legge.
+L'elenco dei file in ordine di urgenza è in `STATO-PROGETTO.md`. Il primo è
+`config.example.php`, perché è quello che si copia a mano per creare
+`config.php`.
+
+---
+
 ## 4. Caricare i file
 
 > ### 🔴 A ogni pubblicazione: alzare il numero di versione
 >
 > Nelle pagine, il foglio di stile e gli script sono richiamati come
-> `styles.css?v=9` e `js/site.js?v=9`. **Quel numero va aumentato ogni volta
+> `styles.css?v=1` e `js/site.js?v=1`. **Quel numero va aumentato ogni volta
 > che modificate CSS o JavaScript**, con un cerca-e-sostituisci su tutti i
 > file `.html` (italiani e inglesi).
 >

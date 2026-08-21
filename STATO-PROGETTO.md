@@ -29,10 +29,16 @@ caricato via FTP su hosting condiviso.
 più privacy e 404. «Chi siamo» e «Contatti» sono sezioni della home, con
 301 dai vecchi indirizzi. Versione inglese completa in `/en/`.
 
-**Direzione visiva «La sala»**, ricavata dalla foto reale del locale: marmo
-chiaro dominante, sezioni scure come punteggiatura, petrolio `#17627A` per le
-azioni, ottone solo nei filetti, rosso dei sigilli `#B23A22` in tre punti.
-Font self-hostati: Fraunces, Familjen Grotesk, DM Mono (104 KB in tutto).
+**Direzione visiva «La sala»**, ricavata dalla foto reale del locale.
+*Il 21 agosto 2026 il rapporto chiaro/scuro è stato rovesciato*, guardando la
+fotografia ad alta risoluzione: la sala è scura, e il sito quasi tutto bianco
+non le somigliava. Ora **lo scuro è il registro base e il chiaro è il tavolo** —
+le superfici chiare sono riservate a dove si legge o si scrive a lungo: menu,
+prezzi, modulo, testi legali. Petrolio per le azioni (`--accent-fill`, che vale
+`#17627A` sul chiaro e `#1F7F9C` sullo scuro, dove il primo darebbe 2,71:1),
+ottone nei filetti, rosso dei sigilli `#B23A22`.
+Font self-hostati: Fraunces, Familjen Grotesk, DM Mono (104 KB in tutto),
+**da sostituire più avanti**: il MASTER dice cosa controllare.
 Tutto documentato in `design-system/x-sapori/MASTER.md`.
 
 **Fotografie: non ce ne sono.** Al loro posto ci sono tavole grafiche in CSS
@@ -108,9 +114,35 @@ In ordine, i primi tre bloccano tutto:
 5. Foto e video
 6. Il resto è in `DA-FORNIRE.md`
 
-**Da fare comunque prima di pubblicare:** rigenerare `ip_salt` in `config.php`
-(quello attuale è finito in un file di esempio) e togliere le righe `localhost`
-da `allowed_origins`.
+**Da fare comunque prima di pubblicare:**
+
+- rigenerare `ip_salt` in `config.php` (quello attuale è finito in un file di
+  esempio) e togliere le righe `localhost` da `allowed_origins`
+- alzare il numero di versione di `styles.css?v=` e `js/*.js?v=` (vedi
+  `DEPLOY.md` §4): senza, chi è già passato riceve HTML nuovo e CSS vecchio
+  per sette giorni
+- **tradurre in italiano i commenti russi** — vedi qui sotto
+
+### Traduzione dei commenti: da fare prima della consegna
+
+Deciso il 21 agosto 2026. Il sito viene consegnato in Italia, quindi la
+documentazione dentro al codice deve essere leggibile da chi lo manterrà.
+Sono circa **700 righe su otto file**, in ordine di urgenza:
+
+| File | Righe | Perché conta |
+|---|---|---|
+| `config.example.php` | 123 | **è il file che si copia a mano** per creare `config.php`: contiene le istruzioni per il sale, l'avvertenza su `trust_proxy`, il divieto di riscrivere l'email di conferma |
+| `api/notify.php` | 200 | invio delle email e SMTP |
+| `api/booking.php` | 180 | validazione e anti-spam |
+| `schema.sql` | 84 | struttura della base dati e permessi MySQL |
+| `js/booking.js` | 61 | validazione lato browser |
+| `js/prenota-plus.js` | 19 | fasce orarie e contatori |
+| `admin/index.php` | 18 | pannello prenotazioni |
+| `js/site.js` | 15 | comportamenti comuni |
+
+Nessun testo visibile al pubblico è in russo: sono tutti commenti. Il sito
+funziona identico prima e dopo — è una questione di manutenibilità, non di
+correttezza.
 
 ---
 
