@@ -287,15 +287,28 @@
    * prima di quello di booking.js, che sta sul form ed è in fase di bolla.
    * Senza questo accorgimento la nota partirebbe senza la riga aggiunta.
    * ------------------------------------------------------------------ */
+  // Riconosce una riga aggiunta da noi in un invio precedente. Serve perché
+  // se il primo invio fallisce (limite anti-spam, errore di rete) la riga
+  // resta nelle note: cambiando i contatori e riprovando ne comparirebbe una
+  // seconda con numeri diversi, e in sala leggerebbero due composizioni in
+  // contraddizione.
+  var RIGA_AUTOMATICA = EN
+    ? /\s*Party: \d+ (?:adult|adults) and \d+ (?:child|children) under 120 cm\./g
+    : /\s*Siamo \d+ (?:adulto|adulti) e \d+ (?:bambino|bambini) sotto i 120 cm\./g;
+
   document.addEventListener('submit', function (e) {
-    if (e.target !== form || bambini <= 0 || !campoNote) { return; }
+    if (e.target !== form || !campoNote) { return; }
 
-    var riga = T.composizione(adulti, bambini);
-    var attuale = (campoNote.value || '').trim();
-    if (attuale.indexOf(riga) !== -1) { return; }
+    // si riparte sempre dal solo testo scritto dal cliente
+    var testo = (campoNote.value || '').replace(RIGA_AUTOMATICA, '').trim();
 
-    var nuovo = attuale ? attuale + '\n\n' + riga : riga;
-    // il server accetta 1000 caratteri: se non ci sta, si lascia il testo del cliente
-    if (nuovo.length <= 1000) { campoNote.value = nuovo; }
+    if (bambini > 0) {
+      var riga = T.composizione(adulti, bambini);
+      var nuovo = testo ? testo + '\n\n' + riga : riga;
+      // il server accetta 1000 caratteri: se non ci stanno, vince il cliente
+      if (nuovo.length <= 1000) { testo = nuovo; }
+    }
+
+    campoNote.value = testo;
   }, true);
 })();
