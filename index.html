@@ -27,7 +27,7 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=3">
+<link rel="stylesheet" href="styles.css?v=4">
 <!-- Segna che il JavaScript è attivo: solo in quel caso le sezioni
      partono nascoste per poi comparire. Senza JS il sito resta leggibile. -->
 <script>document.documentElement.classList.add('js');</script>
@@ -53,7 +53,7 @@
     "postalCode": "17100",
     "addressCountry": "IT"
   },
-  "geo": { "@type": "GeoCoordinates", "latitude": 44.3075, "longitude": 8.4813 },
+  "geo": { "@type": "GeoCoordinates", "latitude": 44.305013, "longitude": 8.470715 },
   "openingHoursSpecification": [
     { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"], "opens": "12:00", "closes": "15:00" },
     { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"], "opens": "19:00", "closes": "23:00" }
@@ -471,15 +471,27 @@
         </div>
 
         <div class="reveal" style="--d:120ms">
+          <!-- Mappa disegnata dai riquadri di OpenStreetMap, ospitati da noi.
+               Niente Google incorporato: nessun cookie di terze parti, nessun
+               indirizzo IP che parte prima del consenso, e quindi nessun
+               blocco da cliccare. Le sei immagini hanno loading="lazy":
+               pesano 172 KB in tutto e si scaricano solo arrivando quaggiù.
+               L'attribuzione a OpenStreetMap è obbligatoria (licenza ODbL). -->
           <div class="mappa" id="mappa">
-            <div class="mappa__consent" id="mappa-consent">
-              <p>La mappa è fornita da Google e imposta cookie di terze parti. La carichiamo solo se lo chiedete.</p>
-              <p style="margin-inline:auto">
-                <button class="btn btn--ghost" type="button" id="mappa-load">Carica la mappa</button>
-              </p>
-              <p style="margin-inline:auto">
-                <a class="btn btn--ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=Via+Luigi+Pirandello+2r,+17100+Savona" target="_blank" rel="noopener">Indicazioni stradali</a>
-              </p>
+            <div class="mappa__tessere" aria-hidden="true">
+              <img src="uploads/mappa/16-34309-23752.png" width="256" height="256" alt="" loading="lazy" decoding="async">
+              <img src="uploads/mappa/16-34310-23752.png" width="256" height="256" alt="" loading="lazy" decoding="async">
+              <img src="uploads/mappa/16-34311-23752.png" width="256" height="256" alt="" loading="lazy" decoding="async">
+              <img src="uploads/mappa/16-34309-23753.png" width="256" height="256" alt="" loading="lazy" decoding="async">
+              <img src="uploads/mappa/16-34310-23753.png" width="256" height="256" alt="" loading="lazy" decoding="async">
+              <img src="uploads/mappa/16-34311-23753.png" width="256" height="256" alt="" loading="lazy" decoding="async">
+            </div>
+            <span class="mappa__segno" aria-hidden="true"></span>
+            <p class="mappa__crediti">
+              <a href="https://www.openstreetmap.org/copyright" rel="noopener">© OpenStreetMap</a>
+            </p>
+            <div class="mappa__azioni">
+              <a class="btn btn--ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=44.305013,8.470715" target="_blank" rel="noopener">Indicazioni stradali</a>
             </div>
           </div>
         </div>
@@ -598,6 +610,6 @@
   </div>
 </footer>
 
-<script src="js/site.js?v=3" defer></script>
+<script src="js/site.js?v=4" defer></script>
 </body>
 </html>

@@ -809,17 +809,54 @@ img.plate{
 
 /* Mappa su consenso */
 .mappa{
-  position:relative;aspect-ratio:16/10;border-radius:var(--r-sm);overflow:hidden;
-  border:1px solid var(--rule);background:var(--surface-2);
+  /* 3:2 e non 16:10: e' l'esatta proporzione dei sei riquadri (768x512),
+     cosi' la mappa riempie il contenitore senza essere ritagliata ne' stirata */
+  position:relative;aspect-ratio:3/2;border-radius:var(--r-sm);overflow:hidden;
+  /* filetto d'ottone come le altre isole chiare del sito */
+  border:1px solid var(--ottone-50);background:var(--surface-2);
 }
-.mappa__consent{
-  position:absolute;inset:0;display:grid;place-content:center;gap:var(--sp-3);
-  text-align:center;padding:var(--sp-4);
+/* Mappa: sei riquadri di OpenStreetMap ospitati da noi, messi in griglia.
+   Tre in orizzontale e due in verticale danno 768x512, cioe' esattamente
+   3:2, quindi il contenitore combacia e non serve ritagliare niente. */
+.mappa__tessere{
+  position:absolute;inset:0;
+  display:grid;grid-template-columns:repeat(3,1fr);
 }
-.mappa__consent p{color:var(--on-surface-dim);font-size:.95rem;max-width:42ch;}
-/* Link che occupa da solo il paragrafo: nessuna eccezione «in linea» */
-.mappa__consent a{display:inline-block;padding-block:.4rem;}
-.mappa iframe{width:100%;height:100%;border:0;}
+.mappa__tessere img{width:100%;height:auto;display:block;}
+
+/* Il segnaposto sta dove sta il locale: 34,9% da sinistra e 39,6% dall'alto
+   della griglia. Non e' un numero a occhio, e' la posizione del punto
+   44.305013, 8.470715 dentro quei sei riquadri. */
+.mappa__segno{
+  position:absolute;left:34.9%;top:39.6%;
+  width:18px;height:18px;margin:-9px 0 0 -9px;
+  border-radius:50%;
+  background:var(--sigillo);
+  border:2px solid #fff;
+  box-shadow:0 0 0 2px rgba(20,25,28,.35), 0 3px 10px rgba(20,25,28,.4);
+}
+.mappa__segno::after{
+  content:"";position:absolute;inset:-10px;
+  border-radius:50%;border:1px solid var(--sigillo);opacity:.55;
+}
+.mappa__crediti{
+  position:absolute;right:0;bottom:0;
+  padding:.15rem .45rem;
+  background:rgba(251,249,245,.88);
+  font-size:.68rem;line-height:1.4;
+}
+.mappa__crediti a{color:#14191C;text-decoration:underline;}
+.mappa__azioni{
+  position:absolute;left:var(--sp-3);bottom:var(--sp-3);
+}
+/* Il bottone sta sopra la mappa: gli serve un fondo pieno, altrimenti
+   si legge male sulle strade chiare. */
+.mappa__azioni .btn{
+  background:var(--marmo-00);
+  border-color:var(--ottone-50);
+  color:#14191C;
+}
+.mappa__azioni .btn:hover{background:#fff;border-color:var(--ottone-70);color:#14191C;}
 
 /* FAQ (accordion nativo) */
 .faq{margin-top:var(--sp-6);border-top:1px solid var(--rule);}

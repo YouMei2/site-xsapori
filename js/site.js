@@ -13,13 +13,11 @@
   var T = EN ? {
     apertoOra:   'Open now · closes at ',
     chiusoRiapre:'Closed · opens at ',
-    chiusoDomani:'Closed · opens tomorrow at ',
-    mappaTitolo: 'Map: X-Sapori, Via Luigi Pirandello 2r, Savona'
+    chiusoDomani:'Closed · opens tomorrow at '
   } : {
     apertoOra:   'Aperto ora · si chiude alle ',
     chiusoRiapre:'Chiuso · riapre alle ',
-    chiusoDomani:'Chiuso · riapre domani alle ',
-    mappaTitolo: 'Mappa: X-Sapori, Via Luigi Pirandello 2r, Savona'
+    chiusoDomani:'Chiuso · riapre domani alle '
   };
 
   /* --- Header: compatto allo scroll ---------------------- */
@@ -309,19 +307,11 @@
     window.setInterval(aggiorna, 60000);
   }
 
-  /* --- Mappa caricata solo su richiesta ------------------- */
-  var caricaMappa = document.getElementById('mappa-load');
-  if (caricaMappa) {
-    caricaMappa.addEventListener('click', function () {
-      var box = document.getElementById('mappa');
-      var consent = document.getElementById('mappa-consent');
-      var iframe = document.createElement('iframe');
-      iframe.src = 'https://www.google.com/maps?q=Via+Luigi+Pirandello+2r,+17100+Savona&output=embed';
-      iframe.title = T.mappaTitolo;
-      iframe.loading = 'lazy';
-      iframe.referrerPolicy = 'no-referrer-when-downgrade';
-      if (consent) consent.remove();
-      box.appendChild(iframe);
-    });
-  }
+  /* --- La mappa non ha piu' bisogno di codice ---------------
+   * Prima qui c'era il blocco che, dopo il consenso, inseriva un iframe di
+   * Google. Ora la mappa e' fatta di riquadri di OpenStreetMap ospitati da
+   * noi: si vede subito, non parte nessuna richiesta verso terzi e non c'e'
+   * niente da consentire. Percio' non serve nessun JavaScript, e la mappa
+   * si vede anche a JavaScript spento.
+   * ------------------------------------------------------- */
 })();
