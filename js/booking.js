@@ -560,7 +560,7 @@
       privacy:   !!(privacyEl && privacyEl.checked),
       // L'honeypot si invia com'è: per una persona resta vuoto, un bot lo
       // compila e riceve dal server un rifiuto silenzioso.
-      indirizzo_web: val('indirizzo_web')
+      xs_riscontro: val('xs_riscontro')
     };
   }
 
