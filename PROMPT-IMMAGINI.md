@@ -42,13 +42,27 @@ mostrare sei locali diversi: è l'errore più facile e il più visibile.
 ```
 Interior of a modern all-you-can-eat buffet restaurant in Savona, Italy.
 The ceiling is covered with curved petrol-blue metal slats, each one backlit
-with warm hidden light. The walls are dark charcoal marble with fine white
-veining. Tables are light warm marble with a thin brass edge. Chairs are
-upholstered in petrol-blue leather with slim brass legs. Polished light
-stone floor. Evening service, warm low lighting around 2700K, no daylight.
+with warm hidden light. The walls are dark charcoal marble with fine, thin,
+restrained white veining — a subtle web, not big dramatic marble streaks.
+The floor is polished light warm-grey stone in large seamless slabs, glossy
+enough to hold soft reflections of the chairs and of the warm lights; no
+visible grout lines, no matte tiles, no small-format tiling. Tables are
+light warm marble with a thin brass edge, a few millimetres only, on a slim
+dark base. Chairs are upholstered in petrol-blue leather with slim brass
+legs. Evening service, warm low lighting around 2700K, no daylight.
 Photographic, full-frame camera, 35mm lens, natural depth of field,
 realistic materials, no glossy plastic look.
 ```
+
+> **Perché il blocco è così pignolo sul pavimento.** Confrontando le due
+> immagini del primo giro sono saltate fuori tre differenze: nella foto
+> della sedia il pavimento è a piastrelle opache con le fughe in vista,
+> mentre nella sala è pietra lucida che riflette le sedie; il marmo del muro
+> è molto più drammatico, con venature grosse invece che sottili; e il bordo
+> del tavolo è una fascia spessa color sabbia invece del filetto d'ottone.
+> **La sala è quella giusta**, perché ricalca la fotografia vera del locale.
+> Le tre righe aggiunte al blocco servono esattamente a non ripetere questi
+> tre scarti.
 
 ## DA EVITARE — da incollare alla fine di ogni prompt
 
@@ -401,3 +415,111 @@ danni che bene.
 La conversione richiede `ffmpeg`, che su questo computer non è installato:
 va installato (è gratuito) oppure fatta la conversione altrove. Mandate pure
 l'originale anche se pesa 200 MB.
+
+---
+
+# Come impostare il tool
+
+Riferito alle due schermate del 22 agosto 2026. Se l'interfaccia cambia, il
+ragionamento sotto ogni voce resta valido.
+
+## Immagini — scheda «Immagine»
+
+| Voce | Com'è ora | Metti | Perché |
+|---|---|---|---|
+| Modello | GPT Image 2 | **lascia** | Va bene, è quello che ha già dato i risultati buoni |
+| Rapporto | 16:9 | **quello scritto nella scheda** | Cambia per ogni immagine: 16:9, 4:3 o 16:10. Vedi ogni prompt |
+| Risoluzione | 1K | **la più alta disponibile** | 1K vuol dire circa 1024 px: basta per tutti gli slot tranne l'hero |
+| Qualità | Medio | **Alta** | È la voce che costa meno e rende di più |
+| Numero | 4 | **4** | Giusto così: si scarta molto |
+| ✨ Migliora prompt | Acceso | **🔴 SPEGNI** | Vedi sotto, è la voce più importante di tutte |
+| Riferimenti immagine | vuoto | **metti la foto vera della sala** | Vedi sotto |
+
+### ✨ «Migliora prompt» va spento
+
+Quella levetta fa riscrivere il prompt al tool prima di generare. Sembra
+comoda ed è il motivo per cui le immagini del primo giro non combaciano fra
+loro: se il testo viene riscritto ogni volta in modo diverso, **il BLOCCO
+SALA non serve più a niente**, perché quello che arriva al modello non è più
+identico. È esattamente così che nasce il pavimento sbagliato.
+
+Tutto il lavoro sui prompt qui dentro ha senso solo con quella levetta spenta.
+
+### «Riferimenti immagine»: usalo sempre
+
+È il riquadro in alto a sinistra. Caricaci **la fotografia vera del locale**
+(non una generata) e lasciala lì per tutte le generazioni.
+
+Fa un lavoro che nessuna descrizione scritta può fare: il testo può dire
+«marmo scuro venato», ma solo l'immagine può dire *quel* marmo. Con il
+riferimento attaccato, pavimento, muri e luce restano gli stessi senza doverli
+descrivere al millimetro.
+
+### «3 rimasti»
+
+Le generazioni sono contate. Con quattro varianti per volta, tre tentativi
+sono dodici immagini: abbastanza per **una sola** delle due immagini che
+servono. Quindi:
+
+1. prima **la sala** (è l'hero, ed è quella che deve venire perfetta);
+2. poi ricarichi e fai **il banco**;
+3. le altre quattro solo dopo, se avanza.
+
+Non spendere tentativi sulle immagini «che migliorano» finché le due che
+servono non sono buone.
+
+---
+
+## Video — scheda «Video»
+
+| Voce | Com'è ora | Metti | Perché |
+|---|---|---|---|
+| Modello | Seedance 2.5 | **lascia** | |
+| Rapporto | 16:9 | **16:9** | Giusto, l'hero e i riquadri sono orizzontali |
+| Risoluzione | 720p | **1080p se c'è** | 720p è sotto il minimo del sito |
+| Durata | 4s | **4s** per V1 e V2, il massimo per V3 e V4 | Vedi sotto |
+| 🔊 Genera audio | Acceso | **🔴 SPEGNI** | I video del sito partono muti per forza: l'audio è solo peso e tempo di generazione buttato |
+| Numero | 1 | **1**, poi valuti | Un video costa molto più di un'immagine |
+| ✨ Migliora prompt | Acceso | **🔴 SPEGNI** | Stesso motivo delle immagini |
+
+### La scoperta utile: «Inizio fotogramma» e «Termina frame»
+
+Sono i primi due riquadri della scheda video, e **risolvono il problema del
+loop** di cui parlavo prima.
+
+Se metti **la stessa identica immagine** sia come fotogramma iniziale sia
+come fotogramma finale, il video parte e finisce dallo stesso punto: l'anello
+si chiude e lo scatto a ogni giro sparisce.
+
+Vale la pena farlo per:
+
+- **V2, il vapore** — parti e finisci da `04-vapore.png`;
+- **V4, la sala** — parti e finisci dalla sala, e ottieni una carrellata che
+  va e torna senza che si veda il salto.
+
+**Non** per V1, la carne girata: lì il gesto deve compiersi, e infatti quel
+video non va in loop ma si guarda una volta sola.
+
+### La durata
+
+- **V1 carne girata**: 4 s. Un solo taglio. Più lungo significa che il
+  modello deve inventarsi un secondo gesto, ed è lì che le mani si rompono.
+- **V2 vapore**: 4 s bastano, se chiudi l'anello con inizio = fine.
+- **V3 banco** e **V4 sala**: qui servirebbero 8-10 s. Se il massimo è 4,
+  prendi 4 e chiedi un movimento **ancora più lento**: una carrellata breve e
+  lentissima in loop rende meglio di una lunga e veloce.
+
+---
+
+## L'ordine in cui farei le cose
+
+1. **Immagine 1, la sala.** Riferimento attaccato, ✨ spento, qualità alta,
+   16:9, risoluzione massima, 4 varianti. Guardi le mani, il pavimento e il
+   marmo del muro. Se non è giusta, rifai: è la più importante del sito.
+2. **Immagine 2, il banco.** Stesse impostazioni.
+3. **Mandamele.** Le guardo prima che tu spenda altri tentativi.
+4. Solo dopo i video, e solo **V1 e V2** — sono i due che rendono davvero.
+   V3 e V4 sono facoltativi.
+
+Le quattro immagini «che migliorano» e i video V3/V4 sono un di più: il sito
+funziona senza. Le due immagini e i due video corti no, quelli cambiano tutto.
