@@ -14,3 +14,7 @@ Thumbs.db
 anteprima-*.html
 audit-*.html
 .thumbnail
+
+# Immagini in attesa di lavorazione: PNG grezzi da 11 MB. Nel repo ci
+# vanno solo le versioni finite e convertite, dentro uploads/.
+uploads/da-integrare/
