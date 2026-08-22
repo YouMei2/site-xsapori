@@ -191,3 +191,54 @@ quantities, plates being refilled.
 Le misure sono quelle misurate nel browser a 1440 px di finestra: servono a
 capire che **solo l'hero ha bisogno di essere davvero grande**. Per tutti gli
 altri slot 1280 px di lato lungo bastano già.
+
+---
+
+# Appendice — le immagini che avete già
+
+Delle sette immagini tenute dal primo giro, **cinque bastano così come
+sono** per lo slot in cui finiscono. Misurato nel browser, dopo il ritaglio:
+
+| Immagine | Ho | Slot | Serve | Dopo il ritaglio | Esito |
+|---|---|---|---|---|---|
+| Vapore | 1280×720 | card 4:3 | 540×404 | 960×720 | basta |
+| Salsa soia | 1280×720 | card 4:3 | 540×404 | 960×720 | basta |
+| Piatto vuoto | 1280×720 | media 16:10 | 1141×713 | 1280×800 | basta |
+| Mani salmone | 1280×720 | menu 16:10 | 1141×713 | 1280×800 | basta |
+| Nigiri | 832×1040 | piccola nel menu | ~400×500 | — | basta |
+| Sedia e tavolo | 1024×1024 | tavola 16:10 | 1141×713 | 1024×640 | corta del 10% |
+| Marmo scuro | 1280×720 | fondo a larghezza piena | 2880 largo | — | vedi sotto |
+
+## 7. La sedia e il tavolo, in 16:10
+
+**Solo se state già generando altro.** Quella che avete è quadrata: tagliata
+in 16:10 resta 1024×640 invece dei 1141 che servirebbero. È uno scarto che
+si nota solo affiancando le due versioni.
+
+**Formato 16:10 · 1600×1000 · orizzontale**
+
+```
+[BLOCCO SALA]
+
+Close-up detail of one dining chair and the corner of a table. The
+petrol-blue leather seat and the slim brass frame fill the left half of the
+frame; the light marble tabletop with its thin brass edge crosses the upper
+right, with two glasses and a small plate on it. The dark veined marble wall
+behind. Low warm light grazing the brass.
+
+[DA EVITARE]
+```
+
+## Il marmo scuro non va rigenerato
+
+Non è una fotografia, è una **texture**, e le texture non si giudicano a
+pixel. Va usata in uno di questi due modi, e in entrambi 1280 px bastano:
+
+- **a piastrella**, ripetuta con `background-repeat`;
+- **sotto una velatura scura**, come materiale appena percepibile dietro al
+  testo.
+
+Serve a 2400 px solo se la volete nitida a tutta larghezza — ed è proprio
+quello che conviene evitare: a piena nitidezza una parete di marmo venato
+ruba l'attenzione alle parole che ci stanno sopra. È un fondale, non un
+soggetto.
