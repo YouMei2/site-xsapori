@@ -523,3 +523,73 @@ video non va in loop ma si guarda una volta sola.
 
 Le quattro immagini «che migliorano» e i video V3/V4 sono un di più: il sito
 funziona senza. Le due immagini e i due video corti no, quelli cambiano tutto.
+
+---
+
+# Controllo di coerenza: tutte le immagini contro la sala
+
+Fatto il 22 agosto 2026, confrontando una per una le sette immagini tenute
+con `08-sala`, che è quella giusta perché ricalca la fotografia vera.
+
+I riferimenti della sala vera sono quattro: **muro** in marmo carbone con
+venature bianche *sottili*, **tavoli** in marmo chiaro caldo con filetto
+d'ottone, **pavimento** in pietra lucida che riflette, **luce** calda e bassa.
+
+| # | Immagine | Esito | Cosa non torna |
+|---|---|---|---|
+| 01 | Marmo scuro | ✅ combacia | È praticamente il muro della sala |
+| 04 | Vapore | ✅ neutra | Fondo scuro senza contesto: non contraddice niente |
+| 06 | Mani salmone | ✅ combacia | Sedie petrolio, ottone e luci calde sullo sfondo tornano |
+| 02 | Piatto vuoto | ⚠️ diversa | Marmo bianco freddo con venature grosse; i tavoli veri sono beige caldi e puntinati. Luce da studio invece che calda. Nessun ottone |
+| 07 | Nigiri | ⚠️ diversa | Stesso marmo bianco freddo della 02 |
+| 05 | Salsa di soia | ⚠️ **contraddice un testo** | Venature **oro** invece che bianche, e soprattutto il piano è **scuro** |
+| 03 | Sedia e tavolo | ❌ tre errori | Pavimento a piastrelle opache con le fughe in vista; venature del muro grosse; bordo del tavolo a fascia spessa color sabbia invece del filetto |
+
+## Quanto conta davvero
+
+**Poco, per i primi piani su fondo nero.** Nella 04, nella 05 e nella 07 non
+si vede nessun pezzo di sala: si vede una superficie. Nessuno le confronta.
+
+**Molto, per la 03**, che mostra pavimento, muro e tavolo tutti insieme. È
+l'unica in cui gli scarti si vedono tutti e tre in una volta.
+
+## Il caso della salsa di soia
+
+Merita una riga a parte perché non è solo una differenza di materiale.
+
+La sezione «La sala» del sito dice, per iscritto:
+
+> «i tavoli sono in marmo chiaro con profili in ottone»
+
+La foto della salsa è appoggiata su un **piano scuro**. Testo e immagine si
+smentiscono a vicenda nella stessa pagina.
+
+Due modi di risolverlo, in ordine di costo:
+
+1. **Usarla piccola**, come dettaglio in una card, dove il piano non si legge
+   come «il tavolo del ristorante» ma solo come un fondo scuro. Costa zero.
+2. **Rigenerarla** su marmo chiaro caldo, se stai già generando altro.
+
+## Se le rigeneri: cosa cambiare nei prompt
+
+Non spendere generazioni apposta per queste. Valgono solo **se stai già
+generando le due che servono** e ti avanzano tentativi.
+
+Per la **02** e la **07**, aggiungi al BLOCCO SALA:
+
+```
+The marble surface is the warm light grey-beige marble of the restaurant
+tables, finely speckled, not cool white Carrara marble with strong grey
+veins. Warm low light, not bright studio daylight.
+```
+
+Per la **05**, aggiungi:
+
+```
+The bowl sits on the warm light marble of a restaurant table with a thin
+brass edge, not on dark stone. The veining is thin and white, never gold
+or amber.
+```
+
+Per la **03**, il BLOCCO SALA aggiornato basta già: descrive il pavimento
+lucido senza fughe, le venature sottili e il filetto d'ottone sottile.
