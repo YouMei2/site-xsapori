@@ -242,3 +242,137 @@ Serve a 2400 px solo se la volete nitida a tutta larghezza — ed è proprio
 quello che conviene evitare: a piena nitidezza una parete di marmo venato
 ruba l'attenzione alle parole che ci stanno sopra. È un fondale, non un
 soggetto.
+
+---
+
+# I video
+
+## Prima: dove vanno, e dove non vanno
+
+Oggi il sito ha **un solo posto pronto per un video**: l'hero. Il codice
+c'è, è stato provato, e si accende con un attributo.
+
+Ma il consiglio è di **non metterlo lì**. Un video di sfondo a tutto schermo
+è la scelta che fanno tutti ed è quella che rende meno: sta dietro al testo,
+quindi va sfocato e scurito per non disturbare, e a quel punto non si capisce
+più cosa mostri. Costa banda e non racconta niente.
+
+Il posto che rende davvero è **il passo «Ogni tanto passiamo noi»**: un
+riquadro piccolo, in loop, con la carne girata al tavolo. Un video di quattro
+secondi nel punto esatto in cui il testo racconta quella cosa vale dieci
+volte un video decorativo a tutto schermo, e pesa un decimo. Quel riquadro
+va costruito: non esiste ancora.
+
+## Requisiti tecnici
+
+Validi per tutti, e già scritti in `DA-FORNIRE.md`:
+
+- **orizzontale**, minimo 1920×1080;
+- **6-12 secondi** per l'hero, **3-5** per i riquadri piccoli;
+- **nessun audio**: parte comunque muto, l'audio è solo peso;
+- **camera ferma o movimento lentissimo**, nessuno stacco, nessuno zoom
+  brusco, nessun effetto;
+- **niente volti riconoscibili** senza consenso scritto;
+- **niente testo dentro al video**: non si traduce e non si legge da telefono.
+
+## Il trucco del loop
+
+Quasi nessun modello genera un vero anello: l'ultimo fotogramma non combacia
+col primo e si vede uno scatto ogni giro.
+
+Il modo di aggirarlo non è tecnico, è di scelta del soggetto. **Funzionano da
+soli i soggetti senza inizio né fine**: il vapore che sale, una carrellata
+lentissima, il riflesso che scorre. Non funzionano i gesti compiuti: una
+mano che taglia comincia e finisce, e allo stacco si vede.
+
+Quindi: per i loop lunghi, soggetti continui. Per i gesti, video corti in un
+riquadro che il visitatore guarda una volta sola.
+
+## Da immagine, non da testo
+
+Tutti questi si generano meglio **partendo da un'immagine** (image-to-video)
+invece che dal solo testo: così la sala resta quella e non cambia a ogni
+generazione. La riga «PARTIRE DA» dice quale file usare.
+
+---
+
+## V1. La carne girata — il più utile
+
+**PARTIRE DA**: l'immagine 3 (carne girata), una volta generata
+**4-5 secondi · 1920×1080**
+
+```
+Very slow motion. The long knife draws once down the picanha on the skewer
+and a single slice folds away and falls onto the plate. The camera does not
+move at all. Warm light, the dining room blurred behind. Nothing else in
+the frame moves.
+```
+
+> Un solo gesto, camera immobile. Va nel riquadro del passo «Ogni tanto
+> passiamo noi», non nell'hero.
+
+## V2. Il vapore — il loop perfetto
+
+**PARTIRE DA**: `04-vapore.png`
+**6-8 secondi · 1920×1080**
+
+```
+The steam rises and curls slowly and continuously from the bowl. The camera
+is completely still. The bowl does not move. Nothing enters or leaves the
+frame. Soft, even, endless movement.
+```
+
+> È il soggetto che si ripete meglio in assoluto: non ha inizio né fine,
+> quindi il loop non si vede. Se volete un video di sfondo nell'hero, è
+> questo il candidato giusto, non la sala.
+
+## V3. Il banco, in carrellata
+
+**PARTIRE DA**: l'immagine 2 (il banco carico), una volta generata
+**8-10 secondi · 1920×1080**
+
+```
+The camera drifts very slowly sideways along the buffet counter, from left
+to right, at a constant speed. Steam rises gently from the hot section. The
+food does not move. No zoom, no tilt, no cuts.
+```
+
+> Racconta l'abbondanza meglio di qualunque foto ferma, perché il banco
+> non finisce mai nell'inquadratura.
+
+## V4. La sala, per l'hero
+
+**PARTIRE DA**: l'immagine 1 (la sala 16:9), una volta generata
+**8-12 secondi · 1920×1080**
+
+```
+Extremely slow push-in towards the dining room, a few centimetres per
+second. The room is empty and still. Only the light stays alive. No people,
+no objects moving, no camera shake.
+```
+
+> Solo se volete comunque il video nell'hero. Chiedete il movimento **più
+> lento di quanto vi sembri giusto**: dietro a un titolo, un movimento
+> percepibile diventa illeggibilità.
+
+---
+
+## Cosa guardare prima di tenere un video
+
+- **Le mani e i coltelli**: è dove l'AI cede per prima. Guardate a velocità
+  ridotta, non a schermo intero.
+- **La carne e il cibo che si deforma** fra un fotogramma e l'altro.
+- **Il vapore che diventa una macchia** invece di dissolversi.
+- **L'ultimo fotogramma contro il primo**: se sono molto diversi, quel video
+  non può andare in loop.
+
+## Conversione
+
+Vanno consegnati in **due formati** — WebM VP9 e MP4 H.264 — perché nessuno
+dei due copre tutti i browser, con obiettivo **sotto 2 MB per file**. Sopra
+quel peso l'hero diventa più lento della pagina intera e il video fa più
+danni che bene.
+
+La conversione richiede `ffmpeg`, che su questo computer non è installato:
+va installato (è gratuito) oppure fatta la conversione altrove. Mandate pure
+l'originale anche se pesa 200 MB.
