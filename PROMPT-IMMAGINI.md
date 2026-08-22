@@ -296,6 +296,23 @@ generazione. La riga «PARTIRE DA» dice quale file usare.
 
 ---
 
+## DA EVITARE — VIDEO, da incollare alla fine di ogni prompt video
+
+Diverso da quello delle immagini: qui i guai non sono i materiali, sono i
+movimenti. Il blocco sala invece **non serve**, perché l'aspetto della sala
+lo porta già l'immagine di partenza.
+
+```
+Keep the exact composition, framing, lighting and objects of the source
+image. Avoid: camera shake, handheld movement, zoom, pans other than the
+one described, cuts, transitions, speed ramps, slow-motion effects, people
+entering the frame, visible faces, text or captions, morphing or warping of
+hands, food or objects, extra fingers, and any change to the room, the
+furniture or the light.
+```
+
+---
+
 ## V1. La carne girata — il più utile
 
 **PARTIRE DA**: l'immagine 3 (carne girata), una volta generata
@@ -306,6 +323,8 @@ Very slow motion. The long knife draws once down the picanha on the skewer
 and a single slice folds away and falls onto the plate. The camera does not
 move at all. Warm light, the dining room blurred behind. Nothing else in
 the frame moves.
+
+[DA EVITARE — VIDEO]
 ```
 
 > Un solo gesto, camera immobile. Va nel riquadro del passo «Ogni tanto
@@ -320,6 +339,8 @@ the frame moves.
 The steam rises and curls slowly and continuously from the bowl. The camera
 is completely still. The bowl does not move. Nothing enters or leaves the
 frame. Soft, even, endless movement.
+
+[DA EVITARE — VIDEO]
 ```
 
 > È il soggetto che si ripete meglio in assoluto: non ha inizio né fine,
@@ -335,6 +356,8 @@ frame. Soft, even, endless movement.
 The camera drifts very slowly sideways along the buffet counter, from left
 to right, at a constant speed. Steam rises gently from the hot section. The
 food does not move. No zoom, no tilt, no cuts.
+
+[DA EVITARE — VIDEO]
 ```
 
 > Racconta l'abbondanza meglio di qualunque foto ferma, perché il banco
@@ -349,6 +372,8 @@ food does not move. No zoom, no tilt, no cuts.
 Extremely slow push-in towards the dining room, a few centimetres per
 second. The room is empty and still. Only the light stays alive. No people,
 no objects moving, no camera shake.
+
+[DA EVITARE — VIDEO]
 ```
 
 > Solo se volete comunque il video nell'hero. Chiedete il movimento **più
