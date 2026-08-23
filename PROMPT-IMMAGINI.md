@@ -13,6 +13,39 @@ non c'è niente da sostituire, niente da assemblare, nessun segnaposto.
 
 ---
 
+# 0. A che punto siamo
+
+Aggiornato al 22 agosto 2026, dopo il secondo giro di generazioni.
+
+| # | Immagine | Stato |
+|---|---|---|
+| 1 | La sala (hero) | 🔄 **non si genera: si ingrandisce quella vera** — vedi sotto |
+| 2 | Il banco carico | ✅ **fatta** |
+| 3 | La carne girata | ✅ **fatta** |
+| 4 | Il tavolo con molti piattini | ⬜ da fare |
+| 5 | Il banco sushi | ✅ **fatta** |
+| 6 | I dolci | ⬜ facoltativa |
+| 7-9 | Sedia, piatto vuoto, salsa | ⬜ solo se avanzano tentativi |
+
+**Manca ancora una cosa importante**: l'immagine dell'hero. Tutto il resto
+e' o fatto o facoltativo.
+
+## Le due lezioni del secondo giro
+
+**1. Generare da testo reinventa la stanza ogni volta.** Il campo
+«Riferimenti immagine» guida lo *stile* — materiali, colori, luce — ma non la
+*geometria*: dove sta il muro, quanti tavoli, dov'e' l'apertura sul banco.
+Nel secondo giro i materiali erano perfetti e la sala era un'altra: piu'
+grande, piu' tavoli, piu' da hotel. Per i primi piani non conta; per l'hero,
+che mostra la stanza intera, e' decisivo.
+
+**2. Il soffitto tende a derivare.** Nella foto vera le lamelle sono nervature
+parallele che curvano dove finisce il muro. Nelle generazioni diventa spesso
+un'onda piu' fluida: stesso linguaggio, geometria diversa. Nei primi piani il
+soffitto e' secondario e non si nota, nelle inquadrature larghe si'.
+
+---
+
 # 1. Le impostazioni del tool
 
 Prima dei prompt, perché due di queste contano più di tutto il resto.
@@ -66,55 +99,88 @@ può dire *quel* marmo.
 | Numero | **1** | un video costa molto più di un'immagine |
 | ✨ Migliora prompt | **Spento** | |
 
-## L'ordine, viste le generazioni contate
+## L'ordine, da qui in avanti
 
-Con 4 varianti per volta, tre tentativi bastano per **una sola** immagine.
+Il banco, la carne e il sushi sono fatti. Resta:
 
-1. **La sala** — è l'hero, deve venire perfetta
-2. **Il banco** — è il prodotto, e oggi non esiste
-3. **Fermati e falle vedere** prima di spendere altro
-4. Poi i video V1 e V2
-5. Tutto il resto solo se avanza
+1. **L'hero** — e non generandolo: ingrandendo la foto vera (immagine 1)
+2. **Il tavolo con molti piattini** (immagine 4) — e' quella che racconta
+   il valore: tanti assaggi, un prezzo solo
+3. **I video V1 e V2**, che adesso hanno le immagini di partenza
+4. Dolci e rifacimenti solo se avanza
 
 ---
 
-# 2. Le due immagini che servono
+# 2. L'hero, l'unica cosa che manca davvero
 
-## IMMAGINE 1 — La sala (l'hero)
+## IMMAGINE 1 — La sala (l'hero) 🔄
 
-**16:9 · risoluzione massima · orizzontale**
+### Questa non va generata. Va ingrandita.
 
-```
-Interior of a modern all-you-can-eat buffet restaurant in Savona, Italy.
-The ceiling is covered with curved petrol-blue metal slats, each one backlit
-with warm hidden light. The walls are dark charcoal marble with fine, thin,
-restrained white veining, a subtle web, never big dramatic streaks and never
-gold or amber veins. The floor is polished light warm-grey stone in large
-seamless slabs, glossy enough to hold soft reflections of the chairs and of
-the warm lights; no visible grout lines, no matte tiles, no small-format
-tiling. Tables are warm light grey-beige marble, finely speckled, with a thin
-brass edge only a few millimetres deep, on a slim dark base. Chairs are
-upholstered in petrol-blue leather with slim brass legs. Evening service,
-warm low lighting around 2700K, no daylight. Photographic, full-frame camera,
-35mm lens, natural depth of field, realistic materials, no glossy plastic look.
+Due giri di generazione hanno dato materiali perfetti e **una stanza diversa**:
+piu' grande, con piu' tavoli, con la disposizione cambiata. E' un limite del
+metodo, non dei prompt: da testo la stanza si reinventa ogni volta, e nessuna
+descrizione puo' dire *quel* muro in *quella* posizione.
 
-Wide establishing shot of the dining room, camera at seated eye height, about
-120 cm from the floor. Tables set and empty, ready before service. The curved
-blue ceiling slats run across the top of the frame. On the right, in the
-background, the warm golden glow of the buffet counter. Calm, welcoming, a
-room that looks cared for. Leave the upper left third of the frame relatively
-empty and uncluttered.
+La fotografia vera del locale, `08-sala-DA-RIFARE.png`, ha la stanza giusta.
+Il suo unico difetto sono i 1024×768 pixel. Quello non si risolve rigenerando:
+si risolve **aggiungendo pixel a quella**.
 
-Avoid: visible faces, text, signage, labels, logos, watermarks, fisheye
-distortion, HDR glow, oversaturated colours, plastic-looking surfaces,
-cool white Carrara marble, bright studio daylight, matte tiled floor with
-visible grout lines.
-```
+### Cosa cercare nel tool
 
-> Lo spazio vuoto in alto a sinistra non è un vezzo: lì ci va il titolo del
-> sito. Senza, il testo finisce sopra le sedie e non si legge.
+Una voce tipo **«Modifica immagine»**, **«Upscale»**, **«Migliora
+risoluzione»** o **«Espandi»**. Sono funzioni diverse dalla generazione:
+partono dall'immagine caricata e non reinventano niente.
 
-## IMMAGINE 2 — Il banco carico
+| Se trovi | Fai cosi' |
+|---|---|
+| **Upscale** | 3×: da 1024×768 si arriva a 3072×2304. Il ritaglio in 16:9 lo faccio io |
+| **Espandi / Outpaint** | allarga a 16:9 aggiungendo solo le strisce laterali: non perdi niente dell'originale |
+| **Niente dei due** | si ripiega sulla generazione piu' fedele delle quattro (vedi sotto) |
+
+Servono almeno **2860 px** di larghezza: e' la misura dell'hero su uno schermo
+Retina, misurata nel browser.
+
+### Il ritaglio: si taglia dal basso
+
+Da 4:3 a 16:9 si perde un quarto dell'altezza. Va tolto **dal basso**: il
+tavolo grande in primo piano e' la parte meno interessante, e li' sotto ci va
+comunque il testo. Le lamelle in alto restano.
+
+### Se l'ingrandimento non si puo' fare
+
+Si tiene la generazione piu' fedele. Il criterio non e' quale sia piu' bella
+ma **quale ricalchi la pianta della stanza vera**:
+
+> muro scuro a sinistra → lamelle che **curvano verso il basso** dove finisce
+> il muro → colonna → apertura a destra sul banco → **scala con parapetto di
+> vetro** sopra
+
+La scala col parapetto di vetro e' il segno che non mente: c'e' nella foto
+vera e in una sola delle generazioni.
+
+> ⚠️ **Attenzione a una cosa che non e' tecnica.** Se il locale vero e' piu'
+> piccolo di come appare nell'immagine generata, metterla nell'hero significa
+> che il cliente arriva aspettandosi una sala piu' grande. E' il motivo per cui
+> ingrandire la foto vera resta la strada giusta.
+
+### Nota: il testo dell'hero sta IN BASSO
+
+Nella prima versione di questo file c'era scritto di lasciare vuoto il terzo
+**in alto** a sinistra. **Sbagliato.** Il CSS dell'hero usa
+`align-items:flex-end`: il titolo, i pulsanti e i prezzi stanno **in fondo**
+allo schermo. Sul fondo c'e' gia' una sfumatura scura che rende il testo
+leggibile comunque, quindi non serve un'area vuota — ma se si genera, meglio
+che la meta' inferiore non abbia dettagli importanti.
+
+## IMMAGINE 2 — Il banco carico ✅
+
+✅ **FATTA.** Variante scelta: quella con il soffitto a onde, i cestelli di
+bambu' e **le pile di piatti sotto il bancone**. Le pile di piatti valgono da
+sole tutta l'immagine: dicono «prendi un piatto e serviti» senza una parola,
+ed e' la traduzione visiva del testo del sito. Seconda scelta, per la card
+«Wok e vapore»: quella con anguria e ananas in alto e i ravioli al vapore in
+primo piano, che e' la piu' ricca di tutte.
 
 **16:9 · risoluzione massima · orizzontale**
 
@@ -149,9 +215,14 @@ cool white Carrara marble, bright studio daylight.
 
 ---
 
-# 3. Le quattro che migliorano
+# 3. Le quattro che migliorano (due fatte)
 
-## IMMAGINE 3 — La carne girata al tavolo
+## IMMAGINE 3 — La carne girata al tavolo ✅
+
+✅ **FATTA.** Variante scelta: camicia nera, con **il banco illuminato che si
+intravede sullo sfondo a destra**. Racconta due cose insieme — il servizio al
+tavolo e il buffet dietro — ed e' esattamente il passo «Ogni tanto passiamo
+noi». Da controllare al 100% le dita della mano che regge il piatto in basso.
 
 **16:9 · risoluzione massima · orizzontale**
 
@@ -204,7 +275,13 @@ studio background, cool white Carrara marble, bright studio daylight.
 > Racconta il valore: tanti assaggi, un prezzo solo. È l'immagine che manca
 > di più al messaggio.
 
-## IMMAGINE 5 — Il banco sushi durante il servizio
+## IMMAGINE 5 — Il banco sushi durante il servizio ✅
+
+✅ **FATTA.** Variante scelta: quella con **le mani del cuoco sfocate dietro il
+vetro** e il sushi a fuoco davanti. Le altre hanno le mani in evidenza, ed e'
+li' che si rischia. Dettaglio riuscito e non richiesto: il riflesso blu delle
+lamelle sul vetro del bancone, che ancora la scena alla sala senza mostrarne
+il soffitto.
 
 **16:10 · risoluzione massima · orizzontale**
 
