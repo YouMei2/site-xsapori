@@ -27,7 +27,7 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=4">
+<link rel="stylesheet" href="styles.css?v=6">
 <!-- Segna che il JavaScript è attivo: solo in quel caso le sezioni
      partono nascoste per poi comparire. Senza JS il sito resta leggibile. -->
 <script>document.documentElement.classList.add('js');</script>
@@ -168,11 +168,14 @@
   <!-- =============== HERO =============== -->
   <section class="hero">
     <div class="hero__bg">
-      <!-- SOSTITUIRE con lo scatto della sala ad alta risoluzione (vedi DA-FORNIRE.md) -->
-      <img src="uploads/sala-x-sapori-originale.webp"
-           alt=""
-           width="300" height="225" fetchpriority="high" decoding="async"
-           class="is-provvisoria">
+      <!-- Due misure: da telefono si scaricano 133 KB invece di 470.
+           Lo zoom lento di 14 secondi e' gia' nel CSS (heroZoom): l'hero ha
+           movimento senza bisogno del video. -->
+      <img src="uploads/sala.webp"
+           srcset="uploads/sala-1440.webp 1440w, uploads/sala.webp 2880w"
+           sizes="100vw"
+           alt="La sala di X-Sapori: tavoli in marmo chiaro con sedie blu petrolio, il soffitto a lamelle e il banco illuminato in fondo"
+           width="2880" height="1620" fetchpriority="high" decoding="async">
     </div>
 
     <div class="wrap hero__inner">
@@ -251,6 +254,17 @@
         </li>
       </ol>
 
+      <!-- Le due meta' del racconto, una accanto all'altra: il banco dove
+           ci si serve, e il momento in cui invece arriviamo noi. -->
+      <div class="grid grid--2" style="margin-top:var(--sp-6)">
+        <img class="plate plate--wide reveal" src="uploads/banco.webp"
+             alt="Il banco del buffet carico: vaschette di riso, verdure e ravioli al vapore, con le pile di piatti pronte sotto il bancone"
+             width="1600" height="1000" loading="lazy" decoding="async">
+        <img class="plate plate--wide reveal" style="--d:100ms" src="uploads/carne-girata.webp"
+             alt="Un cameriere taglia la picanha dallo spiedo direttamente nel piatto, al tavolo"
+             width="1600" height="1000" loading="lazy" decoding="async">
+      </div>
+
       <p class="lead reveal" style="margin-top:var(--sp-5)">
         <strong>Quanto dura:</strong> a cena il tavolo è vostro per tutta la serata, non facciamo
         doppio turno. A pranzo lo teniamo 90 minuti, così anche chi ha poco tempo trova posto.
@@ -275,10 +289,15 @@
         </p>
       </div>
 
+      <!-- Le quattro tavole grafiche restano grafiche. E' una scelta, non
+           una mancanza: poche fotografie grandi valgono piu' di molte piccole,
+           e in un riquadro da 270px una foto si legge come stock. Se un giorno
+           si vorranno le foto qui, ne servono QUATTRO — Italia compresa —
+           altrimenti una card resta diversa dalle altre. -->
       <div class="grid grid--4">
         <a class="card reveal" href="menu.html#sushi">
           <div class="card__media">
-            <!-- FOTO: sostituire con <img src="uploads/sushi.webp" alt="…" width="1200" height="900" loading="lazy"> -->
+            <!-- Qui NON va una fotografia: vedi la nota sopra la griglia. -->
             <div class="plate plate--giappone" aria-hidden="true"></div>
           </div>
           <div class="card__body">
@@ -290,7 +309,7 @@
 
         <a class="card reveal" style="--d:80ms" href="menu.html#wok">
           <div class="card__media">
-            <!-- FOTO: sostituire con <img src="uploads/wok.webp" alt="…" width="1200" height="900" loading="lazy"> -->
+            <!-- Qui NON va una fotografia: vedi la nota sopra la griglia. -->
             <div class="plate plate--cina" aria-hidden="true"></div>
           </div>
           <div class="card__body">
@@ -302,7 +321,7 @@
 
         <a class="card reveal" style="--d:160ms" href="menu.html#brace">
           <div class="card__media">
-            <!-- FOTO: sostituire con <img src="uploads/brace.webp" alt="…" width="1200" height="900" loading="lazy"> -->
+            <!-- Qui NON va una fotografia: vedi la nota sopra la griglia. -->
             <div class="plate plate--brasile" aria-hidden="true"></div>
           </div>
           <div class="card__body">
@@ -314,7 +333,7 @@
 
         <a class="card reveal" style="--d:240ms" href="menu.html#italiano">
           <div class="card__media">
-            <!-- FOTO: sostituire con <img src="uploads/italiano.webp" alt="…" width="1200" height="900" loading="lazy"> -->
+            <!-- Qui NON va una fotografia: vedi la nota sopra la griglia. -->
             <div class="plate plate--italia" aria-hidden="true"></div>
           </div>
           <div class="card__body">
@@ -391,6 +410,14 @@
     </div>
   </section>
 
+  <!-- Fascia a tutta larghezza: rompe il ritmo delle sezioni a colonna e
+       mostra una fotografia in grande invece che dentro un riquadro.
+       Decorativa: la sala e' gia' descritta a parole qui sotto. -->
+  <div class="fascia" aria-hidden="true">
+    <img src="uploads/banco-atmosfera.webp" alt=""
+         width="1600" height="1000" loading="lazy" decoding="async">
+  </div>
+
   <!-- =============== LA SALA =============== -->
   <section class="section" id="la-sala" aria-labelledby="sala-t">
     <div class="wrap">
@@ -414,20 +441,19 @@
         </div>
 
         <div class="split__media reveal" style="--d:120ms">
-          <figure class="cornice">
-            <img src="uploads/sala-x-sapori-originale.webp"
-                 alt="La sala di X-Sapori: tavoli in marmo chiaro con sedie blu petrolio sotto il soffitto a lamelle curve"
-                 width="300" height="225" loading="lazy" decoding="async">
-            <figcaption>La sala in Via Pirandello</figcaption>
-          </figure>
+          <img class="plate plate--wide" src="uploads/sedia-tavolo.webp"
+               alt="Dettaglio di una sedia in pelle blu petrolio con struttura in ottone, accanto al bordo di un tavolo in marmo chiaro"
+               width="1024" height="640" loading="lazy" decoding="async">
         </div>
       </div>
 
       <div class="grid grid--2" style="margin-top:var(--sp-5)">
-        <!-- FOTO: sostituire con <img src="uploads/banco-sushi.webp" alt="…" width="1600" height="1000" loading="lazy"> -->
-        <div class="plate plate--wide plate--marmo reveal"><span class="plate__label">Il banco sushi</span></div>
-        <!-- FOTO: sostituire con <img src="uploads/tavolo.webp" alt="…" width="1600" height="1000" loading="lazy"> -->
-        <div class="plate plate--wide plate--marmo reveal" style="--d:100ms"><span class="plate__label">I tavoli in marmo</span></div>
+        <img class="plate plate--wide reveal" src="uploads/banco-sushi.webp"
+             alt="Il banco del sushi durante il servizio, con i vassoi di nigiri e maki sotto il vetro"
+             width="1600" height="1000" loading="lazy" decoding="async">
+        <img class="plate plate--wide reveal" style="--d:100ms" src="uploads/mani-salmone.webp"
+             alt="Le mani di un cuoco affettano il salmone dietro il banco, con la sala sullo sfondo"
+             width="1152" height="720" loading="lazy" decoding="async">
       </div>
     </div>
   </section>
@@ -610,6 +636,6 @@
   </div>
 </footer>
 
-<script src="js/site.js?v=4" defer></script>
+<script src="js/site.js?v=6" defer></script>
 </body>
 </html>

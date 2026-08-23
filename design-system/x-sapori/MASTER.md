@@ -129,6 +129,45 @@ ai 104 KB attuali.
 Scala fluida: `--fs-display` → `--fs-micro`. Corpo del testo 17px, interlinea
 1,62. Cifre tabulari su prezzi e orari, per non far ballare le colonne.
 
+## Le fotografie: poche e grandi
+
+Aggiunto il 23 agosto 2026, quando sono arrivate le prime immagini vere.
+
+**Regola:** una fotografia sta dove può respirare, oppure non sta. Le foto
+piccole dentro un riquadro da 270 px si leggono come stock e fanno sembrare
+il sito assemblato; le stesse foto in grande lo fanno sembrare commissionato.
+
+Conseguenza pratica: **le quattro card delle cucine restano grafiche.** Non è
+una mancanza in attesa di essere colmata — è la scelta. Se un giorno si
+vorranno le foto lì, ne servono quattro, Italia compresa: tre su quattro
+lasciano una card diversa dalle altre, che è peggio di zero su quattro.
+
+### Due componenti nuovi
+
+**`.fascia`** — una fotografia a tutta larghezza, alta `clamp(240px,45vh,520px)`,
+che esce dal contenitore e attraversa lo schermo. Serve a rompere il ritmo
+delle sezioni a colonna. Ha le sfumature ai bordi che la cuciono alle sezioni
+scure vicine e il filetto d'ottone in cima, come le isole chiare. È
+decorativa: `aria-hidden` e `alt=""`.
+
+**La pietra.** Il registro scuro non è più colore piatto: sotto c'è la texture
+del marmo della sala, tenuta sotto una velatura al 90% fino a non leggersi più
+come immagine. Sta nel blocco condiviso del registro scuro, quindi la prendono
+`body`, `.on-dark`, il pannello e il piede. Costa 72 KB scaricati una volta
+sola. Le isole chiare non la ereditano: hanno il loro fondo pieno.
+
+> Nella sala vera le pareti sono pietra. Il sito lo diventa anche dove non
+> c'è una fotografia: è quello che tiene insieme il tutto quando le immagini
+> finiscono.
+
+### L'hero non ha bisogno di un video
+
+Nel CSS c'è `heroZoom`: 14 secondi di avvicinamento lentissimo, poi si ferma.
+Con una fotografia vera dà quello che darebbe un video di sfondo, senza
+scaricare un megabyte e senza il pulsante di pausa che WCAG 2.2.2 imporrebbe.
+Quando arriverà il video prenderà il posto di questa animazione, senza toccare
+il layout.
+
 ## Spazio e forma
 
 Scala `--sp-1` (0,35rem) → `--sp-8` (8,5rem). Contenitore 1280px, versione
