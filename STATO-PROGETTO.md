@@ -1,4 +1,4 @@
-# Stato del progetto — 21 agosto 2026
+# Stato del progetto — 23 agosto 2026
 
 Documento di passaggio: serve a riprendere il lavoro in una conversazione
 nuova, o a farlo riprendere a un'altra persona, senza rileggere niente.
@@ -8,43 +8,59 @@ nuova, o a farlo riprendere a un'altra persona, senza rileggere niente.
 ## Che cos'è
 
 Sito di **X-Sapori**, gran buffet all you can eat in Via Luigi Pirandello 2r,
-Savona. Quattro cucine — italiana, brasiliana, cinese, giapponese — ordinate
-dal menu e servite al tavolo. Tel. 019 221 3138, aperto 7/7, 12:00–15:00 e
-19:00–23:00.
+Savona. Tel. 019 221 3138, aperto 7/7, 12:00–15:00 e 19:00–23:00.
+
+**Come funziona il locale — e attenzione, perché il sito lo diceva sbagliato
+fino al 22 agosto.** È un **buffet**: ci si serve da soli al banco, non si
+ordina, non c'è un cameriere che prende le comande e non c'è un tablet. Ogni
+tanto il personale passa fra i tavoli con qualcosa che al banco non c'è —
+carne girata alla brace, ananas, un dolce — ma non è fisso e non va promesso
+come un servizio.
 
 **Stack:** HTML statico + CSS + JavaScript vanilla + PHP 8.1 + MySQL.
-Nessun framework, nessuna libreria, nessuna dipendenza npm. Deve poter essere
-caricato via FTP su hosting condiviso.
+Nessun framework, nessuna dipendenza npm. Deve poter essere caricato via FTP
+su hosting condiviso.
 
 **Cartelle:**
 - `D:\Claude Code\x-sapori` — il progetto vero, sotto git
 - `C:\xampp\htdocs\x-sapori` — copia di prova locale (ha una password admin
   usa-e-getta e `RewriteBase` in più: **non è quella da pubblicare**)
 
+**Per provare:** Apache su `http://localhost:8080/x-sapori/`. Va avviato a
+mano dal pannello XAMPP, non è un servizio. C'è anche un'anteprima statica
+sulla porta 4173 (`.dev-server.js`) che **non esegue PHP**: le prenotazioni
+lì non funzionano, e il modulo lo dice esplicitamente.
+
 ---
 
 ## Com'è fatto
 
-**Tre pagine** invece delle sei iniziali: home (one-page), menu, prenotazione,
-più privacy e 404. «Chi siamo» e «Contatti» sono sezioni della home, con
-301 dai vecchi indirizzi. Versione inglese completa in `/en/`.
+**Tre pagine** più privacy e 404, e la versione inglese completa in `/en/`.
 
-**Direzione visiva «La sala»**, ricavata dalla foto reale del locale.
-*Il 21 agosto 2026 il rapporto chiaro/scuro è stato rovesciato*, guardando la
-fotografia ad alta risoluzione: la sala è scura, e il sito quasi tutto bianco
-non le somigliava. Ora **lo scuro è il registro base e il chiaro è il tavolo** —
-le superfici chiare sono riservate a dove si legge o si scrive a lungo: menu,
-prezzi, modulo, testi legali. Petrolio per le azioni (`--accent-fill`, che vale
-`#17627A` sul chiaro e `#1F7F9C` sullo scuro, dove il primo darebbe 2,71:1),
-ottone nei filetti, rosso dei sigilli `#B23A22`.
-Font self-hostati: Fraunces, Familjen Grotesk, DM Mono (104 KB in tutto),
-**da sostituire più avanti**: il MASTER dice cosa controllare.
-Tutto documentato in `design-system/x-sapori/MASTER.md`.
+**Direzione visiva «La sala»**, ricavata dalla fotografia reale del locale.
 
-**Fotografie: non ce ne sono.** Al loro posto ci sono tavole grafiche in CSS
-costruite sul motivo delle lamelle del soffitto. Il design regge senza foto,
-e quando arrivano si sostituisce un `<div>` con un `<img>` senza toccare il
-layout. L'hero è già predisposto per un video: bastano due attributi.
+> **Il 21 agosto il rapporto chiaro/scuro è stato rovesciato.** Prima il
+> chiaro era dominante; guardando la foto ad alta risoluzione il sito non
+> somigliava al locale. Ora vale: **scuro = la sala, chiaro = il tavolo.**
+> Le superfici chiare sono riservate a dove si legge o si scrive a lungo —
+> menu, prezzi, modulo, testi legali. Tutto in `design-system/x-sapori/MASTER.md`.
+
+Sotto il registro scuro c'è **la pietra**: la texture del marmo della sala a
+velatura 90%, che toglie al buio l'aspetto di colore piatto. 72 KB per tutto
+il sito.
+
+**Le fotografie ci sono.** Tredici immagini WebP in `uploads/`, montate il
+23 agosto. Il principio è **poche e grandi**: una foto sta dove può respirare,
+oppure non sta. Per questo **le quattro card delle cucine restano grafiche** —
+è una scelta, non una mancanza, ed è scritta sopra la griglia in `index.html`.
+
+**Due video pronti ma spenti**, in `uploads/`: `sala-hero` e
+`banco-carrellata`, WebM e MP4. Non sono montati per scelta del cliente.
+L'hero non ne ha bisogno: `heroZoom` nel CSS dà 14 secondi di avvicinamento
+lento senza scaricare un megabyte.
+
+**La mappa non è di Google.** Sei riquadri di OpenStreetMap ospitati da noi:
+si vede subito, nessun cookie, nessun consenso da cliccare.
 
 ---
 
@@ -52,11 +68,11 @@ layout. L'hero è già predisposto per un video: bastano due attributi.
 
 | File | A cosa serve |
 |---|---|
-| `DA-FORNIRE.md` | **Le 11 cose che mancano dal cliente.** Il primo da aprire |
-| `ALLERGENI-DA-COMPILARE.md` | Modulo con 67 piatti × 14 allergeni, da far compilare in cucina |
-| `DEPLOY.md` | Pubblicazione passo per passo con lista di controllo |
-| `MANUTENZIONE.md` | Come cambiare prezzi, orari, piatti, foto senza toccare il codice |
-| `PROVA-LOCALE.md` | Come far girare tutto su XAMPP (già fatto) |
+| `DA-FORNIRE.md` | **Le cose che mancano dal cliente.** Il primo da aprire |
+| `PROMPT-IMMAGINI.md` | Prompt pronti per immagini e video, impostazioni del tool, cosa manca |
+| `ALLERGENI-DA-COMPILARE.md` | 67 piatti × 14 allergeni, da far compilare in cucina |
+| `DEPLOY.md` | Pubblicazione passo per passo |
+| `MANUTENZIONE.md` | Come cambiare prezzi, orari, piatti senza toccare il codice |
 | `ACCESSIBILITA.md` | Esito WCAG criterio per criterio |
 | `design-system/x-sapori/MASTER.md` | Token, palette, regole visive |
 
@@ -64,85 +80,124 @@ layout. L'hero è già predisposto per un video: bastano due attributi.
 
 ## Cosa è stato verificato davvero
 
-Prova completa su XAMPP (Apache su **porta 8080**, PHP 8.2.12, MySQL):
+Tutto misurato nel browser sul rendering reale, non stimato.
 
-- prenotazione reale dal browser → database → pannello: funziona
-- validazione: campi vuoti, data passata, orario fuori apertura, 99 persone,
-  consenso mancante — tutti rifiutati con messaggi in italiano
-- honeypot: il bot riceve un finto successo, il database resta pulito
-- `config.php`, `schema.sql`, `.md`, `api/notify.php` → tutti 403
-- intestazioni di sicurezza attive (CSP e altre)
-- pannello: accesso, elenco, filtri, CSV, cambio stato, protezione CSRF
-- eliminazione definitiva a due passi e cancellazione automatica dopo 24 mesi
-- SMTP Brevo: autenticazione e invio verificati sul server reale
-- 9 pagine, nessun link rotto, nessuno scroll orizzontale a 375 px
-- contrasto: 132 elementi misurati, nessuno sotto soglia
+- **Contrasti:** 143 elementi sulla home, 258 sul menu, 75 sulla prenotazione,
+  71 sulla privacy, 31 sulla 404, 143 sulla home inglese. **Nessuno sotto
+  soglia.**
+- **Responsive** a 360, 390, 768, 1024, 1440 e in orizzontale su telefono:
+  nessuno scroll orizzontale, nessun bersaglio sotto soglia fuori dalle
+  eccezioni WCAG.
+- **Prenotazione reale** dal browser → database → pannello: funziona.
+  Validazione, honeypot, limite anti-spam, CSRF, CSV, cancellazione a due
+  passi, SMTP Brevo.
+- **File sensibili** in 403; intestazioni di sicurezza attive.
+- **Immagini e video:** tutti rispondono `200 image/webp` alle dimensioni
+  giuste; i video hanno durata, movimento e chiusura dell'anello misurati.
 
-**Non verificato:** l'ambiente di produzione (dominio reale, HTTPS, hosting).
+**Non verificato:** l'ambiente di produzione, e **l'aspetto a schermo**. Il
+pannello del browser in queste sessioni non dipinge, quindi gli screenshot non
+funzionano e il caricamento pigro non scatta. Numeri sì, occhio no.
 
 ---
 
-## Tre difetti trovati provando dal browser vero
+## I difetti trovati provando, non leggendo
 
-Vale la pena conoscerli: erano tutti diretti in produzione e nessuno si vedeva
-dai test automatici.
+Vale la pena conoscerli: nessuno si vedeva dai test automatici.
 
-1. **`allowed_origins` non conteneva il dominio giusto** (`xsapori.it` invece di
-   `x-sapori.it`). Ogni prenotazione sarebbe stata rifiutata con «Richiesta non
-   consentita», mentre il resto del sito funzionava benissimo.
-2. **Il campo trappola anti-bot si chiamava `indirizzo_web`** e i gestori di
+**Dalla prima tornata (agosto, prima del 21):**
+
+1. `allowed_origins` non conteneva il dominio giusto: ogni prenotazione
+   sarebbe stata rifiutata mentre il resto del sito funzionava.
+2. Il campo trappola anti-bot si chiamava `indirizzo_web` e i gestori di
    password lo riempivano da soli: il cliente vedeva la conferma, la
-   prenotazione spariva nel nulla. Il peggiore dei tre.
-3. **Il flag `NE` mancante** nei 301 trasformava `#la-sala` in `%23la-sala`,
-   cioè un 404 su ogni vecchio link.
+   prenotazione spariva nel nulla.
+3. Il flag `NE` mancante nei 301 trasformava `#la-sala` in `%23la-sala`.
 
-Morale per chi riprende: **le prove con `curl` non bastano.** Serve un browser
-vero, possibilmente con un gestore di password installato.
+**Da queste due sessioni:**
+
+4. **Il dominio nella privacy era senza trattino** (`xsapori.it` invece di
+   `x-sapori.it`): le richieste GDPR sarebbero rimbalzate in silenzio.
+5. **La barra dei filtri del menu finiva sotto l'header fisso.** A 390 px la
+   navigazione delle otto portate era coperta al 100%. Nasce `--header-h`.
+6. **CSS e JS erano richiamati senza versione con `max-age` di 7 giorni:**
+   dopo ogni pubblicazione chi era già passato riceveva HTML nuovo e CSS
+   vecchio. Invisibile a curl e in finestra anonima.
+7. **L'anteprima statica serviva `config.php` in chiaro** — password del
+   database e credenziali SMTP — e ascoltava su tutte le interfacce di rete.
+   Ora ascolta solo su `127.0.0.1` e blocca i file come `.htaccess`.
+   **Le credenziali Brevo andrebbero cambiate per prudenza.**
+8. **La coordinata nei dati strutturati era sbagliata di 887 metri.**
+9. **L'inversione chiaro/scuro ha rotto dieci contrasti**, tutti da primitivi
+   usati al posto dei semantici. Il peggiore: `.btn--ghost` non dichiarava
+   sfondo e si appoggiava al grigio di sistema del browser — 1,04:1.
+
+> **Morale:** le prove con `curl` non bastano, e nemmeno leggere il codice.
+> Serve un browser vero, e serve misurare.
 
 ---
 
 ## Cosa manca per pubblicare
 
-In ordine, i primi tre bloccano tutto:
+**Dal cliente, in ordine — i primi tre bloccano tutto:**
 
 1. **Dominio definitivo** — ovunque c'è il segnaposto `www.x-sapori.it`,
    compreso `allowed_origins` in `config.php`
 2. **Ragione sociale, P. IVA, provider di hosting, email privacy**
-3. **Regola bambini**: altezza o età? Oggi il sito dice «sotto i 120 cm», le
-   vecchie FAQ dicevano «gratis fino a 3 anni». Ne può restare una sola
-4. Allergeni compilati dalla cucina
-5. Foto e video
-6. Il resto è in `DA-FORNIRE.md`
+   (`privacy@x-sapori.it` va creata davvero)
+3. **Regola bambini**: altezza o età? Ne può restare una sola
+4. **Allergeni** compilati dalla cucina
+5. **Undici piatti** con la cucina assegnata a occhio, da confermare
+   (`DA-FORNIRE.md` §3-bis)
 
 **Da fare comunque prima di pubblicare:**
 
-- rigenerare `ip_salt` in `config.php` (quello attuale è finito in un file di
-  esempio) e togliere le righe `localhost` da `allowed_origins`
-- alzare il numero di versione di `styles.css?v=` e `js/*.js?v=` (vedi
-  `DEPLOY.md` §4): senza, chi è già passato riceve HTML nuovo e CSS vecchio
-  per sette giorni
-- **tradurre in italiano i commenti russi** — vedi qui sotto
+- rigenerare `ip_salt` in `config.php` e togliere le righe `localhost` da
+  `allowed_origins`
+- alzare `?v=` su `styles.css` e `js/*.js` (vedi `DEPLOY.md` §4)
+- **tradurre i commenti russi** — vedi sotto
 
-### Traduzione dei commenti: da fare prima della consegna
+### Immagini e video ancora aperti
 
-Deciso il 21 agosto 2026. Il sito viene consegnato in Italia, quindi la
-documentazione dentro al codice deve essere leggibile da chi lo manterrà.
-Sono circa **700 righe su otto file**, in ordine di urgenza:
+| | Stato |
+|---|---|
+| Foto per la card **Italia** | serve solo se si vogliono le foto nelle card: allora ne servono **quattro** |
+| **Tavolo con molti piattini** | l'unica foto del piano che manca. Prompt pronto |
+| **Video della carne girata** | l'unico che vale davvero, e richiede un generatore video |
+| Dolci, vapore, rifacimenti | facoltativi |
 
-| File | Righe | Perché conta |
-|---|---|---|
-| `config.example.php` | 123 | **è il file che si copia a mano** per creare `config.php`: contiene le istruzioni per il sale, l'avvertenza su `trust_proxy`, il divieto di riscrivere l'email di conferma |
-| `api/notify.php` | 200 | invio delle email e SMTP |
-| `api/booking.php` | 180 | validazione e anti-spam |
-| `schema.sql` | 84 | struttura della base dati e permessi MySQL |
-| `js/booking.js` | 61 | validazione lato browser |
-| `js/prenota-plus.js` | 19 | fasce orarie e contatori |
-| `admin/index.php` | 18 | pannello prenotazioni |
-| `js/site.js` | 15 | comportamenti comuni |
+### Traduzione dei commenti: prima della consegna
 
-Nessun testo visibile al pubblico è in russo: sono tutti commenti. Il sito
-funziona identico prima e dopo — è una questione di manutenibilità, non di
-correttezza.
+Circa **700 righe su otto file**. Non è urgente — nessun testo visibile al
+pubblico è in russo, sono tutti commenti e il sito funziona identico — ma chi
+manterrà il progetto non li legge.
+
+| File | Righe |
+|---|---|
+| `api/notify.php` | 200 |
+| `api/booking.php` | 180 |
+| **`config.example.php`** | **123** — è quello che si copia a mano: va per primo |
+| `schema.sql` | 84 |
+| `js/booking.js` | 61 |
+| `js/prenota-plus.js`, `admin/index.php`, `js/site.js` | 52 |
+
+---
+
+## Tre cose da sapere prima di toccare il codice
+
+**1. I due registri sono entrambi espliciti.** `body, .on-dark, .hero,
+.drawer, .site-footer` sono scuri; `:root, .cornice, .on-light` sono chiari.
+Una superficie non può cambiare solo il fondo: deve ridefinire **tutti** i
+semantici, `--sigillo` e `--success-text` compresi. È così che nascono i
+contrasti rotti, ed è successo dieci volte in un giorno.
+
+**2. Mai usare un primitivo in un componente.** `--inchiostro`, `--carta`,
+`--ottone-30` funzionano su un tema solo, e il difetto si vede unicamente
+sull'altro.
+
+**3. Le classi usate da `js/booking.js`** — `.field--invalid`,
+`.checkbox--invalid`, `.form-msg--error`, `.form-msg--ok`, `.field-error` —
+sono un contratto: cambiarle scollega la validazione.
 
 ---
 
@@ -151,8 +206,12 @@ correttezza.
 Incolla questo:
 
 > Riprendiamo il sito del ristorante X-Sapori in `D:\Claude Code\x-sapori`.
-> Leggi `STATO-PROGETTO.md` e `DA-FORNIRE.md` per capire dove siamo.
+> Leggi `STATO-PROGETTO.md`, `DA-FORNIRE.md` e `PROMPT-IMMAGINI.md` per
+> capire dove siamo. Il locale è un **buffet**: ci si serve al banco, non si
+> ordina — se trovi testi che dicono il contrario sono vecchi.
+> Prima di dichiarare qualcosa verificato, misuralo nel browser.
 > [poi dici cosa vuoi fare]
 
-Il resto lo ricostruisco da solo dai file e dalla storia git, che ha un commit
-separato e commentato per ogni intervento.
+Il resto si ricostruisce dai file e dalla storia git, che ha un commit
+separato e commentato per ogni intervento: `git log --oneline` racconta il
+progetto meglio di qualsiasi riassunto.
