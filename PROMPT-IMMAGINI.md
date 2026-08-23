@@ -19,7 +19,7 @@ Aggiornato al 22 agosto 2026, dopo il secondo giro di generazioni.
 
 | # | Immagine | Stato |
 |---|---|---|
-| 1 | La sala (hero) | 🔄 **non si genera: si ingrandisce quella vera** — vedi sotto |
+| 1 | La sala (hero) | ✅ **fatta** — `08-sala.png`, 3840×2160 |
 | 2 | Il banco carico | ✅ **fatta** |
 | 3 | La carne girata | ✅ **fatta** |
 | 4 | Il tavolo con molti piattini | ⬜ da fare |
@@ -27,8 +27,18 @@ Aggiornato al 22 agosto 2026, dopo il secondo giro di generazioni.
 | 6 | I dolci | ⬜ facoltativa |
 | 7-9 | Sedia, piatto vuoto, salsa | ⬜ solo se avanzano tentativi |
 
-**Manca ancora una cosa importante**: l'immagine dell'hero. Tutto il resto
-e' o fatto o facoltativo.
+**Manca una sola foto**: il tavolo con molti piattini (immagine 4). Tutto il
+resto è fatto o facoltativo.
+
+### I file scelti, in `uploads/da-integrare/`
+
+| File | Slot | Perché questa variante |
+|---|---|---|
+| `08-sala.png` | hero | ha la firma della sala vera: muro a sinistra, lamelle che curvano dove finisce, colonna, apertura sul banco, scala col parapetto di vetro |
+| `09-banco-carico.png` | «Come funziona» | **sette pile di piatti illuminate sotto il bancone**: sono la frase «si prende un piatto e ci si serve» detta in immagine. Ed è chiara, quindi regge i 570px dello slot |
+| `10-banco-atmosfera.png` | riserva | più bella e col soffitto più fedele, ma scura: in piccolo si spegne. Da usare solo in grande |
+| `11-banco-sushi.png` | «La sala» | i riflessi blu delle lamelle sul vetro sono i più forti del gruppo, e le mani del cuoco sono corrette |
+| `12-carne-girata.png` | «Ogni tanto passiamo noi» | sfondo pulito con banco e lamelle, **senza il calice di vino rosso** delle altre: le bevande non sono incluse nel prezzo e mostrarle in evidenza è una promessa sbagliata |
 
 ## Le due lezioni del secondo giro
 
@@ -101,13 +111,13 @@ può dire *quel* marmo.
 
 ## L'ordine, da qui in avanti
 
-Il banco, la carne e il sushi sono fatti. Resta:
+Hero, banco, carne e sushi sono fatti, tutti a 3840×2160. Resta:
 
-1. **L'hero** — e non generandolo: ingrandendo la foto vera (immagine 1)
-2. **Il tavolo con molti piattini** (immagine 4) — e' quella che racconta
-   il valore: tanti assaggi, un prezzo solo
-3. **I video V1 e V2**, che adesso hanno le immagini di partenza
-4. Dolci e rifacimenti solo se avanza
+1. **V1, la carne girata** — il video che rende di più di tutti
+2. **V3, il banco in carrellata** — abbondanza in movimento, e chiude
+   l'anello da solo
+3. **Il tavolo con molti piattini** (immagine 4) — l'unica foto che manca
+4. Dolci, V2, V4 e rifacimenti solo se avanza
 
 ---
 
@@ -425,7 +435,8 @@ Consegna in WebM e MP4, sotto 2 MB per file.
 
 ## VIDEO 1 — La carne girata
 
-**Da**: immagine 3 · **4 secondi · 16:9** · niente loop, si guarda una volta
+**Da**: `12-carne-girata.png` · **4 secondi · 16:9** · niente loop, si guarda
+una volta sola
 
 ```
 Very slow motion. The long knife draws once down the picanha on the skewer and
@@ -444,6 +455,11 @@ the furniture or the light.
 
 **Da**: `04-vapore.png` · **4 secondi · 16:9** · **inizio = fine** per il loop
 
+> ⚠️ **Declassato.** Adesso che il banco esiste, questo serve poco: la ciotola
+> col vapore è un oggetto neutro che non mostra il locale, mentre il video del
+> banco fa lo stesso lavoro di loop **e** racconta il prodotto. Fatelo solo se
+> avanza tempo.
+
 ```
 The steam rises and curls slowly and continuously from the bowl. The camera is
 completely still. The bowl does not move. Nothing enters or leaves the frame.
@@ -461,7 +477,11 @@ warping of objects, and any change to the light.
 
 ## VIDEO 3 — Il banco, in carrellata
 
-**Da**: immagine 2 · **durata massima · 16:9** · **inizio = fine**
+**Da**: `09-banco-carico.png` · **durata massima · 16:9** · **inizio = fine**
+
+> ⬆️ **Promosso a secondo per importanza.** L'immagine ha già il vapore che
+> sale: in movimento il vapore si anima da solo e la carrellata chiude
+> l'anello. Fa il lavoro del video del vapore, ma mostrando il banco.
 
 ```
 The camera drifts very slowly sideways along the buffet counter, from left to
@@ -476,7 +496,7 @@ warping of food, and any change to the room or the light.
 
 ## VIDEO 4 — La sala
 
-**Da**: immagine 1 · **durata massima · 16:9** · **inizio = fine**
+**Da**: `08-sala.png` · **durata massima · 16:9** · **inizio = fine**
 
 ```
 Extremely slow push-in towards the dining room, a few centimetres per second.
