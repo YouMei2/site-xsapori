@@ -18,3 +18,7 @@ audit-*.html
 # Immagini in attesa di lavorazione: PNG grezzi da 11 MB. Nel repo ci
 # vanno solo le versioni finite e convertite, dentro uploads/.
 uploads/da-integrare/
+
+# Configurazione locale dell'anteprima (porta 4173): come .dev-server.js,
+# serve solo su questo computer.
+.claude/
