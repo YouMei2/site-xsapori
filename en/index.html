@@ -27,7 +27,7 @@
 <link rel="manifest" href="../site.webmanifest">
 <link rel="preload" href="../assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../styles.css?v=12">
+<link rel="stylesheet" href="../styles.css?v=16">
 <!-- Segna che il JavaScript è attivo: solo in quel caso le sezioni
      partono nascoste per poi comparire. Senza JS il sito resta leggibile. -->
 <script>document.documentElement.classList.add('js');</script>
@@ -171,8 +171,8 @@
       <!-- Two sizes: a phone downloads 133 KB instead of 470.
            The slow 14-second zoom is already in the CSS (heroZoom). -->
       <img src="../uploads/sala.webp"
-           srcset="../uploads/sala-1440.webp 1440w, ../uploads/sala.webp 2880w"
-           sizes="100vw"
+           srcset="../uploads/sala-768.webp 768w, ../uploads/sala-1440.webp 1440w, ../uploads/sala-1600.webp 1600w, ../uploads/sala-2048.webp 2048w, ../uploads/sala.webp 2880w"
+           sizes="107vw"
            alt="The X-Sapori dining room: light marble tables with petrol-blue chairs, the slatted ceiling and the lit buffet counter at the back"
            width="2880" height="1620" fetchpriority="high" decoding="async">
     </div>
@@ -256,9 +256,13 @@
 
       <div class="grid grid--2" style="margin-top:var(--sp-6)">
         <img class="plate plate--wide reveal" src="../uploads/banco.webp"
+             srcset="../uploads/banco-640.webp 640w, ../uploads/banco-960.webp 960w, ../uploads/banco-1280.webp 1280w, ../uploads/banco.webp 1600w"
+             sizes="(min-width:1400px) 570px, (min-width:760px) 44vw, calc(100vw - 2.5rem)"
              alt="The buffet counter, full: trays of rice, vegetables and steamed dumplings, with stacks of plates ready underneath"
              width="1600" height="1000" loading="lazy" decoding="async">
         <img class="plate plate--wide reveal" style="--d:100ms" src="../uploads/carne-girata.webp"
+             srcset="../uploads/carne-girata-640.webp 640w, ../uploads/carne-girata-960.webp 960w, ../uploads/carne-girata-1280.webp 1280w, ../uploads/carne-girata.webp 1600w"
+             sizes="(min-width:1400px) 570px, (min-width:760px) 44vw, calc(100vw - 2.5rem)"
              alt="A member of staff carving picanha from the skewer straight onto the plate, going round the tables"
              width="1600" height="1000" loading="lazy" decoding="async">
       </div>
@@ -405,7 +409,9 @@
   </section>
 
   <div class="fascia-foto reveal" aria-hidden="true">
-    <img src="../uploads/banco-atmosfera.webp" alt=""
+    <img src="../uploads/banco-atmosfera.webp"
+             srcset="../uploads/banco-atmosfera-640.webp 640w, ../uploads/banco-atmosfera-1280.webp 1280w, ../uploads/banco-atmosfera-2048.webp 2048w"
+             sizes="100vw" alt=""
          width="1600" height="1000" loading="lazy" decoding="async">
   </div>
 
@@ -432,6 +438,8 @@
 
         <div class="split__media reveal" style="--d:120ms">
           <img class="plate plate--wide" src="../uploads/sedia-tavolo.webp"
+             srcset="../uploads/sedia-tavolo-640.webp 640w, ../uploads/sedia-tavolo.webp 1024w"
+             sizes="(min-width:1400px) 552px, (min-width:900px) 45vw, (min-width:760px) 90vw, calc(100vw - 2.5rem)"
                alt="Detail of a petrol-blue leather chair with a brass frame, beside the edge of a light marble table"
                width="1024" height="640" loading="lazy" decoding="async">
         </div>
@@ -439,9 +447,13 @@
 
       <div class="grid grid--2" style="margin-top:var(--sp-5)">
         <img class="plate plate--wide reveal" src="../uploads/banco-sushi.webp"
+             srcset="../uploads/banco-sushi-640.webp 640w, ../uploads/banco-sushi-960.webp 960w, ../uploads/banco-sushi-1280.webp 1280w, ../uploads/banco-sushi.webp 1600w"
+             sizes="(min-width:1400px) 570px, (min-width:760px) 44vw, calc(100vw - 2.5rem)"
              alt="The sushi counter during service, trays of nigiri and maki under the glass"
              width="1600" height="1000" loading="lazy" decoding="async">
         <img class="plate plate--wide reveal" style="--d:100ms" src="../uploads/mani-salmone.webp"
+             srcset="../uploads/mani-salmone-640.webp 640w, ../uploads/mani-salmone.webp 1152w"
+             sizes="(min-width:1400px) 570px, (min-width:760px) 44vw, calc(100vw - 2.5rem)"
              alt="A chef's hands slicing salmon behind the counter, the dining room behind"
              width="1152" height="720" loading="lazy" decoding="async">
       </div>
@@ -619,6 +631,6 @@
   </div>
 </footer>
 
-<script src="../js/site.js?v=12" defer></script>
+<script src="../js/site.js?v=16" defer></script>
 </body>
 </html>
