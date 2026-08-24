@@ -116,11 +116,24 @@
   --fs-small:.85rem;                          /*  13,6 */
   --fs-micro:.72rem;                          /*  11,5 */
   --fs-nano:.62rem;                           /*  10 */
+  /* INTERLINEA E CRENATURA SCALANO COL CORPO, non sono un valore solo.
+     Fino al 25 agosto 2026 tutti i titoli — dal display da 96px all'h4 da
+     23 — condividevano `line-height:1.05` e `letter-spacing:-.018em`. E'
+     sbagliato per costruzione: piu' un carattere e' grande, piu' lo spazio
+     fra le righe sembra largo e piu' le lettere sembrano staccate. Un
+     titolo da 96px con l'interlinea di uno da 23 si legge come un elenco
+     di righe invece che come un blocco.
+
+     La regola e' quella classica: al crescere del corpo l'interlinea si
+     stringe e la crenatura diventa piu' negativa. Le maiuscolette fanno
+     l'opposto — vedi `--track-wide`. */
+  --lh-display:.88;   --track-display:-.035em;   /*  46 → 96 px */
+  --lh-h1:.92;        --track-h1:-.032em;        /*  37 → 62 */
+  --lh-h2:.95;        --track-h2:-.028em;        /*  30 → 46 */
+  --lh-h3:1;          --track-h3:-.022em;        /*  26 → 38 */
+  --lh-h4:1.08;       --track-h4:-.018em;        /*  23 → 26 */
+  /* tenuto per compatibilita' con le regole che non distinguono il livello */
   --lh-tight:1.05;
-  /* Regolazioni ottiche legate al font display. Sono qui e non sparse nelle
-     regole perche un font nuovo ha ascendenti e proporzioni diverse: si
-     ritarano in due righe invece che cercando i letterali nel file. */
-  --track-display:-.018em;
   --wght-body:400;
   --wght-strong:600;
   --wght-display:500;
@@ -352,11 +365,12 @@ body{
 img,svg,video{max-width:100%;display:block;height:auto;}
 h1,h2,h3,h4{
   margin:0;font-family:var(--font-display);font-weight:var(--wght-display);
-  line-height:var(--lh-tight);letter-spacing:var(--track-display);text-wrap:balance;
+  text-wrap:balance;hyphens:none;
 }
-h1{font-size:var(--fs-h1);}
-h2{font-size:var(--fs-h2);}
-h3{font-size:var(--fs-h3);}
+h1{font-size:var(--fs-h1);line-height:var(--lh-h1);letter-spacing:var(--track-h1);}
+h2{font-size:var(--fs-h2);line-height:var(--lh-h2);letter-spacing:var(--track-h2);}
+h3{font-size:var(--fs-h3);line-height:var(--lh-h3);letter-spacing:var(--track-h3);}
+h4{font-size:var(--fs-h4);line-height:var(--lh-h4);letter-spacing:var(--track-h4);}
 p,ul,ol,dl,figure{margin:0;}
 ul,ol{padding:0;list-style:none;}
 a{color:var(--accent);text-underline-offset:.22em;text-decoration-thickness:1px;}
@@ -395,7 +409,14 @@ button,input,select,textarea{font:inherit;color:inherit;}
 /* Le due sezioni di cucina cinese portano l'occhiello in rosso sigillo:
    è il modo di dire «qui siamo in Cina» senza vestire di rosso il sito. */
 .eyebrow--cina{color:var(--sigillo);}
-.lead{font-size:var(--fs-lead);color:var(--on-surface-dim);max-width:62ch;}
+/* I paragrafi d'apertura sono blocchi da due a quattro righe: `balance`
+   li fa risolvere in un rettangolo invece che in una scala. Misurato prima:
+   cinque blocchi avevano una riga sotto il 60% della piu' lunga, uno al 23%.
+   `pretty` sul corpo lungo resta, perche' li' balance costerebbe troppo. */
+.lead{
+  font-size:var(--fs-lead);color:var(--on-surface-dim);max-width:62ch;
+  text-wrap:balance;
+}
 .mono{font-family:var(--font-data);font-variant-numeric:tabular-nums;}
 /* Oro come testo. Passa da --detail-text, che vale ottone scuro sul marmo e
    ottone chiaro sulla sala: un primitivo qui funzionerebbe su un tema solo. */
@@ -659,7 +680,7 @@ button,input,select,textarea{font:inherit;color:inherit;}
 @media (min-width:900px){ .hero__inner{padding-block:clamp(6.5rem,18vh,8.5rem) clamp(1.75rem,6vh,4rem);} }
 .hero__title{
   font-size:var(--fs-display);margin-top:var(--sp-3);max-width:16ch;
-  letter-spacing:-.028em;
+  line-height:var(--lh-display);letter-spacing:var(--track-display);
 }
 /* Portatili bassi (1280×720 e simili): le quattro cucine devono restare
    sopra la piega, quindi titolo e spazi si stringono in base all'altezza.
@@ -688,8 +709,16 @@ button,input,select,textarea{font:inherit;color:inherit;}
   font-size:.6em;letter-spacing:-.015em;margin-top:.18em;
 }
 .hero .eyebrow{color:var(--ottone-30);}
-.hero__lead{margin-top:var(--sp-4);max-width:48ch;color:#C6D0D4;font-size:var(--fs-lead);}
-.hero__actions{display:flex;flex-wrap:wrap;gap:var(--sp-3);margin-top:var(--sp-5);}
+.hero__lead{margin-top:var(--sp-4);max-width:48ch;color:#C6D0D4;font-size:var(--fs-lead);text-wrap:balance;}
+.hero__actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-3);margin-top:var(--sp-5);}
+/* La rassicurazione accanto al pulsante: piccola e smorzata, perche' deve
+   togliere un dubbio, non competere con l'azione. Va a capo da sola sui
+   telefoni, dove i due pulsanti occupano gia' tutta la riga. */
+.cta-nota{
+  font-family:var(--font-data);font-size:var(--fs-small);
+  color:#A9B6BC;letter-spacing:.02em;
+}
+@media (max-width:559px){ .cta-nota{flex-basis:100%;margin-top:calc(var(--sp-1) * -1);} }
 
 /* Il prezzo nella prima schermata: per un all you can eat è la domanda
    numero uno, prima ancora del menu. Nasconderlo genera solo telefonate. */
@@ -1691,14 +1720,22 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
 /* --- 13. Motion ------------------------------------------- */
 /* I .reveal partono nascosti SOLO se il JavaScript è attivo: senza JS
    la classe .js non viene aggiunta e il contenuto resta visibile. */
-.js .reveal{opacity:0;transform:translateY(24px);}
+/* LA SFOCATURA NELL'ENTRATA.
+   Senza, questo e' una dissolvenza dal basso come tante; con, l'elemento
+   sembra mettersi a fuoco arrivando, e il livello percepito cambia — a
+   costo zero, perche' `filter` sta sul compositore insieme a `opacity` e
+   `transform` e non tocca il layout.
+   Quattordici pixel: sotto non si nota, sopra sembra un effetto. */
+.js .reveal{opacity:0;transform:translateY(24px);filter:blur(14px);}
 .js .reveal.is-in{
-  opacity:1;transform:none;
+  opacity:1;transform:none;filter:blur(0);
   transition:opacity var(--dur-slow) var(--ease-out) var(--d,0ms),
-             transform var(--dur-slow) var(--ease-out) var(--d,0ms);
+             transform var(--dur-slow) var(--ease-out) var(--d,0ms),
+             filter var(--dur-slow) var(--ease-out) var(--d,0ms);
 }
-.enter{opacity:0;transform:translateY(20px);animation:enter .85s var(--ease-out) forwards;animation-delay:var(--d,0ms);}
-@keyframes enter{ to{opacity:1;transform:none;} }
+.enter{opacity:0;transform:translateY(20px);filter:blur(12px);
+  animation:enter .85s var(--ease-out) forwards;animation-delay:var(--d,0ms);}
+@keyframes enter{ to{opacity:1;transform:none;filter:blur(0);} }
 .hero__bg img{transform:scale(1.07);animation:heroZoom 14s var(--ease-soft) forwards;}
 @keyframes heroZoom{ to{transform:scale(1);} }
 /* `.draw` (l'animazione del tratto SVG) e' stata rimossa il 24 agosto 2026
@@ -1711,8 +1748,8 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
     animation-duration:1ms!important;animation-iteration-count:1!important;
     transition-duration:1ms!important;
   }
-  .js .reveal{opacity:1;transform:none;}
-  .enter{opacity:1;transform:none;animation:none;}
+  .js .reveal{opacity:1;transform:none;filter:none;}
+  .enter{opacity:1;transform:none;filter:none;animation:none;}
   .hero__bg img{transform:none;}
 }
 

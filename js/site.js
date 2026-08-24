@@ -11,13 +11,13 @@
   // sono i testi generati da qui, tutto il resto e identico.
   var EN = (document.documentElement.lang || 'it').toLowerCase().indexOf('en') === 0;
   var T = EN ? {
-    apertoOra:   'Open now · closes at ',
-    chiusoRiapre:'Closed · opens at ',
-    chiusoDomani:'Closed · opens tomorrow at '
+    apertoOra:   'Open now / closes at ',
+    chiusoRiapre:'Closed / opens at ',
+    chiusoDomani:'Closed / opens tomorrow at '
   } : {
-    apertoOra:   'Aperto ora · si chiude alle ',
-    chiusoRiapre:'Chiuso · riapre alle ',
-    chiusoDomani:'Chiuso · riapre domani alle '
+    apertoOra:   'Aperto ora / si chiude alle ',
+    chiusoRiapre:'Chiuso / riapre alle ',
+    chiusoDomani:'Chiuso / riapre domani alle '
   };
 
   /* --- Header: compatto allo scroll ---------------------- */

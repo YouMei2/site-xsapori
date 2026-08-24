@@ -27,7 +27,7 @@
 <link rel="manifest" href="../site.webmanifest">
 <link rel="preload" href="../assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../styles.css?v=16">
+<link rel="stylesheet" href="../styles.css?v=18">
 <!-- Segna che il JavaScript è attivo: solo in quel caso le sezioni
      partono nascoste per poi comparire. Senza JS il sito resta leggibile. -->
 <script>document.documentElement.classList.add('js');</script>
@@ -178,7 +178,7 @@
     </div>
 
     <div class="wrap hero__inner">
-      <p class="eyebrow enter" style="--d:100ms">Buffet · Savona · Newly opened</p>
+      <p class="eyebrow enter" style="--d:100ms">Buffet / Savona / Newly opened</p>
       <h1 class="hero__title enter" style="--d:220ms">Everything you want, <em>for one price</em></h1>
       <p class="hero__lead enter" style="--d:360ms">
         It is a buffet: you go to the counter and take what is there, as many times as
@@ -188,6 +188,9 @@
       <div class="hero__actions enter" style="--d:480ms">
         <a class="btn btn--primary" href="book.html">Book a table</a>
         <a class="btn btn--ghost" href="menu.html">Browse the menu</a>
+        <!-- Removes the friction right before the click: says what happens
+             next, and that nothing is being committed. -->
+        <p class="cta-nota">We call you back / no deposit</p>
       </div>
 
       <p class="hero__prezzo enter" style="--d:540ms">
@@ -197,7 +200,7 @@
       </p>
       <p class="hero__meta enter" style="--d:600ms">
         <span>Via Luigi Pirandello, 2r — Savona</span>
-        <span>Every day · 12:00–15:00 · 19:00–23:00</span>
+        <span>Every day / 12:00–15:00 / 19:00–23:00</span>
         <span><a class="hero__tel" href="tel:+390192213138">019 221 3138</a></span>
       </p>
 
@@ -206,16 +209,16 @@
         <ul class="cucine__list">
           <li><a class="cucina" href="menu.html#italiano">
             <span class="cucina__filo" aria-hidden="true"></span>
-            <b>Italy</b><small>Pasta · mozzarella</small></a></li>
+            <b>Italy</b><small>Pasta / mozzarella</small></a></li>
           <li><a class="cucina" href="menu.html#brace">
             <span class="cucina__filo" aria-hidden="true"></span>
-            <b>Brazil</b><small>Grill · churrasco</small></a></li>
+            <b>Brazil</b><small>Grill / churrasco</small></a></li>
           <li><a class="cucina" href="menu.html#wok">
             <span class="cucina__filo" aria-hidden="true"></span>
-            <b>China</b><small>Wok · steamed</small></a></li>
+            <b>China</b><small>Wok / steamed</small></a></li>
           <li><a class="cucina" href="menu.html#sushi">
             <span class="cucina__filo" aria-hidden="true"></span>
-            <b>Japan</b><small>Sushi · tartare</small></a></li>
+            <b>Japan</b><small>Sushi / tartare</small></a></li>
         </ul>
       </div>
     </div>
@@ -227,7 +230,7 @@
       <div class="section__head reveal">
         <p class="eyebrow">How it works</p>
         <h2 id="come-t">You help yourself, and every so often we come to you</h2>
-        <p class="dato-varieta">67 dishes · 8 sections · 4 kitchens</p>
+        <p class="dato-varieta">67 dishes / 8 sections / 4 kitchens</p>
         <p class="lead">
           It is a buffet, not an à la carte restaurant: nothing to order and nothing to wait for.
           Take a plate, walk round the counter, go back as often as you like.
@@ -325,7 +328,7 @@
           <div class="card__body">
             <span class="card__tag">Brazil</span>
             <h3>Grill and churrasco</h3>
-            <p>Griddled meat and skewers, brought to the table as soon as they are ready.</p>
+            <p>Griddled meat and skewers, carved as you watch at the barbecue counter.</p>
           </div>
         </a>
 
@@ -362,20 +365,20 @@
 
       <dl class="prezzi">
         <div class="prezzo reveal">
-          <dt>Lunch · Monday to Friday</dt>
+          <dt>Lunch / Monday to Friday</dt>
           <dd>€14.90<small>per person</small></dd>
         </div>
         <div class="prezzo prezzo--hi reveal" style="--d:80ms">
           <span class="prezzo__badge">Most booked</span>
-          <dt>Dinner · Monday to Friday</dt>
+          <dt>Dinner / Monday to Friday</dt>
           <dd>€22.90<small>per person</small></dd>
         </div>
         <div class="prezzo reveal" style="--d:160ms">
-          <dt>Lunch · Saturday, Sunday and holidays</dt>
+          <dt>Lunch / Saturday, Sunday and holidays</dt>
           <dd>€18.90<small>per person</small></dd>
         </div>
         <div class="prezzo reveal" style="--d:240ms">
-          <dt>Dinner · Saturday, Sunday and holidays</dt>
+          <dt>Dinner / Saturday, Sunday and holidays</dt>
           <dd>€24.90<small>per person</small></dd>
         </div>
       </dl>
@@ -472,7 +475,7 @@
         <div class="reveal">
           <p class="stato" id="stato-apertura" data-open="false">
             <!-- No-JavaScript fallback: this is information, not decoration. -->
-            <span id="stato-testo">Open every day · 12:00–15:00 and 19:00–23:00</span>
+            <span id="stato-testo">Open every day / 12:00–15:00 and 19:00–23:00</span>
           </p>
 
           <ul class="orari">
@@ -619,18 +622,18 @@
         <ul>
           <li>Via Luigi Pirandello, 2r<br>17100 Savona (SV)</li>
           <li><a href="tel:+390192213138">+39 019 221 3138</a></li>
-          <li>Every day<br>12:00–15:00 · 19:00–23:00</li>
+          <li>Every day<br>12:00–15:00 / 19:00–23:00</li>
         </ul>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <span>© 2026 X-Sapori · Via Luigi Pirandello, 2r, 17100 Savona (SV)</span>
+      <span>© 2026 X-Sapori / Via Luigi Pirandello, 2r, 17100 Savona (SV)</span>
       <span>VAT number to be added</span>
     </div>
   </div>
 </footer>
 
-<script src="../js/site.js?v=16" defer></script>
+<script src="../js/site.js?v=18" defer></script>
 </body>
 </html>

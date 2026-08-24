@@ -23,7 +23,7 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=16">
+<link rel="stylesheet" href="styles.css?v=18">
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -77,7 +77,7 @@
 
   <section class="page-head">
     <div class="wrap">
-      <p class="breadcrumb"><a href="index.html">Home</a> · Prenota un tavolo</p>
+      <p class="breadcrumb"><a href="index.html">Home</a> / Prenota un tavolo</p>
       <h1 style="margin-top:var(--sp-3)">Il vostro tavolo, riservato in un minuto</h1>
       <p class="lead" style="margin-top:var(--sp-4)">
         Compilate il modulo: vi richiamiamo per confermare entro poche ore, negli orari di apertura.
@@ -156,10 +156,10 @@
                    con l'array formulas in config.php e con le etichette
                    di xs_formula_label() in api/notify.php. -->
               <select id="formula" name="formula" aria-describedby="formula-hint">
-                <option value="pranzo_feriale">Pranzo · 14,90 € (da lunedì a venerdì)</option>
-                <option value="cena_feriale" selected>Cena · 22,90 € (da lunedì a venerdì)</option>
-                <option value="pranzo_weekend">Pranzo · 18,90 € (sabato, domenica e festivi)</option>
-                <option value="cena_weekend">Cena · 24,90 € (sabato, domenica e festivi)</option>
+                <option value="pranzo_feriale">Pranzo / 14,90 € (da lunedì a venerdì)</option>
+                <option value="cena_feriale" selected>Cena / 22,90 € (da lunedì a venerdì)</option>
+                <option value="pranzo_weekend">Pranzo / 18,90 € (sabato, domenica e festivi)</option>
+                <option value="cena_weekend">Cena / 24,90 € (sabato, domenica e festivi)</option>
               </select>
               <span class="hint" id="formula-hint">
                 Si imposta da sola in base a data e orario. Nei giorni festivi vale la tariffa
@@ -340,19 +340,19 @@
         <ul>
           <li>Via Luigi Pirandello, 2r<br>17100 Savona (SV)</li>
           <li><a href="tel:+390192213138">+39 019 221 3138</a></li>
-          <li>Tutti i giorni<br>12:00–15:00 · 19:00–23:00</li>
+          <li>Tutti i giorni<br>12:00–15:00 / 19:00–23:00</li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 X-Sapori · Via Luigi Pirandello, 2r, 17100 Savona (SV)</span>
+      <span>© 2026 X-Sapori / Via Luigi Pirandello, 2r, 17100 Savona (SV)</span>
       <span>P. IVA da inserire</span>
     </div>
   </div>
 </footer>
 
-<script src="js/site.js?v=16" defer></script>
-<script src="js/booking.js?v=16" defer></script>
-<script src="js/prenota-plus.js?v=16" defer></script>
+<script src="js/site.js?v=18" defer></script>
+<script src="js/booking.js?v=18" defer></script>
+<script src="js/prenota-plus.js?v=18" defer></script>
 </body>
 </html>

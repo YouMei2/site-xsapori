@@ -629,15 +629,15 @@
    * ------------------------------------------------------------------ */
 
   var ETICHETTE_FORMULA = EN ? {
-    pranzo_feriale: 'Lunch · €14.90 (Mon–Fri)',
-    cena_feriale:   'Dinner · €22.90 (Mon–Fri)',
-    pranzo_weekend: 'Lunch · €18.90 (weekends and holidays)',
-    cena_weekend:   'Dinner · €24.90 (weekends and holidays)'
+    pranzo_feriale: 'Lunch / €14.90 (Mon–Fri)',
+    cena_feriale:   'Dinner / €22.90 (Mon–Fri)',
+    pranzo_weekend: 'Lunch / €18.90 (weekends and holidays)',
+    cena_weekend:   'Dinner / €24.90 (weekends and holidays)'
   } : {
-    pranzo_feriale: 'Pranzo · 14,90 € (lun–ven)',
-    cena_feriale:   'Cena · 22,90 € (lun–ven)',
-    pranzo_weekend: 'Pranzo · 18,90 € (weekend e festivi)',
-    cena_weekend:   'Cena · 24,90 € (weekend e festivi)'
+    pranzo_feriale: 'Pranzo / 14,90 € (lun–ven)',
+    cena_feriale:   'Cena / 22,90 € (lun–ven)',
+    pranzo_weekend: 'Pranzo / 18,90 € (weekend e festivi)',
+    cena_weekend:   'Cena / 24,90 € (weekend e festivi)'
   };
 
   var ETICHETTE_RIEPILOGO = EN

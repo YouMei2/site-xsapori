@@ -406,14 +406,14 @@
     biglietto.setAttribute('data-avviato', avviato ? 'true' : 'false');
 
     var quando = '';
-    if (data && ora)      { quando = dataLunga(data) + ' · ' + ora; }
+    if (data && ora)      { quando = dataLunga(data) + ' / ' + ora; }
     else if (data)        { quando = dataLunga(data); }
     else if (ora)         { quando = ora; }
     rigaBiglietto('quando', quando);
 
     if (avviato) {
       var p = adulti + ' ' + (adulti === 1 ? T.adulto : T.adultiPl);
-      if (bambini) { p += ' · ' + bambini + ' ' + (bambini === 1 ? T.bambino : T.bambiniPl); }
+      if (bambini) { p += ' / ' + bambini + ' ' + (bambini === 1 ? T.bambino : T.bambiniPl); }
       rigaBiglietto('persone', p);
     } else {
       rigaBiglietto('persone', '');
@@ -422,9 +422,9 @@
     var etichettaFormula = '';
     if (campoFormula && campoFormula.selectedIndex >= 0) {
       // La prima parte dell'etichetta, prima del primo separatore: basta
-      // "Cena" invece di "Cena · 22,90 € (da lunedi a venerdi)".
+      // "Cena" invece di "Cena / 22,90 € (da lunedi a venerdi)".
       etichettaFormula = campoFormula.options[campoFormula.selectedIndex]
-        .textContent.split('·')[0].trim();
+        .textContent.split('/')[0].trim();
     }
     rigaBiglietto('formula', completo ? etichettaFormula : '');
 

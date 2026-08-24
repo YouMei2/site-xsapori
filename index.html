@@ -27,7 +27,7 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=16">
+<link rel="stylesheet" href="styles.css?v=18">
 <!-- Segna che il JavaScript è attivo: solo in quel caso le sezioni
      partono nascoste per poi comparire. Senza JS il sito resta leggibile. -->
 <script>document.documentElement.classList.add('js');</script>
@@ -186,7 +186,7 @@
     </div>
 
     <div class="wrap hero__inner">
-      <p class="eyebrow enter" style="--d:100ms">Gran Buffet · Savona · Nuova apertura</p>
+      <p class="eyebrow enter" style="--d:100ms">Gran Buffet / Savona / Nuova apertura</p>
       <h1 class="hero__title enter" style="--d:220ms">Tutto quello che volete, <em>a un prezzo solo</em></h1>
       <p class="hero__lead enter" style="--d:360ms">
         Buffet: si va al banco e si prende quello che c'è, quante volte volete.
@@ -196,6 +196,9 @@
       <div class="hero__actions enter" style="--d:480ms">
         <a class="btn btn--primary" href="prenota.html">Prenota un tavolo</a>
         <a class="btn btn--ghost" href="menu.html">Sfoglia il menu</a>
+        <!-- La riga accanto al pulsante toglie l'attrito prima del clic:
+             dice cosa succede dopo, e che non si sta impegnando nulla. -->
+        <p class="cta-nota">Vi richiamiamo noi / nessun anticipo</p>
       </div>
 
       <p class="hero__prezzo enter" style="--d:540ms">
@@ -205,7 +208,7 @@
       </p>
       <p class="hero__meta enter" style="--d:600ms">
         <span>Via Luigi Pirandello, 2r — Savona</span>
-        <span>Tutti i giorni · 12:00–15:00 · 19:00–23:00</span>
+        <span>Tutti i giorni / 12:00–15:00 / 19:00–23:00</span>
         <span><a class="hero__tel" href="tel:+390192213138">019 221 3138</a></span>
       </p>
 
@@ -214,16 +217,16 @@
         <ul class="cucine__list">
           <li><a class="cucina" href="menu.html#italiano">
             <span class="cucina__filo" aria-hidden="true"></span>
-            <b>Italia</b><small>Primi · mozzarella</small></a></li>
+            <b>Italia</b><small>Primi / mozzarella</small></a></li>
           <li><a class="cucina" href="menu.html#brace">
             <span class="cucina__filo" aria-hidden="true"></span>
-            <b>Brasile</b><small>Brace · churrasco</small></a></li>
+            <b>Brasile</b><small>Brace / churrasco</small></a></li>
           <li><a class="cucina" href="menu.html#wok">
             <span class="cucina__filo" aria-hidden="true"></span>
-            <b>Cina</b><small>Wok · vapore</small></a></li>
+            <b>Cina</b><small>Wok / vapore</small></a></li>
           <li><a class="cucina" href="menu.html#sushi">
             <span class="cucina__filo" aria-hidden="true"></span>
-            <b>Giappone</b><small>Sushi · tartare</small></a></li>
+            <b>Giappone</b><small>Sushi / tartare</small></a></li>
         </ul>
       </div>
     </div>
@@ -338,7 +341,7 @@
           <div class="card__body">
             <span class="card__tag">Brasile</span>
             <h3>Brace e churrasco</h3>
-            <p>Carne alla piastra e spiedini, portati al tavolo appena pronti.</p>
+            <p>Carne alla piastra e spiedini, tagliati al momento sul banco della brace.</p>
           </div>
         </a>
 
@@ -375,20 +378,20 @@
 
       <dl class="prezzi">
         <div class="prezzo reveal">
-          <dt>Pranzo · da lunedì a venerdì</dt>
+          <dt>Pranzo / da lunedì a venerdì</dt>
           <dd>14,90 €<small>a persona</small></dd>
         </div>
         <div class="prezzo prezzo--hi reveal" style="--d:80ms">
           <span class="prezzo__badge">La più richiesta</span>
-          <dt>Cena · da lunedì a venerdì</dt>
+          <dt>Cena / da lunedì a venerdì</dt>
           <dd>22,90 €<small>a persona</small></dd>
         </div>
         <div class="prezzo reveal" style="--d:160ms">
-          <dt>Pranzo · sabato, domenica e festivi</dt>
+          <dt>Pranzo / sabato, domenica e festivi</dt>
           <dd>18,90 €<small>a persona</small></dd>
         </div>
         <div class="prezzo reveal" style="--d:240ms">
-          <dt>Cena · sabato, domenica e festivi</dt>
+          <dt>Cena / sabato, domenica e festivi</dt>
           <dd>24,90 €<small>a persona</small></dd>
         </div>
       </dl>
@@ -490,7 +493,7 @@
           <p class="stato" id="stato-apertura" data-open="false">
             <!-- Ripiego senza JavaScript: questo non è decorazione, è informazione.
                  Se lo script parte, lo sostituisce con lo stato calcolato. -->
-            <span id="stato-testo">Aperti tutti i giorni · 12:00–15:00 e 19:00–23:00</span>
+            <span id="stato-testo">Aperti tutti i giorni / 12:00–15:00 e 19:00–23:00</span>
           </p>
 
           <ul class="orari">
@@ -643,18 +646,18 @@
         <ul>
           <li>Via Luigi Pirandello, 2r<br>17100 Savona (SV)</li>
           <li><a href="tel:+390192213138">+39 019 221 3138</a></li>
-          <li>Tutti i giorni<br>12:00–15:00 · 19:00–23:00</li>
+          <li>Tutti i giorni<br>12:00–15:00 / 19:00–23:00</li>
         </ul>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <span>© 2026 X-Sapori · Via Luigi Pirandello, 2r, 17100 Savona (SV)</span>
+      <span>© 2026 X-Sapori / Via Luigi Pirandello, 2r, 17100 Savona (SV)</span>
       <span>P. IVA da inserire</span>
     </div>
   </div>
 </footer>
 
-<script src="js/site.js?v=16" defer></script>
+<script src="js/site.js?v=18" defer></script>
 </body>
 </html>
