@@ -1,0 +1,9 @@
+# Seconda difesa, indipendente dalla prima.
+#
+# Il .htaccess di radice nega gia' questa cartella con un RedirectMatch, ma
+# quella regola ragiona sul percorso URL: se il sito viene spostato, montato
+# altrove o se quel file viene rimaneggiato, smette di proteggere. Questo
+# invece vale per la cartella in cui si trova, ovunque essa sia.
+#
+# Serve perche' qui dentro c'e' materiale che non va pubblicato: vedi LEGGIMI.md.
+Require all denied

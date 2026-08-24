@@ -38,7 +38,14 @@
 # Materiale di riferimento interno (la foto vera della sala, i siti guardati
 # in fase di studio). Fino al 24 agosto 2026 stava dentro uploads/, quindi
 # veniva servito dal web come una foto qualsiasi. Vedi riferimenti/LEGGIMI.md.
-RedirectMatch 403 (?i)^/riferimenti(/|$)
+#
+# ATTENZIONE AL `(^|/)`, non e' pignoleria. RedirectMatch confronta il
+# percorso a partire dalla radice del SERVER, non dalla cartella che contiene
+# questo .htaccess. Con `^/riferimenti` la regola funziona solo se il sito sta
+# sulla radice del dominio: in una sottocartella il percorso e'
+# `/sottocartella/riferimenti/...` e i file venivano serviti con 200.
+# Provato su Apache, non dedotto.
+RedirectMatch 403 (?i)(^|/)riferimenti(/|$)
 
 # ---------------------------------------------------------------------
 #  Pagine unite: reindirizzamenti permanenti

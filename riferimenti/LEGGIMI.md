@@ -11,5 +11,8 @@ interno raggiungibili da chiunque indovinasse il nome.
 | `riferimento-sito-esterno.png` | Sito di un altro locale, guardato in fase di studio. |
 
 La cartella resta nel repo perche' serve a chi lavora, ma `.htaccess` la
-blocca con un 403: se per errore finisce sull'hosting non e' raggiungibile.
+blocca con un 403 — anzi con due, indipendenti l'una dall'altra: la regola
+`RedirectMatch` nel `.htaccess` di radice, e un `.htaccess` qui dentro con
+`Require all denied`. Provate una alla volta su Apache: se per errore la
+cartella finisce sull'hosting non e' raggiungibile.
 Meglio comunque non copiarla via FTP.

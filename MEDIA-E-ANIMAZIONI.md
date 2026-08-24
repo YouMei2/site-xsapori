@@ -87,6 +87,23 @@ Tutte con `.menu-foto`: `aspect-ratio:4/3`, `cover`, bordo 1 px `--ottone-50`.
 FTP e serviti dal web. **Spostati in `riferimenti/`**, che `.htaccess` nega
 con un 403 e che il server di anteprima ora blocca allo stesso modo.
 
+**E la prima versione di quel 403 non funzionava.** Vale la pena raccontarlo,
+perché è lo stesso errore di sempre. La regola era
+`RedirectMatch 403 (?i)^/riferimenti(/|$)`, verificata sul server di anteprima,
+dove passava. Provata poi su Apache vero, i file rispondevano **200**:
+`RedirectMatch` confronta il percorso a partire dalla radice del **server**,
+non dalla cartella che contiene il `.htaccess`. Con il sito in una
+sottocartella il percorso è `/x-sapori/riferimenti/…`, e `^/riferimenti` non
+aggancia niente.
+
+Corretta in `(^|/)riferimenti(/|$)`, che funziona in tutti e due i casi.
+Aggiunta anche una **seconda difesa indipendente**: `riferimenti/.htaccess`
+con `Require all denied`, che vale per la cartella dovunque venga spostata e
+non dipende dal file di radice. Provate una alla volta su Apache disattivando
+l'altra: reggono entrambe da sole. E un file *chiamato*
+`riferimenti-di-prova.webp` resta accessibile — la regola aggancia il segmento
+di percorso, non il prefisso del nome.
+
 ---
 
 # Passo 2 — Giudizio su ogni immagine
@@ -539,6 +556,5 @@ Le scrivo qui perché non si perdano fra i numeri.
    posate, bordi dei piatti, texture ripetute. Dieci minuti a schermo intero.
 2. **Se le due animazioni nuove siano gradevoli mentre scorrono.** So che
    finiscono dove devono; non so come si vedono.
-3. **Il 403 su `riferimenti/`.** Verificato sul server di anteprima, non su
-   Apache: XAMPP va avviato a mano. È l'unica cosa qui dentro non misurata
-   dove conta.
+*(Il terzo punto — il 403 su `riferimenti/` — è stato verificato su Apache
+poco dopo, e la verifica ha trovato che la regola non funzionava. Vedi sotto.)*
