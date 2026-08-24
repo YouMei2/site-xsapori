@@ -54,10 +54,17 @@ il sito.
 oppure non sta. Per questo **le quattro card delle cucine restano grafiche** —
 è una scelta, non una mancanza, ed è scritta sopra la griglia in `index.html`.
 
-**Due video pronti ma spenti**, in `uploads/`: `sala-hero` e
-`banco-carrellata`, WebM e MP4. Non sono montati per scelta del cliente.
-L'hero non ne ha bisogno: `heroZoom` nel CSS dà 14 secondi di avvicinamento
-lento senza scaricare un megabyte.
+**Nessun video esiste.** *(Corretto il 24 agosto 2026: fino a oggi questo
+documento affermava che `sala-hero` e `banco-carrellata` fossero pronti in
+`uploads/` in WebM e MP4. È falso — nella cartella non c'è nessun `.webm`
+né `.mp4`, e git non ne traccia nessuno.)*
+
+**L'impianto però c'è, ed è completo.** `js/site.js:65` costruisce il
+`<video>` non appena `.hero__bg` dichiara `data-video`: muto, in loop, con
+poster, pulsante di pausa WCAG 2.2.2 e blocco su rete lenta o «riduci
+movimento». Aspetta solo i file. Nel frattempo l'hero non ne ha bisogno:
+`heroZoom` nel CSS dà 14 secondi di avvicinamento lento senza scaricare un
+megabyte.
 
 **La mappa non è di Google.** Sei riquadri di OpenStreetMap ospitati da noi:
 si vede subito, nessun cookie, nessun consenso da cliccare.
@@ -70,6 +77,7 @@ si vede subito, nessun cookie, nessun consenso da cliccare.
 |---|---|
 | `DA-FORNIRE.md` | **Le cose che mancano dal cliente.** Il primo da aprire |
 | `PROMPT-IMMAGINI.md` | Prompt pronti per immagini e video, impostazioni del tool, cosa manca |
+| `MEDIA-E-ANIMAZIONI.md` | **Giudizio misurato su ogni immagine**, la deriva ambrata, i prompt di correzione, le proposte di animazione |
 | `ALLERGENI-DA-COMPILARE.md` | 67 piatti × 14 allergeni, da far compilare in cucina |
 | `DEPLOY.md` | Pubblicazione passo per passo |
 | `MANUTENZIONE.md` | Come cambiare prezzi, orari, piatti senza toccare il codice |
@@ -92,8 +100,8 @@ Tutto misurato nel browser sul rendering reale, non stimato.
   Validazione, honeypot, limite anti-spam, CSRF, CSV, cancellazione a due
   passi, SMTP Brevo.
 - **File sensibili** in 403; intestazioni di sicurezza attive.
-- **Immagini e video:** tutti rispondono `200 image/webp` alle dimensioni
-  giuste; i video hanno durata, movimento e chiusura dell'anello misurati.
+- **Immagini:** tutte rispondono `200 image/webp` alle dimensioni giuste.
+  *(Questa riga diceva «Immagini e video»: non esistono video da verificare.)*
 
 **Non verificato:** l'ambiente di produzione, e **l'aspetto a schermo**. Il
 pannello del browser in queste sessioni non dipinge, quindi gli screenshot non
