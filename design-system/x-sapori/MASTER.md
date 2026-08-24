@@ -192,6 +192,30 @@ la fanno l'alone caldo e sedici pixel di raccordo.
 **In stampa la pietra sparisce**, insieme a tutte le velature di raccordo: è
 `fixed`, e in stampa un fondo fisso si ripete foglio per foglio.
 
+### Nessun confine fra sezioni deve essere un gradino
+
+La regola operativa, e si può verificare con un numero: **il colore composito
+dell'ultimo pixel di una sezione deve essere uguale a quello del primo pixel
+della sezione dopo.** Se lo è, il bordo non esiste. Misurato sui nove confini
+della home, il salto massimo deve restare **0**.
+
+Se ne ricavano due modi, uno per registro:
+
+- **Fra sezioni scure**, il fondo si apre e si chiude a **`alpha 0`**: al
+  confine restano tutte e due la pietra. Lo fanno `.section--alt`,
+  `.page-head`, `.cta-band` e il piede.
+- **Fra scuro e chiaro** non si può usare la trasparenza — l'isola chiara
+  deve restare piena dove si legge — quindi il raccordo è una **rampa dentro
+  l'isola**, che parte dal colore esatto della pietra e va a zero in metà del
+  padding della sezione. Il testo resta sempre oltre la rampa perché la
+  rampa è legata al padding, non a un valore fisso.
+
+> **La trappola, e ci sono cascato.** Una velatura sopra una fotografia deve
+> diventare **sempre più coprente** verso il bordo, non sempre meno. L'hero
+> chiudeva in `transparent`: gli ultimi pixel dell'immagine tornavano a piena
+> luce proprio sul confine, e il taglio fra hero e sezione seguente era la
+> riga più visibile del sito. Ora chiude su `--sala-90` pieno.
+
 > Nella sala vera le pareti sono pietra. Il sito lo diventa anche dove non
 > c'è una fotografia: è quello che tiene insieme il tutto quando le immagini
 > finiscono.
