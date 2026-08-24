@@ -548,13 +548,32 @@ Le scrivo perché il prossimo che legge non le riproponga.
 | **Il video del banco** | una generazione Seedance, e poi il blocco sotto i 768 px e la rimisura del contrasto del titolo |
 | **Le animazioni** | **fatte.** Non resta niente da decidere |
 
-## Le tre cose che nessuno ha ancora guardato con gli occhi
+## Le due cose che nessuno ha ancora guardato con gli occhi
 
 Le scrivo qui perché non si perdano fra i numeri.
 
 1. **Se le tredici immagini sembrino generate.** Difetti di forma — mani,
    posate, bordi dei piatti, texture ripetute. Dieci minuti a schermo intero.
-2. **Se le due animazioni nuove siano gradevoli mentre scorrono.** So che
-   finiscono dove devono; non so come si vedono.
-*(Il terzo punto — il 403 su `riferimenti/` — è stato verificato su Apache
-poco dopo, e la verifica ha trovato che la regola non funzionava. Vedi sotto.)*
+2. **Se le animazioni siano gradevoli mentre scorrono.** So che finiscono
+   dove devono; non so come si vedono.
+
+*(Qui c'era un terzo punto: il 403 su `riferimenti/`, «verificato
+sull'anteprima ma non su Apache». È stato provato su Apache poco dopo, e la
+prova ha trovato che **la regola non funzionava affatto** — vedi il racconto
+più su. Ora funziona, con due difese indipendenti.)*
+
+## Le immagini sono cambiate dopo che questo documento è stato scritto
+
+Il 25 agosto 2026 sono state generate **ventuno varianti responsive**, e
+`srcset` è passato da una immagine su tredici a tutte. I nomi dei file
+originali non cambiano — `banco.webp` resta `banco.webp` — ma accanto ci
+sono ora `banco-640`, `banco-960`, `banco-1280`.
+
+**Se rigeneri un'immagine, vanno rigenerate anche le sue varianti**,
+altrimenti il sito serve la foto nuova sui schermi grandi e quella vecchia
+su tutti gli altri. Il modo è descritto nel commit `b18e9ec`: il browser
+legge il file, ridimensiona su canvas e scrive attraverso un endpoint
+temporaneo del server di anteprima locale.
+
+Vale in particolare per **l'hero**, che è l'immagine da correggere: ha
+cinque gradini (768, 1440, 1600, 2048, 2880).

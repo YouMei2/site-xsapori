@@ -107,9 +107,18 @@ Tutto misurato nel browser sul rendering reale, non stimato.
 - **Prenotazione reale** dal browser → database → pannello: funziona.
   Validazione, honeypot, limite anti-spam, CSRF, CSV, cancellazione a due
   passi, SMTP Brevo.
-- **File sensibili** in 403; intestazioni di sicurezza attive.
-- **Immagini:** tutte rispondono `200 image/webp` alle dimensioni giuste.
-  *(Questa riga diceva «Immagini e video»: non esistono video da verificare.)*
+- **File sensibili** in 403; intestazioni di sicurezza attive. Il 403 su
+  `riferimenti/` è provato **su Apache**, non solo sull'anteprima — e ha due
+  difese indipendenti, perché la prima versione non funzionava.
+- **Immagini:** 39 URL fra `src` e `srcset` su nove pagine, nessuno rotto.
+  Tutte hanno varianti responsive tranne i sei riquadri della mappa, che a
+  256 px non ne hanno bisogno.
+- **Scala tipografica:** un solo elemento reso fuori dai dieci gradini, ed è
+  il rapporto `.6em` dentro il titolo dell'hero. Rapporto massimo fra
+  gradini 1,54.
+- **Confini fra sezioni:** nove su nove a **salto 0**, cioè il colore
+  dell'ultimo pixel di una sezione è identico a quello del primo pixel della
+  successiva.
 
 **Non verificato:** l'ambiente di produzione, e **l'aspetto a schermo**. Il
 pannello del browser in queste sessioni non dipinge, quindi gli screenshot non
@@ -170,7 +179,10 @@ Vale la pena conoscerli: nessuno si vedeva dai test automatici.
 
 - rigenerare `ip_salt` in `config.php` e togliere le righe `localhost` da
   `allowed_origins`
-- alzare `?v=` su `styles.css` e `js/*.js` (vedi `DEPLOY.md` §4)
+- alzare `?v=` su `styles.css` e `js/*.js` (vedi `DEPLOY.md` §4). **Oggi è a
+  16**, ed è arrivato lì perché due volte, in una sola sessione, ho misurato
+  il foglio di stile vecchio per essermelo dimenticato: se una modifica al
+  CSS «non si vede», la prima cosa da controllare è questa.
 - **tradurre i commenti russi** — vedi sotto
 
 ### Immagini e video ancora aperti
