@@ -10,6 +10,28 @@
 > **Il sito è già raggiungibile qui:**
 > `http://localhost:8080/x-sapori/index.html` — nota la porta **8080**.
 >
+> ### Ma dal 25 agosto 2026 basta un indirizzo solo
+>
+> L'anteprima su **`http://localhost:4173`** adesso accetta anche le
+> prenotazioni. Prima no: quel server è venti righe di Node e non esegue PHP,
+> quindi il modulo rispondeva «questa anteprima non esegue PHP, aprite il
+> sito da XAMPP» e bisognava saltare da una porta all'altra.
+>
+> Ora le richieste a `/api/` e a `/admin/` vengono **inoltrate ad Apache**,
+> che PHP lo esegue e che parla col database. Si sta sulla 4173 per tutto:
+> aspetto, moduli e prenotazioni vere.
+>
+> **XAMPP serve comunque acceso**, perché i dati finiscono in MySQL: l'inoltro
+> sposta la richiesta, non sostituisce il server. Se Apache è spento
+> l'anteprima lo dice con un messaggio che spiega cosa avviare.
+>
+> Attenzione a una cosa che confonde: Apache serve la **copia** in
+> `C:\xampp\htdocs\x-sapori`, non la cartella del progetto. Il PHP che gira è
+> quello lì. Se tocchi `api/` o `config.php` nel progetto, ricopiali.
+>
+> Verificato il 25 agosto: prenotazione inviata dal modulo su
+> `localhost:4173`, riga corretta nel database, poi cancellata.
+>
 > Cosa è stato verificato interrogando direttamente il server:
 >
 > | Prova | Esito |

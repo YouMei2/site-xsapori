@@ -131,10 +131,10 @@ function xs_notify_booking(array $cfg, int $id, array $b): void
 function xs_formula_label(string $v): string
 {
     return [
-        'pranzo_feriale' => 'Pranzo feriale · 14,90 € a persona',
-        'cena_feriale'   => 'Cena feriale · 22,90 € a persona',
-        'pranzo_weekend' => 'Pranzo weekend/festivi · 18,90 € a persona',
-        'cena_weekend'   => 'Cena weekend/festivi · 24,90 € a persona',
+        'pranzo_feriale' => 'Pranzo feriale / 14,90 € a persona',
+        'cena_feriale'   => 'Cena feriale / 22,90 € a persona',
+        'pranzo_weekend' => 'Pranzo weekend/festivi / 18,90 € a persona',
+        'cena_weekend'   => 'Cena weekend/festivi / 24,90 € a persona',
     ][$v] ?? $v;
 }
 
@@ -266,7 +266,7 @@ function xs_build_message(int $id, array $b): array
     $shortDate = $date !== '' ? implode('/', array_reverse(explode('-', $date))) : '?';
 
     $subject = sprintf(
-        'Prenotazione #%d — %s %s · %s · %s',
+        'Prenotazione #%d — %s %s / %s / %s',
         $id,
         $shortDate,
         $time,
@@ -348,7 +348,7 @@ function xs_build_message(int $id, array $b): array
         . '<body style="margin:0;padding:20px;background:#f3f4f6;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">'
         . '<table role="presentation" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb">'
         . '<tr><td style="background:#101315;padding:18px 24px">'
-        . '<div style="color:#c9a253;font-size:12px;letter-spacing:.18em;text-transform:uppercase">X·Sapori Savona</div>'
+        . '<div style="color:#c9a253;font-size:12px;letter-spacing:.18em;text-transform:uppercase">X-Sapori Savona</div>'
         . '<div style="color:#ffffff;font-size:20px;margin-top:4px">Nuova prenotazione #' . $id . '</div>'
         . '</td></tr>'
         . '<tr><td style="padding:22px 24px">'

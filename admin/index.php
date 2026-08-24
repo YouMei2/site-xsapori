@@ -415,7 +415,7 @@ pagina_inizio('Prenotazioni');
 <header class="testata">
   <h1>Prenotazioni</h1>
   <p class="sommario">
-    <strong><?= (int) $riepilogo['n'] ?></strong> prenotazioni oggi ·
+    <strong><?= (int) $riepilogo['n'] ?></strong> prenotazioni oggi /
     <strong><?= (int) $riepilogo['coperti'] ?></strong> coperti attesi
   </p>
   <a class="esci" href="index.php?esci=1">Esci</a>

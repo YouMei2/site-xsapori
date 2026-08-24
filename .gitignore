@@ -1,6 +1,15 @@
 # File locali di sviluppo, mai da pubblicare
 _audit.js
-.dev-server.js
+
+# `.dev-server.js` NON è più qui, dal 25 agosto 2026. Era ignorato come
+# «file locale», ma nel frattempo è diventato l'unico modo per provare il
+# sito: serve i file statici e inoltra `/api/` e `/admin/` ad Apache, così
+# le prenotazioni funzionano senza cambiare porta. Ignorandolo, chi clona il
+# progetto non ha nessuna anteprima e deve riscriverselo.
+#
+# Non contiene credenziali, e «mai da pubblicare» resta vero per altra via:
+# `.htaccess` nega ogni file che comincia per punto, quindi anche se finisce
+# sull'FTP non è raggiungibile.
 
 # Configurazione con le credenziali reali
 config.php

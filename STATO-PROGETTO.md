@@ -26,10 +26,22 @@ su hosting condiviso.
 - `C:\xampp\htdocs\x-sapori` — copia di prova locale (ha una password admin
   usa-e-getta e `RewriteBase` in più: **non è quella da pubblicare**)
 
-**Per provare:** Apache su `http://localhost:8080/x-sapori/`. Va avviato a
-mano dal pannello XAMPP, non è un servizio. C'è anche un'anteprima statica
-sulla porta 4173 (`.dev-server.js`) che **non esegue PHP**: le prenotazioni
-lì non funzionano, e il modulo lo dice esplicitamente.
+**Per provare: `http://localhost:4173`**, e basta quello. È l'anteprima in
+Node (`.dev-server.js`), che serve i file statici e **inoltra `/api/` e
+`/admin/` ad Apache** sulla 8080. PHP e database sono quelli veri, quindi da
+lì si prenota davvero.
+
+XAMPP va comunque acceso a mano dal suo pannello — Apache e MySQL non sono
+servizi — perché l'inoltro sposta la richiesta, non sostituisce il server. Se
+è spento, il modulo lo dice e spiega cosa avviare.
+
+> *(Fino al 24 agosto 2026 la 4173 non eseguiva PHP e le prenotazioni lì non
+> funzionavano: bisognava saltare sulla 8080 per provare il modulo. L'inoltro
+> ha tolto quel salto.)*
+
+Attenzione, ed è la cosa che confonde: Apache serve la **copia** in
+`C:\xampp\htdocs\x-sapori`, non la cartella del progetto. Il PHP che gira è
+quello lì. Se tocchi `api/` o `config.php`, ricopiali.
 
 ---
 

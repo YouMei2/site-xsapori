@@ -410,10 +410,10 @@ function is_festivo(DateTimeImmutable $d, array $cfg): bool
 function formula_label(string $v): string
 {
     return [
-        'pranzo_feriale' => 'Pranzo · 14,90 € (da lunedì a venerdì)',
-        'cena_feriale'   => 'Cena · 22,90 € (da lunedì a venerdì)',
-        'pranzo_weekend' => 'Pranzo · 18,90 € (sabato, domenica e festivi)',
-        'cena_weekend'   => 'Cena · 24,90 € (sabato, domenica e festivi)',
+        'pranzo_feriale' => 'Pranzo / 14,90 € (da lunedì a venerdì)',
+        'cena_feriale'   => 'Cena / 22,90 € (da lunedì a venerdì)',
+        'pranzo_weekend' => 'Pranzo / 18,90 € (sabato, domenica e festivi)',
+        'cena_weekend'   => 'Cena / 24,90 € (sabato, domenica e festivi)',
     ][$v] ?? $v;
 }
 
