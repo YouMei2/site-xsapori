@@ -26,6 +26,7 @@
     orarioLegenda: 'Arrival time',
     durataPranzo: 'At lunch the table is held for 90 minutes.',
     durataCena: 'At dinner the table is yours for the whole evening.',
+    aPersona: 'per person',
     totale: 'Estimated total',
     bevande: 'drinks excluded',
     adulto: 'adult', adultiPl: 'adults', bambino: 'child', bambiniPl: 'children',
@@ -40,6 +41,7 @@
     orarioLegenda: 'Orario di arrivo',
     durataPranzo: 'A pranzo il tavolo si tiene 90 minuti.',
     durataCena: 'A cena il tavolo è vostro per tutta la serata.',
+    aPersona: 'a persona',
     totale: 'Totale stimato',
     bevande: 'bevande escluse',
     adulto: 'adulto', adultiPl: 'adulti', bambino: 'bambino', bambiniPl: 'bambini',
@@ -75,11 +77,29 @@
   // assegnazioni no, e il blocco dei contatori gira prima.
   var contatori = [];
 
+  // Le fasce vanno ridisegnate quando cambia la data, altrimenti il prezzo
+  // in testa al turno resta quello del giorno precedente. Assegnata dentro
+  // il blocco delle fasce, chiamata dal listener della data piu' in basso.
+  var ridisegnaFasce = null;
+
   /* --- Fasce orarie ---------------------------------------------------
    * Il campo <input type="time"> resta nel documento e continua a essere
    * quello che viene inviato: lo nascondiamo e lo pilotiamo dai pulsanti.
    * Un campo orario libero fa arrivare richieste per le 14:52.
    * ------------------------------------------------------------------ */
+  // Serve sia alle fasce (per il prezzo del turno) sia al biglietto.
+  function euroBreve(n) {
+    return EN ? '€' + n.toFixed(2) : n.toFixed(2).replace('.', ',') + ' €';
+  }
+  function weekendScelto() {
+    var c = form.elements.namedItem('data');
+    if (!c || !c.value) { return false; }
+    var d = new Date(c.value + 'T12:00:00');
+    if (isNaN(d)) { return false; }
+    var g = d.getDay();
+    return g === 0 || g === 6;
+  }
+
   var contenitoreOrario = campoOrario.closest('.field');
   if (contenitoreOrario) {
     campoOrario.hidden = true;
@@ -104,10 +124,30 @@
         var riga = document.createElement('div');
         riga.className = 'fasce__riga';
 
+        /* Nome del turno e prezzo dentro una loro intestazione, non sciolti
+         * nella riga flex: sciolti, i pulsanti si accodavano sulla stessa
+         * riga e gli undici finivano su quattro righe invece che su due.
+         * Misurato: label, prezzo e quattro pulsanti tutti a top=872. */
+        var cap = document.createElement('div');
+        cap.className = 'fasce__cap';
+
         var etichetta = document.createElement('span');
         etichetta.className = 'fasce__turno';
         etichetta.textContent = T[turno];
-        riga.appendChild(etichetta);
+        cap.appendChild(etichetta);
+
+        /* Il prezzo del turno, accanto al nome. Pranzo e cena costano
+         * diverso, e il weekend costa piu' dei feriali: vederlo PRIMA di
+         * scegliere l'orario evita la sorpresa dopo. Si aggiorna da solo
+         * quando cambia la data, perche' `disegnaFasce` viene richiamata. */
+        var prezzo = document.createElement('span');
+        prezzo.className = 'fasce__prezzo';
+        var chiave = turno + (weekendScelto() ? '_weekend' : '_feriale');
+        if (PREZZI[chiave]) {
+          prezzo.textContent = euroBreve(PREZZI[chiave].adulto) + ' ' + T.aPersona;
+        }
+        cap.appendChild(prezzo);
+        riga.appendChild(cap);
 
         FASCE[turno].forEach(function (ora) {
           var b = document.createElement('button');
@@ -138,8 +178,27 @@
     };
 
     disegnaFasce();
+    ridisegnaFasce = disegnaFasce;
     contenitoreOrario.appendChild(gruppo);
     contenitoreOrario.appendChild(durata);
+
+    /* IL CAMPO ORARIO ESCE DALLA GRIGLIA A TRE COLONNE.
+     * Nel markup sta accanto a Data e Persone, perche' senza JavaScript e'
+     * un `<input type="time">` largo un terzo e va benissimo cosi'. Ma qui
+     * sopra e' appena diventato undici pulsanti, e undici pulsanti in un
+     * terzo di colonna si incolonnano uno per riga: misurato, 72px di
+     * larghezza e tutti i bottoni a x=220. Diventava una lista verticale
+     * lunga mezza pagina.
+     *
+     * Lo spostiamo quindi fuori dalla griglia, subito dopo, dove ha tutta
+     * la larghezza del modulo. Lo facciamo qui e non nel CSS perche' e'
+     * vero solo quando i pulsanti esistono davvero. */
+    var griglia = contenitoreOrario.parentElement;
+    if (griglia && griglia.classList.contains('field-grid')) {
+      griglia.parentNode.insertBefore(contenitoreOrario, griglia.nextSibling);
+      contenitoreOrario.classList.add('field--fasce');
+      griglia.classList.add('field-grid--senza-orario');
+    }
   }
 
   /* --- Contatori adulti e bambini -------------------------------------
@@ -374,7 +433,15 @@
   }
   // la formula si aggiorna da sola anche cambiando la data
   var campoData = form.elements.namedItem('data');
-  if (campoData) { campoData.addEventListener('change', function () { window.setTimeout(aggiornaTotale, 0); }); }
+  if (campoData) {
+    campoData.addEventListener('change', function () {
+      // Il ridisegno rifà i prezzi in testa ai due turni: cambiando da un
+      // feriale a un sabato passano da 14,90/22,90 a 18,90/24,90, e si deve
+      // vedere prima di scegliere l'orario, non dopo.
+      if (ridisegnaFasce) { ridisegnaFasce(); }
+      window.setTimeout(aggiornaTotale, 0);
+    });
+  }
 
   aggiornaTotale();
 

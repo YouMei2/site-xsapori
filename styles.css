@@ -1190,7 +1190,10 @@ img.plate{
 /* La colonna di destra cresce con lo schermo invece di restare una frazione
    fissa: a `.55fr` il biglietto veniva fuori stretto come un ritaglio. */
 @media (min-width:1000px){
-  .booking{grid-template-columns:minmax(0,1fr) clamp(24rem,30vw,34rem);gap:var(--sp-6);}
+  .booking{grid-template-columns:minmax(0,1fr) clamp(26rem,34vw,40rem);gap:var(--sp-5);}
+}
+@media (min-width:1500px){
+  .booking{gap:var(--sp-6);}
 }
 
 /* =========================================================
@@ -1317,10 +1320,37 @@ img.plate{
   }
 }
 .form fieldset{border:0;padding:0;margin:0 0 var(--sp-5);}
+/* I PASSI NUMERATI.
+   Le tre `fieldset` erano gia' una struttura in tre tempi, ma impilate
+   tutte uguali la struttura non si vedeva: un modulo da dodici campi
+   sembrava un muro. Il numero arriva da un contatore CSS, quindi nessun
+   markup da aggiungere e niente da tradurre in due lingue.
+
+   Il numero e' IN LINEA con il titolo, non in posizione assoluta: cosi'
+   non puo' finirgli sopra, per costruzione. */
+.form{counter-reset:passo;}
+.form fieldset{counter-increment:passo;}
 .form legend{
+  display:flex;align-items:center;gap:var(--sp-2);
   font-family:var(--font-data);font-size:var(--fs-micro);
   letter-spacing:.15em;text-transform:uppercase;color:var(--detail-text);
   padding:0 0 var(--sp-3);
+}
+.form legend::before{
+  content:counter(passo);
+  flex:0 0 auto;
+  width:1.7rem;height:1.7rem;border-radius:var(--r-pill);
+  display:grid;place-items:center;
+  letter-spacing:0;
+  border:1px solid var(--rule-strong);color:var(--on-surface-dim);
+  transition:border-color var(--dur-fast) var(--ease-out),
+             color var(--dur-fast) var(--ease-out);
+}
+.form fieldset:focus-within legend::before{
+  border-color:var(--detail);color:var(--detail-text);
+}
+@media (prefers-reduced-motion:reduce){
+  .form legend::before{transition:none;}
 }
 .field-grid{display:grid;gap:var(--sp-3);}
 @media (min-width:680px){
@@ -1349,8 +1379,35 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
    Sostituiscono a schermo il campo orario libero, che faceva arrivare
    richieste per le 14:52. Il campo nativo resta nel documento ed è
    sempre lui a essere inviato. */
+/* Quando le fasce orarie esistono, il campo esce dalla griglia a tre colonne
+   (lo sposta js/prenota-plus.js) e prende tutta la larghezza: undici pulsanti
+   in un terzo di colonna si incolonnavano uno per riga. La griglia rimasta
+   torna a due colonne, altrimenti Data e Persone lascerebbero un buco. */
+.field--fasce{margin-top:var(--sp-4);}
+.field-grid--senza-orario{grid-template-columns:repeat(2,minmax(0,1fr));}
+/* Pranzo e cena sono due servizi con due prezzi: hanno diritto a due
+   superfici, invece di essere due etichette sopra undici pulsanti uguali.
+   E il prezzo sta in testa al turno, non solo nel totale: vederlo PRIMA di
+   scegliere l'orario evita la sorpresa dopo. */
 .fasce{display:grid;gap:var(--sp-3);}
-.fasce__riga{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;}
+.fasce__riga{
+  display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;
+  border:1px solid var(--rule);border-radius:var(--r-md);
+  padding:var(--sp-3);
+  background:var(--surface-2);
+}
+/* L'intestazione del turno prende una riga intera (`flex-basis:100%`), cosi'
+   i pulsanti ricominciano da capo invece di accodarsi al prezzo. */
+.fasce__cap{
+  flex:0 0 100%;
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:var(--sp-3);margin-bottom:var(--sp-2);
+}
+.fasce__cap .fasce__turno{width:auto;}
+.fasce__prezzo{
+  font-family:var(--font-data);font-size:var(--fs-small);
+  color:var(--detail-text);white-space:nowrap;
+}
 .fasce__turno{
   font-family:var(--font-data);font-size:var(--fs-micro);
   letter-spacing:.14em;text-transform:uppercase;color:var(--on-surface-dim);
