@@ -280,6 +280,93 @@
       '<span class="stima__voci">' + pezzi.join(' + ') + '</span>' +
       '<strong class="stima__totale" data-aggiornato="true">' + T.totale + ' ' + euro(totale) + '</strong>' +
       '<span class="stima__nota">' + T.bevande + '</span>';
+
+    aggiornaBiglietto(totale, euro);
+  }
+
+  /* --- Il biglietto del tavolo -----------------------------------------
+   * Lo stesso conto, ma come oggetto invece che come riga di testo persa in
+   * mezzo al modulo: si compone mentre si compila, e su un modulo da dodici
+   * campi vedere crescere qualcosa toglie l'impressione del muro.
+   *
+   * Non calcola niente per conto suo: legge i valori che questo file ha
+   * gia'. Se il biglietto non c'e' nel markup, tutto il resto funziona
+   * identico — e senza JavaScript non compare affatto, il che va bene:
+   * i dati sono tutti nei campi qui accanto.
+   * ------------------------------------------------------------------ */
+  var biglietto = document.getElementById('biglietto');
+
+  function rigaBiglietto(chiave, testo) {
+    if (!biglietto) { return; }
+    var r = biglietto.querySelector('.riga[data-k="' + chiave + '"]');
+    if (!r) { return; }
+    r.querySelector('.riga__v').textContent = testo || '';
+    r.setAttribute('data-pieno', testo ? 'true' : 'false');
+  }
+
+  function dataLunga(v) {
+    if (!v) { return ''; }
+    var d = new Date(v + 'T12:00:00');
+    if (isNaN(d)) { return ''; }
+    return d.toLocaleDateString(EN ? 'en-GB' : 'it-IT',
+      { weekday: 'long', day: 'numeric', month: 'long' });
+  }
+
+  function aggiornaBiglietto(totale, euro) {
+    if (!biglietto) { return; }
+
+    // `campoOrario` e `campoData` sono gia' quelli del resto del file: le
+    // fasce orarie lanciano un `change` su campoOrario quando si scelgono
+    // (riga 136), quindi da li' arriva anche l'aggiornamento del biglietto.
+    var data = campoData ? campoData.value : '';
+    var ora = campoOrario ? campoOrario.value : '';
+    var avviato = !!(data && ora);
+
+    biglietto.setAttribute('data-avviato', avviato ? 'true' : 'false');
+
+    rigaBiglietto('quando', avviato ? dataLunga(data) + ' · ' + ora : '');
+
+    if (avviato) {
+      var p = adulti + ' ' + (adulti === 1 ? T.adulto : T.adultiPl);
+      if (bambini) { p += ' · ' + bambini + ' ' + (bambini === 1 ? T.bambino : T.bambiniPl); }
+      rigaBiglietto('persone', p);
+    } else {
+      rigaBiglietto('persone', '');
+    }
+
+    var etichettaFormula = '';
+    if (campoFormula && campoFormula.selectedIndex >= 0) {
+      // La prima parte dell'etichetta, prima del primo separatore: basta
+      // "Cena" invece di "Cena · 22,90 € (da lunedi a venerdi)".
+      etichettaFormula = campoFormula.options[campoFormula.selectedIndex]
+        .textContent.split('·')[0].trim();
+    }
+    rigaBiglietto('formula', avviato ? etichettaFormula : '');
+
+    var nome = form.elements.namedItem('nome');
+    var cognome = form.elements.namedItem('cognome');
+    var chi = ((nome ? nome.value : '') + ' ' + (cognome ? cognome.value : '')).trim();
+    rigaBiglietto('nome', chi);
+
+    var box = document.getElementById('biglietto-totale');
+    if (box) { box.textContent = avviato ? euro(totale) : '—'; }
+
+    var stato = document.getElementById('biglietto-stato');
+    if (stato) {
+      stato.textContent = avviato
+        ? (EN ? 'to be confirmed' : 'da confermare')
+        : (EN ? 'your table' : 'il vostro tavolo');
+    }
+  }
+
+  if (biglietto) {
+    // Il nome e il cognome non passano da aggiornaTotale: li ascoltiamo qui.
+    form.addEventListener('input', function (e) {
+      if (e.target && (e.target.name === 'nome' || e.target.name === 'cognome')) {
+        aggiornaTotale();
+      }
+    });
+    campoOrario.addEventListener('change', aggiornaTotale);
   }
 
   if (campoFormula) {

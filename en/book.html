@@ -22,7 +22,7 @@
 <link rel="manifest" href="../site.webmanifest">
 <link rel="preload" href="../assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../styles.css?v=6">
+<link rel="stylesheet" href="../styles.css?v=7">
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -230,34 +230,76 @@
             <span class="hint">Fields marked <span class="req">*</span> are required.</span>
           </div>
         </form>
+        <aside class="aside-card" style="margin-top:var(--sp-6)" aria-label="Useful booking information">
+          <h2 style="font-family:var(--font-body);font-size:1.15rem;font-weight:600">Before you book</h2>
+          <ul class="info-list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              <span><strong>Opening hours</strong>Every day, 12:00–15:00 and 19:00–23:00. Open on Mondays too.</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/></svg>
+              <span><strong>Groups and birthdays</strong>Up to 40 people in the private room, with 48 hours of notice.</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-5.6-7-11a7 7 0 1114 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+              <span><strong>Where we are</strong>Via Luigi Pirandello, 2r — 17100 Savona (SV)</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 005 5L15 13l5 2v4a1 1 0 01-1 1A16 16 0 014 5a1 1 0 011-1z"/></svg>
+              <span><strong>Prefer the phone?</strong><a href="tel:+390192213138">019 221 3138</a></span>
+            </li>
+          </ul>
+  
+          <p class="hint" style="margin-top:var(--sp-4);padding-top:var(--sp-3);border-top:1px solid var(--rule)">
+            A request is not yet a confirmed booking: we call you. If you have not heard from us
+            by the next day, please call.
+          </p>
+        </aside>
       </div>
 
-      <aside class="aside-card" aria-label="Useful booking information">
-        <h2 style="font-family:var(--font-body);font-size:1.15rem;font-weight:600">Before you book</h2>
-        <ul class="info-list">
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-            <span><strong>Opening hours</strong>Every day, 12:00–15:00 and 19:00–23:00. Open on Mondays too.</span>
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/></svg>
-            <span><strong>Groups and birthdays</strong>Up to 40 people in the private room, with 48 hours of notice.</span>
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-5.6-7-11a7 7 0 1114 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
-            <span><strong>Where we are</strong>Via Luigi Pirandello, 2r — 17100 Savona (SV)</span>
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 005 5L15 13l5 2v4a1 1 0 01-1 1A16 16 0 014 5a1 1 0 011-1z"/></svg>
-            <span><strong>Prefer the phone?</strong><a href="tel:+390192213138">019 221 3138</a></span>
-          </li>
-        </ul>
 
-        <p class="hint" style="margin-top:var(--sp-4);padding-top:var(--sp-3);border-top:1px solid var(--rule)">
-          A request is not yet a confirmed booking: we call you. If you have not heard from us
-          by the next day, please call.
-        </p>
-      </aside>
+      <!-- The table ticket: js/prenota-plus.js fills it in, using the values
+           it already has. Without JavaScript it stays empty and hidden — the
+           form works the same, and every value is in the fields beside it. -->
+      <div class="biglietto-sede">
+        <aside class="biglietto" id="biglietto" data-avviato="false"
+               aria-label="Booking summary">
+          <div class="biglietto__filo" aria-hidden="true"></div>
+          <div class="biglietto__corpo">
+            <div class="biglietto__cap">
+              <span>X-Sapori</span><span id="biglietto-stato">your table</span>
+            </div>
+
+            <p class="biglietto__vuoto">
+              Pick the date and the time: the summary builds up here.
+            </p>
+
+            <div class="biglietto__righe" id="biglietto-righe" aria-live="polite">
+              <div class="riga" data-pieno="false" data-k="quando">
+                <span class="riga__et">when</span><span class="riga__v"></span>
+              </div>
+              <div class="riga" data-pieno="false" data-k="persone">
+                <span class="riga__et">party</span><span class="riga__v"></span>
+              </div>
+              <div class="riga" data-pieno="false" data-k="formula">
+                <span class="riga__et">set menu</span><span class="riga__v"></span>
+              </div>
+              <div class="riga" data-pieno="false" data-k="nome">
+                <span class="riga__et">in the name of</span><span class="riga__v"></span>
+              </div>
+            </div>
+
+            <div class="biglietto__conto">
+              <div class="biglietto__tot">
+                <span class="et">estimated</span>
+                <strong id="biglietto-totale">—</strong>
+              </div>
+              <p class="biglietto__nota">drinks excluded</p>
+            </div>
+          </div>
+        </aside>
+      </div>
 
     </div>
   </section>
@@ -306,8 +348,8 @@
   </div>
 </footer>
 
-<script src="../js/site.js?v=6" defer></script>
-<script src="../js/booking.js?v=6" defer></script>
-<script src="../js/prenota-plus.js?v=6" defer></script>
+<script src="../js/site.js?v=7" defer></script>
+<script src="../js/booking.js?v=7" defer></script>
+<script src="../js/prenota-plus.js?v=7" defer></script>
 </body>
 </html>

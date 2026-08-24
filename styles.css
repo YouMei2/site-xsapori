@@ -191,6 +191,26 @@
   box-shadow:0 -34px 64px -34px rgba(240,194,123,.20),
              0  34px 64px -34px rgba(240,194,123,.20);
 }
+/* L'isola chiara deve restare piena dove si legge — un fondo semitrasparente
+   sotto sessanta righe di menu e' illeggibile — quindi la morbidezza la
+   fanno l'alone caldo qui sopra e questa fascia di raccordo, che porta la
+   pietra dentro il chiaro per pochi pixel invece di finire di netto.
+   Sedici pixel: abbastanza da togliere il gradino, troppo pochi da toccare
+   il testo, che comincia molto piu' in basso. */
+.on-light{position:relative;}
+.on-light::before,
+.on-light::after{
+  content:"";position:absolute;left:0;right:0;height:16px;
+  pointer-events:none;
+}
+.on-light::before{
+  top:0;
+  background:linear-gradient(180deg, rgba(14,20,23,.14), transparent);
+}
+.on-light::after{
+  bottom:0;
+  background:linear-gradient(0deg, rgba(14,20,23,.14), transparent);
+}
 
 /* La sala — registro base. `body` è in testa all'elenco: da qui in poi il
    sito nasce scuro e le isole chiare sono le eccezioni dichiarate. */
@@ -227,18 +247,48 @@ body,
   --sigillo:var(--sigillo-chiaro);
   color:var(--on-surface);
 
-  /* La pietra sotto il registro scuro: la texture del marmo della sala,
-     tenuta sotto una velatura fino a non leggersi piu' come immagine.
-     Serve a togliere al buio l'aspetto di colore piatto — nella sala vera
-     le pareti sono pietra, e il sito lo diventa anche dove non c'e' una
-     fotografia. 72 KB scaricati una volta sola per tutto il sito.
-     Le isole chiare non la ereditano: hanno il loro fondo pieno. */
-  background-color:var(--surface);
+}
+
+/* Il fondo pieno lo prende SOLO `body`. Se lo prendesse tutto l'elenco qui
+   sopra, ogni `.on-dark` dipingerebbe un rettangolo nero opaco sopra la
+   pietra e la continuita' si spezzerebbe di nuovo — che e' esattamente il
+   difetto appena tolto. `.drawer` non ne risente: ha il suo fondo pieno,
+   dichiarato per conto proprio, perche' copre la pagina. */
+body{background-color:var(--sala-90);}
+.on-dark{background-color:transparent;}
+
+/* --- La pietra: UNA SOLA, FERMA, A TUTTO SCHERMO -----------
+   La texture del marmo della sala, tenuta sotto una velatura fino a non
+   leggersi piu' come immagine. Serve a togliere al buio l'aspetto di colore
+   piatto: nella sala vera le pareti sono pietra.
+
+   COME ERA, E PERCHE' ERA SBAGLIATO. Fino al 24 agosto 2026 la texture stava
+   come `background-image` sul registro scuro, con `background-size:1100px` e
+   `repeat`. Due conseguenze, tutte e due visibili a occhio e nessuna dai test:
+
+   1. A 1100px la piastrella si ripeteva, e la cucitura fra una copia e
+      l'altra si vedeva come una riga verticale netta: sembravano due
+      immagini tagliate e accostate.
+   2. Solo `body` e `.on-dark` la portavano. Ogni altra sezione scura
+      (`.hero`, `.section--alt`, il footer, `.page-head`) ci dipingeva sopra
+      un colore PIENO: la pietra compariva a bande, spenta e riaccesa a ogni
+      sezione.
+
+   Ora e' un solo strato fisso dietro tutto il sito: `cover`, `no-repeat`,
+   nessuna cucitura, e resta immobile mentre la pagina scorre. Le sezioni
+   scure sopra sono TRANSLUCIDE (vedi `.section--alt` e compagnia), quindi la
+   stessa pietra si legge dall'inizio alla fine senza interruzioni. */
+body::before{
+  content:"";
+  position:fixed;inset:0;z-index:-1;
+  pointer-events:none;
+  background-color:var(--sala-90);
   background-image:
-    linear-gradient(rgba(14,20,23,.90), rgba(14,20,23,.90)),
+    linear-gradient(rgba(14,20,23,.88), rgba(14,20,23,.88)),
     url("uploads/marmo-scuro.webp");
-  background-size:auto, 1100px auto;
-  background-repeat:repeat;
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
 }
 
 /* --- 3. Reset --------------------------------------------- */
@@ -442,7 +492,21 @@ button,input,select,textarea{font:inherit;color:inherit;}
 /* --- 7. Sezioni ------------------------------------------- */
 .section{padding-block:var(--section-y);}
 .section--tight{padding-block:calc(var(--section-y) * .6);}
-.section--alt{background:var(--surface-2);}
+/* IL PASSAGGIO FRA SEZIONI E' SFUMATO, NON UN GRADINO.
+   Prima ogni sezione dipingeva un rettangolo di colore pieno: il confine era
+   una riga netta, e sommato alla pietra a bande dava al sito l'aria di
+   fogli accostati. Ora il fondo e' una velatura che si apre e si chiude ai
+   bordi, quindi due sezioni vicine si fondono e la pietra continua sotto.
+
+   L'elevazione resta leggibile — l'occhio vede comunque che la fascia e' piu'
+   chiara del suo intorno — ma il salto e' morbido. */
+.section--alt{
+  background:linear-gradient(180deg,
+    rgba(35,46,52,0)   0%,
+    rgba(35,46,52,.62) 14%,
+    rgba(35,46,52,.62) 86%,
+    rgba(35,46,52,0)   100%);
+}
 .section__head{max-width:56ch;}
 .section__head h2{margin-top:var(--sp-3);}
 .section__head .lead{margin-top:var(--sp-4);}
@@ -466,17 +530,32 @@ button,input,select,textarea{font:inherit;color:inherit;}
 .hero{
   position:relative;min-height:min(100svh,860px);
   display:flex;align-items:flex-end;overflow:hidden;
-  background:var(--sala-90);color:var(--carta);
+  /* `transparent` e non `--sala-90`: sotto c'e' la pietra fissa, e la
+     fotografia la copre comunque. Un colore pieno qui interrompeva la
+     continuita' della pietra proprio nel punto piu' visibile del sito. */
+  background:transparent;color:var(--carta);
 }
 .hero__bg{position:absolute;inset:0;}
 .hero__bg img{width:100%;height:100%;object-fit:cover;object-position:center 45%;}
 .hero__bg::after{
   content:"";position:absolute;inset:0;
+  /* NIENTE ARCHI DISEGNATI SOPRA LA FOTOGRAFIA.
+     Qui c'era un `repeating-radial-gradient` che ridisegnava le lamelle del
+     soffitto in righe azzurre sopra l'immagine. Aveva senso quando l'hero
+     era una tavola grafica: adesso che c'e' la fotografia vera della sala —
+     con le sue lamelle, vere — erano due soffitti sovrapposti, e coprivano
+     il buffet illuminato in fondo, che e' la cosa migliore dello scatto.
+     Restano solo le velature che tengono leggibile il titolo.
+
+     Il fondo si chiude in `transparent` e non piu' in `--sala-90`: cosi'
+     l'hero sfuma nella pietra invece di finire con un taglio netto. */
   background:
-    /* le lamelle del soffitto, sopra la sfumatura: sono il motivo del sito */
-    repeating-radial-gradient(circle at 50% 116%,
-      rgba(143,208,226,.13) 0 1px, transparent 1px 34px),
-    linear-gradient(180deg,rgba(14,20,23,.86) 0%,rgba(14,20,23,.4) 32%,rgba(14,20,23,.86) 78%,var(--sala-90) 100%),
+    linear-gradient(180deg,
+      rgba(14,20,23,.86) 0%,
+      rgba(14,20,23,.34) 34%,
+      rgba(14,20,23,.80) 76%,
+      rgba(14,20,23,.94) 92%,
+      transparent 100%),
     radial-gradient(130% 90% at 10% 85%,rgba(14,20,23,.72),transparent 62%);
 }
 
@@ -586,11 +665,30 @@ button,input,select,textarea{font:inherit;color:inherit;}
 .cucine{margin-top:var(--sp-6);border-top:1px solid rgba(185,141,74,.32);padding-top:var(--sp-4);}
 .cucine__list{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-3);}
 @media (min-width:760px){ .cucine__list{grid-template-columns:repeat(4,1fr);gap:var(--sp-4);} }
-.cucina{display:flex;flex-direction:column;gap:.5rem;text-decoration:none;color:inherit;}
-.cucina svg{width:100%;height:22px;overflow:visible;}
-.cucina svg path{fill:none;stroke:var(--petrolio-20);stroke-width:2;stroke-linecap:round;
-  transition:stroke var(--dur-fast) var(--ease-out),transform var(--dur-mid) var(--ease-out);}
-.cucina:hover svg path{stroke:var(--ottone-30);transform:translateY(-3px);}
+/* LE QUATTRO CUCINE SENZA GLI ARCHI AZZURRI.
+   C'erano quattro archi SVG in petrolio chiaro, uno per cucina, sopra la
+   fotografia dell'hero. Erano il motivo delle lamelle ridisegnato — ma
+   sotto c'e' gia' la sala vera, e quattro parentesi luminose in fila
+   toglievano l'occhio dalla foto senza dire niente in piu' dei nomi.
+
+   Al loro posto il filetto d'ottone, che nel sito e' il bordo del tavolo:
+   una riga sottile che al passaggio del mouse si accende e si distende da
+   sinistra. Stesso gesto della fascia in home e dei passi della
+   prenotazione, quindi il sito parla una lingua sola. */
+.cucina{
+  display:flex;flex-direction:column;gap:.55rem;
+  text-decoration:none;color:inherit;
+  padding-top:var(--sp-2);
+}
+.cucina__filo{
+  display:block;height:1px;width:100%;
+  background:var(--ottone-50);opacity:.45;
+  transform:scaleX(.34);transform-origin:left center;
+  transition:transform var(--dur-mid) var(--ease-soft),
+             opacity var(--dur-fast) var(--ease-out);
+}
+.cucina:hover .cucina__filo,
+.cucina:focus-visible .cucina__filo{transform:scaleX(1);opacity:.95;}
 .cucina b{font-size:1rem;font-weight:var(--wght-strong);}
 .cucina small{
   font-family:var(--font-data);font-size:.66rem;letter-spacing:.13em;
@@ -632,16 +730,19 @@ button,input,select,textarea{font:inherit;color:inherit;}
   position:relative;
   height:clamp(240px,45vh,520px);
   overflow:hidden;
-  background:var(--sala-90);
+  background:transparent;
 }
 .fascia-foto img{
   width:100%;height:100%;object-fit:cover;object-position:center 55%;
 }
+/* Le due sfumature ai bordi finiscono in `transparent` e non piu' nel nero
+   pieno: cosi' la fascia si cuce alla pietra continua invece di chiudersi
+   contro un rettangolo scuro suo. */
 .fascia-foto::after{
   content:"";position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(180deg,
-    var(--sala-90) 0%, rgba(14,20,23,.35) 18%,
-    rgba(14,20,23,.35) 82%, var(--sala-90) 100%);
+    rgba(14,20,23,.96) 0%, rgba(14,20,23,.35) 22%,
+    rgba(14,20,23,.35) 78%, rgba(14,20,23,.96) 100%);
 }
 /* Il filetto d'ottone anche qui: e' il segno che tiene insieme il sito.
    Si disegna da sinistra quando la fascia entra nello schermo, riusando
@@ -982,7 +1083,15 @@ img.plate{
 @media (min-width:900px){ .cta-band__inner{grid-template-columns:1.5fr auto;gap:var(--sp-6);} }
 
 /* --- 10. Menu --------------------------------------------- */
-.page-head{padding-block:calc(var(--header-h) + var(--sp-5)) var(--sp-5);background:var(--surface-2);}
+/* Testata delle pagine interne: velata, non piena, cosi' la pietra sale
+   fin sotto il titolo e il passaggio alla sezione seguente e' sfumato. */
+.page-head{
+  padding-block:calc(var(--header-h) + var(--sp-5)) var(--sp-5);
+  background:linear-gradient(180deg,
+    rgba(35,46,52,.70) 0%,
+    rgba(35,46,52,.70) 72%,
+    rgba(35,46,52,0) 100%);
+}
 @media (min-width:900px){ .page-head{padding-block:10rem var(--sp-6);} }
 .breadcrumb{
   font-family:var(--font-data);font-size:var(--fs-micro);
@@ -1078,7 +1187,135 @@ img.plate{
 
 /* --- 11. Form --------------------------------------------- */
 .booking{display:grid;gap:var(--sp-5);align-items:start;}
-@media (min-width:1000px){ .booking{grid-template-columns:1.45fr .55fr;gap:var(--sp-6);} }
+/* La colonna di destra cresce con lo schermo invece di restare una frazione
+   fissa: a `.55fr` il biglietto veniva fuori stretto come un ritaglio. */
+@media (min-width:1000px){
+  .booking{grid-template-columns:minmax(0,1fr) clamp(24rem,30vw,34rem);gap:var(--sp-6);}
+}
+
+/* =========================================================
+   IL BIGLIETTO DEL TAVOLO
+   Il riepilogo si compone mentre si compila, invece di stare
+   come una riga di testo persa in mezzo al modulo.
+   ========================================================= */
+
+/* Segue lo scorrimento, ma CENTRATO nello schermo. Non e' il biglietto a
+   essere `sticky`: e' la sua sede, alta quanto lo schermo, che si incolla a
+   `top:0` e lo centra al proprio interno. Cosi' resta a mezza altezza
+   qualunque sia la sua altezza — e l'altezza cambia, perche' cresce mentre
+   si compila. Con `top` fisso sul biglietto stesso restava appeso in alto. */
+@media (min-width:1000px){
+  .biglietto-sede{
+    position:sticky;top:0;height:100vh;
+    display:flex;align-items:center;
+  }
+  .biglietto-sede > .biglietto{width:100%;}
+}
+
+.biglietto{
+  background:var(--surface);
+  border:1px solid var(--rule-strong);
+  border-radius:var(--r-md);
+  overflow:hidden;
+}
+.biglietto__filo{
+  height:2px;background:var(--detail);opacity:.75;
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform var(--dur-slow) var(--ease-soft);
+}
+.biglietto[data-avviato="true"] .biglietto__filo{transform:scaleX(1);}
+
+.biglietto__corpo{padding:var(--sp-5);}
+.biglietto__cap{
+  font-family:var(--font-data);font-size:var(--fs-micro);
+  letter-spacing:.16em;text-transform:uppercase;color:var(--on-surface-dim);
+  display:flex;justify-content:space-between;align-items:center;gap:var(--sp-3);
+}
+.biglietto__cap span:last-child{color:var(--detail-text);}
+
+.biglietto__righe{margin-top:var(--sp-5);display:grid;gap:var(--sp-3);}
+
+/* Ogni riga entra quando il dato arriva: e' la conferma che il campo e'
+   stato registrato. Solo opacity e transform. */
+.biglietto .riga{
+  display:flex;justify-content:space-between;gap:var(--sp-3);
+  font-size:var(--fs-body);
+  opacity:0;transform:translateY(6px);
+  transition:opacity var(--dur-mid) var(--ease-out),
+             transform var(--dur-mid) var(--ease-out);
+}
+.biglietto .riga[data-pieno="true"]{opacity:1;transform:none;}
+.riga__et{color:var(--on-surface-dim);flex:0 0 auto;}
+.riga__v{
+  font-family:var(--font-data);font-variant-numeric:tabular-nums;
+  text-align:right;
+}
+
+.biglietto__vuoto{
+  margin-top:var(--sp-4);font-size:var(--fs-small);
+  color:var(--on-surface-dim);
+}
+.biglietto[data-avviato="true"] .biglietto__vuoto{display:none;}
+
+.biglietto__tot{
+  margin-top:var(--sp-5);padding-top:var(--sp-4);
+  border-top:1px dashed var(--rule-strong);
+  display:flex;justify-content:space-between;align-items:baseline;gap:var(--sp-3);
+}
+.biglietto__tot .et{font-size:var(--fs-small);color:var(--on-surface-dim);}
+.biglietto__tot strong{
+  font-family:var(--font-data);font-size:1.6rem;font-weight:var(--wght-strong);
+  font-variant-numeric:tabular-nums;
+}
+.biglietto__nota{
+  margin-top:var(--sp-1);font-size:var(--fs-micro);
+  color:var(--on-surface-dim);text-align:right;
+}
+
+/* Su telefono e' una striscia in fondo, non la scheda rimpicciolita: la
+   scheda verticale prendeva il 36% di uno schermo da 360x640. Compare solo
+   a scelta fatta, altrimenti ruberebbe spazio alla tastiera senza dire
+   niente. */
+@media (max-width:999px){
+  .biglietto{
+    position:fixed;left:0;right:0;bottom:0;z-index:40;
+    border-radius:var(--r-md) var(--r-md) 0 0;border-bottom:0;
+    box-shadow:0 -8px 30px rgba(14,20,23,.18);
+    transform:translateY(110%);
+    transition:transform var(--dur-mid) var(--ease-out);
+  }
+  .biglietto[data-avviato="true"]{transform:translateY(0);}
+  .biglietto__cap{display:none;}
+  .biglietto .riga[data-k="nome"]{display:none;}
+  .biglietto__corpo{
+    padding:var(--sp-3) var(--gutter);
+    display:flex;align-items:center;gap:var(--sp-4);
+  }
+  .biglietto__righe{
+    margin-top:0;flex:1 1 auto;min-width:0;
+    grid-auto-flow:column;grid-auto-columns:max-content;
+    gap:var(--sp-4);overflow-x:auto;scrollbar-width:none;
+  }
+  .biglietto__righe::-webkit-scrollbar{display:none;}
+  .biglietto .riga{flex-direction:column;gap:0;font-size:var(--fs-small);}
+  .riga__v{text-align:left;}
+  .biglietto__conto{flex:0 0 auto;text-align:right;}
+  .biglietto__tot{margin-top:0;padding-top:0;border-top:0;display:block;}
+  .biglietto__tot .et{display:none;}
+  .biglietto__tot strong{font-size:1.15rem;}
+  .biglietto__nota{margin-top:0;}
+  .booking{padding-bottom:7rem;}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .biglietto,.biglietto__filo,.biglietto .riga{transition:none;}
+  .biglietto__filo{transform:scaleX(1);}
+  .biglietto .riga{opacity:1;transform:none;}
+  @media (max-width:999px){
+    .biglietto{transform:translateY(110%);}
+    .biglietto[data-avviato="true"]{transform:translateY(0);}
+  }
+}
 .form fieldset{border:0;padding:0;margin:0 0 var(--sp-5);}
 .form legend{
   font-family:var(--font-data);font-size:var(--fs-micro);
@@ -1259,7 +1496,26 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
 @media (max-width:899px){ .site-footer{padding-bottom:calc(var(--sp-4) + 4.5rem);} }
 
 /* --- 12. Footer ------------------------------------------- */
-.site-footer{background:var(--sala-90);color:var(--carta);padding-block:var(--sp-6) var(--sp-4);}
+/* Il footer e' l'unico posto dove il nero pieno resta, ed e' voluto: e' la
+   fine della pagina, il punto in cui la sala si spegne. Ma ci arriva
+   sfumando dalla pietra invece che con un taglio, e tiene il filetto
+   d'ottone in testa perche' non sia solo un rettangolo scuro. */
+.site-footer{
+  position:relative;
+  background:linear-gradient(180deg,
+    rgba(14,20,23,0) 0%,
+    rgba(14,20,23,.88) 18%,
+    var(--sala-90) 46%,
+    var(--sala-90) 100%);
+  color:var(--carta);
+  padding-block:var(--sp-6) var(--sp-4);
+}
+.site-footer::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,
+    transparent 0%, var(--ottone-50) 22%, var(--ottone-50) 78%, transparent 100%);
+  opacity:.5;
+}
 .footer-grid{display:grid;gap:var(--sp-5);}
 @media (min-width:760px){ .footer-grid{grid-template-columns:1.5fr 1fr 1fr;gap:var(--sp-6);} }
 .site-footer h2{font-family:var(--font-body);font-size:.78rem;font-weight:var(--wght-strong);
