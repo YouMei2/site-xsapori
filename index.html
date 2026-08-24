@@ -27,7 +27,7 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=18">
+<link rel="stylesheet" href="styles.css?v=19">
 <!-- Segna che il JavaScript è attivo: solo in quel caso le sezioni
      partono nascoste per poi comparire. Senza JS il sito resta leggibile. -->
 <script>document.documentElement.classList.add('js');</script>
@@ -186,7 +186,13 @@
     </div>
 
     <div class="wrap hero__inner">
-      <p class="eyebrow enter" style="--d:100ms">Gran Buffet / Savona / Nuova apertura</p>
+      <!-- L'OCCHIELLO NON C'E' PIU'. Era «Gran Buffet / Savona / Nuova
+           apertura»: un'etichetta maiuscola spaziata subito sopra il titolo,
+           cioe' il primo segnale che si riconosce in una pagina fatta in
+           serie. Quello che diceva non si e' perso: «gran buffet» e' il
+           soggetto del titolo e sta nella descrizione della pagina, «Savona»
+           e' nell'indirizzo qui sotto, e «nuova apertura» — l'unica cosa
+           davvero nuova — si e' spostata nella riga dei dati. -->
       <h1 class="hero__title enter" style="--d:220ms">Tutto quello che volete, <em>a un prezzo solo</em></h1>
       <p class="hero__lead enter" style="--d:360ms">
         Buffet: si va al banco e si prende quello che c'è, quante volte volete.
@@ -201,15 +207,20 @@
         <p class="cta-nota">Vi richiamiamo noi / nessun anticipo</p>
       </div>
 
-      <p class="hero__prezzo enter" style="--d:540ms">
+      <!-- UNA SOLA RIGA DI DATI, non due. Prima erano `hero__prezzo` e
+           `hero__meta` impilate: due blocchi di testo piccolo uno sotto
+           l'altro, che e' il modo piu' rapido di far sembrare un hero un
+           cruscotto. Sono la stessa cosa — i fatti pratici — e stanno su
+           una riga sola, separati da un filetto d'ottone. -->
+      <p class="hero__fatti enter" style="--d:540ms">
         <span>Pranzo da <b>14,90 €</b></span>
         <span>Cena da <b>22,90 €</b></span>
         <span>bevande escluse</span>
-      </p>
-      <p class="hero__meta enter" style="--d:600ms">
+        <span class="hero__fatti-sep" aria-hidden="true"></span>
         <span>Via Luigi Pirandello, 2r — Savona</span>
         <span>Tutti i giorni / 12:00–15:00 / 19:00–23:00</span>
         <span><a class="hero__tel" href="tel:+390192213138">019 221 3138</a></span>
+        <span>Nuova apertura</span>
       </p>
 
       <div class="cucine enter" style="--d:720ms">
@@ -658,6 +669,6 @@
   </div>
 </footer>
 
-<script src="js/site.js?v=18" defer></script>
+<script src="js/site.js?v=19" defer></script>
 </body>
 </html>

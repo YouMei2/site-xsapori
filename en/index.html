@@ -27,7 +27,7 @@
 <link rel="manifest" href="../site.webmanifest">
 <link rel="preload" href="../assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/familjen-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../styles.css?v=18">
+<link rel="stylesheet" href="../styles.css?v=19">
 <!-- Segna che il JavaScript è attivo: solo in quel caso le sezioni
      partono nascoste per poi comparire. Senza JS il sito resta leggibile. -->
 <script>document.documentElement.classList.add('js');</script>
@@ -178,7 +178,8 @@
     </div>
 
     <div class="wrap hero__inner">
-      <p class="eyebrow enter" style="--d:100ms">Buffet / Savona / Newly opened</p>
+      <!-- The eyebrow is gone: see index.html. Its content survives in the
+           heading, the address line and the facts row. -->
       <h1 class="hero__title enter" style="--d:220ms">Everything you want, <em>for one price</em></h1>
       <p class="hero__lead enter" style="--d:360ms">
         It is a buffet: you go to the counter and take what is there, as many times as
@@ -193,15 +194,16 @@
         <p class="cta-nota">We call you back / no deposit</p>
       </div>
 
-      <p class="hero__prezzo enter" style="--d:540ms">
+      <!-- One facts row, not two stacked. See index.html. -->
+      <p class="hero__fatti enter" style="--d:540ms">
         <span>Lunch from <b>€14.90</b></span>
         <span>Dinner from <b>€22.90</b></span>
         <span>drinks excluded</span>
-      </p>
-      <p class="hero__meta enter" style="--d:600ms">
+        <span class="hero__fatti-sep" aria-hidden="true"></span>
         <span>Via Luigi Pirandello, 2r — Savona</span>
         <span>Every day / 12:00–15:00 / 19:00–23:00</span>
         <span><a class="hero__tel" href="tel:+390192213138">019 221 3138</a></span>
+        <span>Newly opened</span>
       </p>
 
       <div class="cucine enter" style="--d:720ms">
@@ -634,6 +636,6 @@
   </div>
 </footer>
 
-<script src="../js/site.js?v=18" defer></script>
+<script src="../js/site.js?v=19" defer></script>
 </body>
 </html>

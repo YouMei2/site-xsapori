@@ -695,7 +695,7 @@ button,input,select,textarea{font:inherit;color:inherit;}
   .hero__title{font-size:clamp(2.6rem,5.2vw,4.2rem);}
   .hero__lead{margin-top:var(--sp-3);}
   .hero__actions{margin-top:var(--sp-4);}
-  .hero__meta{margin-top:var(--sp-3);}
+  .hero__fatti{margin-top:var(--sp-3);}
   .cucine{margin-top:var(--sp-3);padding-top:var(--sp-2);}
 }
 .hero__title em{
@@ -705,7 +705,7 @@ button,input,select,textarea{font:inherit;color:inherit;}
      qualunque dimensione prenda il titolo, e il titolo cambia tre volte a
      seconda dell'altezza dello schermo. Un valore assoluto qui romperebbe
      la proporzione proprio dove serve. Vale anche per l'`1.05em` di
-     `.hero__prezzo b`. */
+     `.hero__fatti b`. */
   font-size:.6em;letter-spacing:-.015em;margin-top:.18em;
 }
 .hero .eyebrow{color:var(--ottone-30);}
@@ -722,21 +722,31 @@ button,input,select,textarea{font:inherit;color:inherit;}
 
 /* Il prezzo nella prima schermata: per un all you can eat è la domanda
    numero uno, prima ancora del menu. Nasconderlo genera solo telefonate. */
-.hero__prezzo{
-  display:flex;flex-wrap:wrap;gap:.5rem var(--sp-4);margin-top:var(--sp-4);
+/* UNA RIGA SOLA DI FATTI. Prima erano `.hero__prezzo` e `.hero__meta`, due
+   blocchi di testo piccolo impilati: il modo piu' rapido di far sembrare un
+   hero un cruscotto, e due dei sette elementi che lo affollavano.
+   Il prezzo resta il pezzo in evidenza — per un all you can eat e' la
+   domanda — quindi tiene l'ottone; il resto e' smorzato. */
+.hero__fatti{
+  display:flex;flex-wrap:wrap;align-items:center;gap:.5rem var(--sp-4);
+  margin-top:var(--sp-4);max-width:64ch;
   font-family:var(--font-data);font-size:var(--fs-small);letter-spacing:.04em;
-  color:#C6D0D4;font-variant-numeric:tabular-nums;
+  color:var(--on-surface-dim);font-variant-numeric:tabular-nums;
 }
-.hero__prezzo b{color:var(--ottone-30);font-weight:400;font-size:1.05em;}
-.hero__prezzo span{display:flex;align-items:center;gap:.5rem;}
-.hero__prezzo span+span::before{
+/* I primi tre pezzi sono il prezzo: piu' chiari degli altri. */
+.hero__fatti span:nth-of-type(-n+3){color:#C6D0D4;}
+.hero__fatti b{color:var(--ottone-30);font-weight:400;font-size:1.05em;}
+.hero__fatti span{display:flex;align-items:center;gap:.5rem;}
+.hero__fatti span+span:not(.hero__fatti-sep)::before{
   content:"";width:1px;height:1em;background:rgba(231,237,239,.28);
   margin-right:.5rem;flex:none;
 }
-.hero__meta{
-  display:flex;flex-wrap:wrap;gap:.6rem var(--sp-5);margin-top:var(--sp-5);
-  font-family:var(--font-data);font-size:var(--fs-small);letter-spacing:.05em;color:var(--on-surface-dim);
+/* Il filetto d'ottone che divide il prezzo dal resto: e' il segno del sito,
+   e qui fa il lavoro che farebbe un a capo senza costare una riga. */
+.hero__fatti-sep{
+  flex:none;width:2rem;height:1px;background:var(--ottone-50);opacity:.55;
 }
+.hero__fatti-sep+span::before{display:none;}
 /* Il telefono è un canale di prenotazione, non una didascalia: da telefono
    deve leggersi e vedersi che si tocca. Misurava 12,2px in un blocco grigio. */
 .hero__tel{
@@ -745,8 +755,11 @@ button,input,select,textarea{font:inherit;color:inherit;}
   padding-block:.35rem;
 }
 .hero__tel:hover{color:var(--detail-text);}
-.hero__meta span{display:flex;align-items:center;gap:.5rem;}
-.hero__meta span::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--ottone-50);flex:none;}
+
+/* Qui c'era un pallino d'ottone da 5px prima di ogni voce. E' esattamente
+   il separatore a punto medio che §8 vieta, solo disegnato in CSS invece
+   che scritto nel testo — e vinceva sulla riga verticale dichiarata piu'
+   su, quindi le voci erano puntate. Tolto: separa il filetto. */
 
 /* Le quattro cucine, sotto l'hero */
 .cucine{margin-top:var(--sp-6);border-top:1px solid rgba(185,141,74,.32);padding-top:var(--sp-4);}
@@ -794,8 +807,7 @@ button,input,select,textarea{font:inherit;color:inherit;}
   .hero__title{font-size:clamp(1.7rem,3.2vw,2.1rem);}
   .hero__lead{margin-top:var(--sp-2);max-width:64ch;font-size:var(--fs-body-sm);}
   .hero__actions{margin-top:var(--sp-3);}
-  .hero__prezzo{margin-top:var(--sp-2);}
-  .hero__meta{margin-top:var(--sp-2);}
+  .hero__fatti{margin-top:var(--sp-2);}
   .cucine{margin-top:var(--sp-3);padding-top:var(--sp-2);}
 }
 
@@ -1141,7 +1153,13 @@ img.plate{
 .menu-foto--basso{ object-position:center 85%; }
 @media (min-width:760px){
   /* accanto all'elenco, non sopra: cosi' non spezza la lettura */
-  .menu-course .menu-foto{float:right;margin-left:var(--sp-5);max-width:16rem;}
+  /* NIENTE PIU' `float:right`. Una fotografia piccola che galleggia a fianco
+     del testo, incorniciata, in mezzo al bianco, e' il segnale di modello
+     piu' riconoscibile che ci sia — IMG-04 lo dice, e ha ragione.
+     Restano piccole, che e' una scelta di questo sito e non un caso: qui il
+     lettore cerca un piatto, non guarda immagini. Ma stanno allineate al
+     bordo della colonna invece che galleggiare dentro il paragrafo. */
+  .menu-course .menu-foto{max-width:16rem;}
 }
 
 /* FAQ (accordion nativo) */
@@ -1632,7 +1650,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
 .info-list svg{width:19px;height:19px;flex:none;margin-top:.2rem;color:var(--detail-text);}
 .info-list strong{display:block;}
 /* Numeri di telefono: area del puntatore portata sopra i 24px */
-.info-list a,.hero__meta a{display:inline-block;padding-block:.4rem;}
+.info-list a,.hero__fatti a{display:inline-block;padding-block:.4rem;}
 
 /* Conferma prenotazione */
 .esito{display:none;}
