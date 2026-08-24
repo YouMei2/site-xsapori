@@ -1179,8 +1179,11 @@ img.plate{
 .booking{display:grid;gap:var(--sp-5);align-items:start;}
 /* La colonna di destra cresce con lo schermo invece di restare una frazione
    fissa: a `.55fr` il biglietto veniva fuori stretto come un ritaglio. */
+/* Il modulo deve restare la colonna larga: e' lui il lavoro, il biglietto
+   accompagna. Con `clamp(26rem,34vw,40rem)` a 1650px il biglietto misurava
+   561 e il modulo 543 — il riepilogo piu' largo del modulo che riassume. */
 @media (min-width:1000px){
-  .booking{grid-template-columns:minmax(0,1fr) clamp(26rem,34vw,40rem);gap:var(--sp-5);}
+  .booking{grid-template-columns:minmax(0,1fr) clamp(21rem,26vw,30rem);gap:var(--sp-5);}
 }
 @media (min-width:1500px){
   .booking{gap:var(--sp-6);}
@@ -1437,8 +1440,20 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
 /* --- Contatori adulti e bambini --------------------------
    Il campo "persone" continua a ricevere il totale: al server non
    cambia niente. */
-.contatori{display:grid;gap:var(--sp-3);}
-@media (min-width:520px){ .contatori{grid-template-columns:1fr 1fr;gap:var(--sp-4);} }
+/* I DUE CONTATORI SI AFFIANCANO SOLO SE C'E' POSTO DAVVERO.
+   Prima era `grid-template-columns:1fr 1fr` sopra i 520px di FINESTRA. Ma
+   `1fr` vale `minmax(auto,1fr)`, e `auto` non scende sotto la larghezza
+   minima del contenuto: nome del contatore piu' due bottoni da 44px fanno
+   circa 220px l'uno. Dentro la colonna del modulo — 263px, non 520 — i due
+   riquadri non ci stavano e USCIVANO dal loro contenitore: misurato,
+   «Bambini» arrivava a x=984 mentre la colonna finiva a 779, quindi finiva
+   sotto il biglietto.
+   `auto-fit` guarda lo spazio reale del contenitore invece che quello della
+   finestra: se non ci stanno affiancati, si impilano. */
+.contatori{
+  display:grid;gap:var(--sp-3);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));
+}
 .contatore{
   display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);
   padding:.6rem .75rem;border:1px solid var(--rule);border-radius:var(--r-sm);
@@ -1470,6 +1485,15 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{
 }
 .stima__totale{font-size:1.05rem;color:var(--on-surface);font-weight:500;}
 .stima__nota{font-size:.78rem;}
+/* Il totale in colonna sinistra sparisce quando c'e' il biglietto: lo stesso
+   numero due volte a mezzo schermo di distanza fa chiedere quale dei due
+   valga. La classe la mette js/prenota-plus.js, e solo se il biglietto
+   esiste davvero — senza, questa riga resta l'unico totale in pagina.
+
+   VA DOPO `.stima`, NON PRIMA: hanno la stessa specificita' (0,1,0) e
+   `.stima` dichiara `display:flex`. Messa sopra, perdeva in silenzio —
+   l'attributo `aria-hidden` c'era e il totale si vedeva lo stesso. */
+.stima--doppione{display:none;}
 .field-error{
   display:flex;align-items:flex-start;gap:.4rem;
   font-size:.86rem;color:var(--error);font-weight:var(--wght-strong);

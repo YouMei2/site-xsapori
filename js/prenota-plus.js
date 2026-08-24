@@ -304,6 +304,18 @@
     etichettaTotale = document.createElement('p');
     etichettaTotale.className = 'stima';
 
+    /* Se in pagina c'e' il biglietto, il totale sta li' e questa riga
+     * sarebbe un doppione: lo stesso numero scritto due volte a mezzo
+     * schermo di distanza, e il lettore si chiede quale dei due vale.
+     * Resta nel DOM — `aggiornaTotale` la riempie e da li' parte
+     * l'aggiornamento del biglietto — ma diventa invisibile e viene tolta
+     * anche agli screen reader, che leggono il biglietto (`aria-live`).
+     * Senza biglietto, o senza il markup che lo contiene, resta com'era. */
+    if (document.getElementById('biglietto')) {
+      etichettaTotale.classList.add('stima--doppione');
+      etichettaTotale.setAttribute('aria-hidden', 'true');
+    }
+
     contenitorePersone.appendChild(gruppoContatori);
     contenitorePersone.appendChild(etichettaTotale);
   }
@@ -379,11 +391,25 @@
     // (riga 136), quindi da li' arriva anche l'aggiornamento del biglietto.
     var data = campoData ? campoData.value : '';
     var ora = campoOrario ? campoOrario.value : '';
-    var avviato = !!(data && ora);
+
+    /* Il biglietto si compone VIA VIA, non tutto insieme alla fine.
+     * Prima pretendeva data E orario per mostrare qualunque cosa: chi
+     * sceglieva solo l'orario, o solo il numero di persone, vedeva un
+     * riquadro muto e non capiva che stesse funzionando. Ora ogni riga
+     * compare appena il suo dato c'e'. Il TOTALE resta legato a data e
+     * orario, e non per pignoleria: senza la data non si sa se vale la
+     * tariffa feriale o quella del weekend, e un totale che poi cambia
+     * e' peggio di un totale che ancora non c'e'. */
+    var avviato = !!(data || ora);
+    var completo = !!(data && ora);
 
     biglietto.setAttribute('data-avviato', avviato ? 'true' : 'false');
 
-    rigaBiglietto('quando', avviato ? dataLunga(data) + ' · ' + ora : '');
+    var quando = '';
+    if (data && ora)      { quando = dataLunga(data) + ' · ' + ora; }
+    else if (data)        { quando = dataLunga(data); }
+    else if (ora)         { quando = ora; }
+    rigaBiglietto('quando', quando);
 
     if (avviato) {
       var p = adulti + ' ' + (adulti === 1 ? T.adulto : T.adultiPl);
@@ -400,7 +426,7 @@
       etichettaFormula = campoFormula.options[campoFormula.selectedIndex]
         .textContent.split('·')[0].trim();
     }
-    rigaBiglietto('formula', avviato ? etichettaFormula : '');
+    rigaBiglietto('formula', completo ? etichettaFormula : '');
 
     var nome = form.elements.namedItem('nome');
     var cognome = form.elements.namedItem('cognome');
@@ -408,11 +434,11 @@
     rigaBiglietto('nome', chi);
 
     var box = document.getElementById('biglietto-totale');
-    if (box) { box.textContent = avviato ? euro(totale) : '—'; }
+    if (box) { box.textContent = completo ? euro(totale) : '—'; }
 
     var stato = document.getElementById('biglietto-stato');
     if (stato) {
-      stato.textContent = avviato
+      stato.textContent = completo
         ? (EN ? 'to be confirmed' : 'da confermare')
         : (EN ? 'your table' : 'il vostro tavolo');
     }
