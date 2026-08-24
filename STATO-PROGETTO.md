@@ -196,18 +196,28 @@ Vale la pena conoscerli: nessuno si vedeva dai test automatici.
 
 ### Traduzione dei commenti: prima della consegna
 
-Circa **700 righe su otto file**. Non è urgente — nessun testo visibile al
-pubblico è in russo, sono tutti commenti e il sito funziona identico — ma chi
-manterrà il progetto non li legge.
+Nessun testo visibile al pubblico è in russo: sono commenti, e il sito
+funziona identico. Ma chi manterrà il progetto non li legge.
 
-| File | Righe |
-|---|---|
-| `api/notify.php` | 200 |
-| `api/booking.php` | 180 |
-| **`config.example.php`** | **123** — è quello che si copia a mano: va per primo |
-| `schema.sql` | 84 |
-| `js/booking.js` | 61 |
-| `js/prenota-plus.js`, `admin/index.php`, `js/site.js` | 52 |
+> **Il numero che c'era qui era sbagliato, e vale la pena dire perché.**
+> Diceva «circa 700 righe su otto file», contate con
+> `grep -c '[а-яА-ЯёЁ]'`. Quel comando, in questa shell, considera cirillico
+> anche `—`, `ì` e `«»`: contava cioè anche le righe **italiane** con un
+> trattino lungo o una vocale accentata. Contate davvero, con
+> `/[Ѐ-ӿ]/`, sono **412 righe su tre file** — e quattro degli otto
+> file elencati non avevano **una sola** riga in russo.
+
+| File | Righe | Stato |
+|---|---|---|
+| `api/notify.php` | 171 | da fare |
+| `api/booking.php` | 157 | da fare |
+| `schema.sql` | 84 | da fare |
+| `config.example.php` | 0 | ✅ **tradotto il 25 agosto**, valori segnaposto compresi |
+| `js/booking.js`, `js/prenota-plus.js`, `admin/index.php`, `js/site.js` | 0 | erano già in italiano |
+
+`config.php` ne ha 80, ma è il file con le credenziali vere: sta fuori dal
+repo e resta sul computer di chi sviluppa. Chi pubblica parte da
+`config.example.php`, che ora è tutto in italiano.
 
 ---
 
