@@ -25,8 +25,18 @@ Tre conseguenze non negoziabili:
    gerarchia dopo due schermate: le isole chiare e i tre livelli di
    elevazione (`sala-90/80/70`) esistono per impedirlo. Mai più di tre
    sezioni scure di fila senza un cambio di elevazione.
-3. **L'arco è il motivo grafico ricorrente**: le quattro cucine sotto l'hero,
-   i divisori. Sottile, mai decorativo e basta.
+3. **Il filetto d'ottone è il motivo grafico ricorrente**: la testa della
+   fascia fotografica, i passi della prenotazione, le quattro cucine sotto
+   l'hero, il bordo del piede. Una riga di un pixel che si distende da
+   sinistra. Sottile, mai decorativo e basta.
+
+   > *(Fino al 24 agosto 2026 qui c'era scritto «l'arco è il motivo
+   > ricorrente», e gli archi erano SVG e gradienti che ridisegnavano le
+   > lamelle del soffitto. Sono stati tolti quando sono arrivate le
+   > fotografie: sopra la sala vera, con le sue lamelle vere, erano due
+   > soffitti sovrapposti, e coprivano il buffet illuminato in fondo. Restano
+   > solo nei riquadri grafici `.plate`, dove non c'è nessuna fotografia
+   > sotto da coprire — lì l'arco è il disegno, non una sovrastampa.)*
 
 ## Colore
 
@@ -60,7 +70,6 @@ Token nati con l'inversione:
 | Token | Chiaro | Scuro | Perché esiste |
 |---|---|---|---|
 | `--accent-fill` | `--petrolio-70` | `--petrolio-60` | il petrolio scuro come riempimento su fondo sala dà 2,71:1, sotto il 3:1 di WCAG 1.4.11 |
-| `--arc` | `--ottone-50` | `--petrolio-20` | nella sala le lamelle sono petrolio; l'ottone è il filetto dei tavoli |
 | `--surface-blur` | `rgba(251,249,245,.94)` | `rgba(14,20,23,.92)` | header e barra del menu sono traslucidi e devono seguire il registro |
 | `--success-text` / `--error-text` | pieni | schiariti | verde e rosso di stato su fondo sala scendevano a 2,6:1 |
 | `--header-h` | `4.25rem` | — | tre cose devono conoscerla: ancore, barra del menu, intestazioni |
@@ -150,11 +159,38 @@ delle sezioni a colonna. Ha le sfumature ai bordi che la cuciono alle sezioni
 scure vicine e il filetto d'ottone in cima, come le isole chiare. È
 decorativa: `aria-hidden` e `alt=""`.
 
-**La pietra.** Il registro scuro non è più colore piatto: sotto c'è la texture
-del marmo della sala, tenuta sotto una velatura al 90% fino a non leggersi più
-come immagine. Sta nel blocco condiviso del registro scuro, quindi la prendono
-`body`, `.on-dark`, il pannello e il piede. Costa 72 KB scaricati una volta
-sola. Le isole chiare non la ereditano: hanno il loro fondo pieno.
+**La pietra: una sola, ferma, a tutto schermo.** Il registro scuro non è
+colore piatto: dietro c'è la texture del marmo della sala, sotto una velatura
+all'88% fino a non leggersi più come immagine. Costa 72 KB, scaricati una
+volta sola per tutto il sito.
+
+Sta su **`body::before`**: `position:fixed`, `cover`, `no-repeat`, `z-index:-1`.
+Un solo strato, immobile mentre la pagina scorre.
+
+> **La regola che ne discende, ed è la più facile da rompere.** Le sezioni
+> scure devono essere **translucide**. Se una dichiara un fondo pieno, ci
+> dipinge sopra e la pietra si spegne lì: il sito torna a sembrare fogli
+> accostati. Il fondo pieno lo prende **solo `body`** — e `.drawer`, che
+> copre la pagina e deve essere opaco per forza.
+>
+> Per l'elevazione si usa una velatura che si apre e si chiude ai bordi
+> (vedi `.section--alt`): l'occhio vede il cambio di piano, ma il confine
+> non è un gradino e la pietra continua sotto.
+
+*(Rifatto il 24 agosto 2026. Prima la texture era un `background-image` sul
+blocco condiviso del registro scuro, con `background-size:1100px` e `repeat`.
+Due difetti, tutti e due visibili solo a occhio: la piastrella si ripeteva e
+la cucitura era una riga verticale netta — sembravano due immagini tagliate e
+accostate — e la portavano solo `body` e `.on-dark`, mentre `.hero`,
+`.section--alt`, `.page-head` e il piede ci dipingevano sopra un colore pieno,
+quindi compariva a bande.)*
+
+Le isole chiare non la ereditano: restano piene, perché sotto sessanta righe
+di menu un fondo semitrasparente è illeggibile. La morbidezza ai loro bordi
+la fanno l'alone caldo e sedici pixel di raccordo.
+
+**In stampa la pietra sparisce**, insieme a tutte le velature di raccordo: è
+`fixed`, e in stampa un fondo fisso si ripete foglio per foglio.
 
 > Nella sala vera le pareti sono pietra. Il sito lo diventa anche dove non
 > c'è una fotografia: è quello che tiene insieme il tutto quando le immagini
@@ -186,8 +222,13 @@ bottoni. Tre ombre soltanto.
 
 Regole: si animano solo `transform` e `opacity`; sfasamento 80-120ms fra
 elementi di una serie; l'hero entra in sequenza (occhiello → titolo → testo →
-bottoni → dati → archi che si disegnano); `prefers-reduced-motion` disattiva
-tutto e lascia il contenuto visibile.
+bottoni → dati); `prefers-reduced-motion` disattiva tutto e lascia il
+contenuto visibile.
+
+**Il gesto ricorrente è il filetto che si distende**: `transform:scaleX(0)` →
+`scaleX(1)` con origine a sinistra. Lo fanno la testa della fascia
+fotografica, il sottotitolo dei passi della prenotazione e le quattro cucine.
+Mai `width`: sarebbe un ricalcolo del layout a ogni fotogramma.
 
 **Le sezioni partono nascoste solo se il JavaScript è attivo** (classe `.js` sul
 tag `html`). Senza JavaScript il sito resta completo e leggibile. Se

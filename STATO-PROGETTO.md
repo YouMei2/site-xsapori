@@ -45,9 +45,17 @@ lì non funzionano, e il modulo lo dice esplicitamente.
 > Le superfici chiare sono riservate a dove si legge o si scrive a lungo —
 > menu, prezzi, modulo, testi legali. Tutto in `design-system/x-sapori/MASTER.md`.
 
-Sotto il registro scuro c'è **la pietra**: la texture del marmo della sala a
-velatura 90%, che toglie al buio l'aspetto di colore piatto. 72 KB per tutto
-il sito.
+Dietro tutto c'è **la pietra**: la texture del marmo della sala a velatura
+88%, che toglie al buio l'aspetto di colore piatto. 72 KB per tutto il sito.
+
+> **È uno strato solo, fisso, a tutto schermo** (`body::before`), e da questo
+> discende **la regola più facile da rompere: le sezioni scure devono essere
+> translucide.** Se una dichiara un fondo pieno, ci dipinge sopra e la pietra
+> si spegne lì. Il fondo pieno lo prende solo `body` — e `.drawer`, che copre
+> la pagina. *(Rifatto il 24 agosto 2026: prima era un `background-image` con
+> `background-size:1100px` e `repeat`, quindi la piastrella si ripeteva con
+> una cucitura visibile, e metà delle sezioni ci dipingevano sopra un colore
+> pieno. Sembravano due immagini tagliate e accostate.)*
 
 **Le fotografie ci sono.** Tredici immagini WebP in `uploads/`, montate il
 23 agosto. Il principio è **poche e grandi**: una foto sta dove può respirare,
@@ -191,7 +199,7 @@ manterrà il progetto non li legge.
 
 ---
 
-## Tre cose da sapere prima di toccare il codice
+## Cinque cose da sapere prima di toccare il codice
 
 **1. I due registri sono entrambi espliciti.** `body, .on-dark, .hero,
 .drawer, .site-footer` sono scuri; `:root, .cornice, .on-light` sono chiari.
@@ -205,7 +213,22 @@ sull'altro.
 
 **3. Le classi usate da `js/booking.js`** — `.field--invalid`,
 `.checkbox--invalid`, `.form-msg--error`, `.form-msg--ok`, `.field-error` —
-sono un contratto: cambiarle scollega la validazione.
+sono un contratto: cambiarle scollega la validazione. Vale anche per
+`.fascia`, che `js/prenota-plus.js:115` dà ai pulsanti delle fasce orarie:
+**non è la fascia fotografica della home, che si chiama `.fascia-foto`.**
+Quando avevano lo stesso nome, i pulsanti si prendevano l'altezza della
+banda e diventavano undici colonne grigie alte 324 px.
+
+**4. Una sezione scura non deve mai dichiarare un fondo pieno.** La pietra
+è uno strato fisso dietro tutto (`body::before`): un colore opaco ci
+dipinge sopra e la spegne in quel punto. Per l'elevazione si usa una
+velatura sfumata ai bordi, come fa `.section--alt`.
+
+**5. Se un componente è generato dal JavaScript, il suo posto nel layout
+può non essere quello del markup.** Il campo orario sta in una griglia a
+tre colonne — giusto per un `<input type="time">`, sbagliato per undici
+pulsanti: `prenota-plus.js` lo sposta fuori dalla griglia proprio perché
+quella scelta vale solo quando i pulsanti esistono davvero.
 
 ---
 
