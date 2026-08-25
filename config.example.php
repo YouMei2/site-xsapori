@@ -17,17 +17,6 @@ declare(strict_types=1);
 return [
 
     // =================================================================
-    //  Pannello prenotazioni (/admin)
-    // =================================================================
-    // La password NON si scrive qui in chiaro: aprite /admin/ nel browser,
-    // digitate la password scelta e la pagina genera il codice cifrato da
-    // incollare qui sotto. Lasciando la stringa vuota il pannello mostra
-    // la procedura di configurazione invece dell'accesso.
-    'admin' => [
-        'password_hash' => '',
-    ],
-
-    // =================================================================
     //  База данных
     // =================================================================
     'db' => [

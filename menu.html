@@ -30,79 +30,42 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Menu",
-  "name": "Menu X-Sapori",
-  "inLanguage": "it",
-  "url": "https://www.x-sapori.it/menu.html",
-  "hasMenuSection": [
-    { "@type": "MenuSection", "name": "Antipasti" },
-    { "@type": "MenuSection", "name": "Primi, insalate e mozzarella" },
-    { "@type": "MenuSection", "name": "Al vapore" },
-    { "@type": "MenuSection", "name": "Sushi e tartare" },
-    { "@type": "MenuSection", "name": "Wok e primi" },
-    { "@type": "MenuSection", "name": "Brace brasiliana" },
-    { "@type": "MenuSection", "name": "Dessert" },
-    { "@type": "MenuSection", "name": "Bevande" }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.x-sapori.it/" },
-    { "@type": "ListItem", "position": 2, "name": "Menu", "item": "https://www.x-sapori.it/menu.html" }
-  ]
+  "@type": "Restaurant",
+  "name": "X-Sapori",
+  "description": "Menu all you can eat del gran buffet X-Sapori a Savona: cucina italiana, brasiliana, cinese e giapponese.",
+  "url": "menu.html",
+  "hasMenu": "menu.html",
+  "telephone": "+390192213138",
+  "servesCuisine": ["Italiana", "Brasiliana", "Cinese", "Giapponese", "Sushi"],
+  "priceRange": "€€",
+  "acceptsReservations": "True",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Via Luigi Pirandello, 2r",
+    "addressLocality": "Savona",
+    "addressRegion": "SV",
+    "postalCode": "17100",
+    "addressCountry": "IT"
+  }
 }
 </script>
 </head>
 <body>
 <a class="skip-link" href="#main">Vai al contenuto principale</a>
 
-<header class="site-header is-stuck" id="site-header">
+<header class="site-header">
   <div class="wrap site-header__inner">
-    <a class="brand" href="index.html">
-      <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true">
-        <path d="M11 13C29 25 35 39 53 51"/>
-        <path d="M53 13C35 25 29 39 11 51"/>
-      </svg>
-      <span>X-Sapori<small>Savona</small></span>
-    </a>
-
+    <a class="brand" href="index.html">X<span>·</span>Sapori <small>Savona</small></a>
     <nav class="nav" aria-label="Navigazione principale">
-      <a href="index.html#come-funziona">Come funziona</a>
-      <a href="index.html#formule">Prezzi</a>
+      <a href="index.html">Home</a>
       <a href="menu.html" aria-current="page">Menu</a>
-      <a href="index.html#dove">Dove siamo</a>
-      <a href="index.html#domande">Domande</a>
+      <a href="prenota.html">Prenota</a>
+      <a href="chi-siamo.html">Chi siamo</a>
+      <a href="contatti.html">Contatti</a>
     </nav>
-
-    <a class="btn btn--primary header-cta" href="prenota.html">Prenota un tavolo</a>
-
-    <a class="lang" href="en/menu.html" hreflang="en" lang="en" title="English version">EN</a>
-
-    <button class="nav-toggle" type="button" id="nav-toggle" aria-expanded="false" aria-controls="drawer">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-        <path d="M3 6h18M3 12h18M3 18h18"/>
-      </svg>
-      Menu
-    </button>
+    <a class="btn btn--gold header-cta" href="prenota.html">Prenota il tuo tavolo</a>
   </div>
 </header>
-
-<div class="drawer" id="drawer" data-open="false" hidden>
-  <button class="drawer__close" type="button" id="drawer-close" aria-label="Chiudi il menu">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-      <path d="M6 6l12 12M18 6L6 18"/>
-    </svg>
-  </button>
-  <a href="index.html" style="--d:60ms">Home</a>
-  <a href="index.html#formule" style="--d:110ms">Prezzi</a>
-  <a href="menu.html" style="--d:160ms">Menu</a>
-  <a href="index.html#dove" style="--d:210ms">Dove siamo</a>
-  <a href="prenota.html" style="--d:260ms;color:var(--ottone-30)">Prenota un tavolo</a>
-</div>
 
 <main id="main">
 
@@ -138,9 +101,9 @@
         <a href="#antipasti">Antipasti</a>
         <a href="#italiano">Italiano</a>
         <a href="#vapore">Al vapore</a>
-        <a href="#sushi">Sushi</a>
-        <a href="#wok">Wok</a>
-        <a href="#brace">Brace</a>
+        <a href="#sushi">Sushi e tartare</a>
+        <a href="#wok">Wok e primi</a>
+        <a href="#brace">Brace brasiliana</a>
         <a href="#dessert">Dessert</a>
         <a href="#bevande">Bevande</a>
       </nav>
@@ -175,9 +138,7 @@
         </label>
       </div>
     </div>
-  </div>
-
-  <p class="visually-hidden" role="status" aria-live="polite" id="menu-status"></p>
+  </section>
 
   <div class="wrap">
     <p class="conteggio" id="menu-conteggio" aria-hidden="true">67 piatti · 8 sezioni · di solito al banco</p>
@@ -205,8 +166,9 @@
 
     <section class="menu-course" data-cucina="cina" id="antipasti" aria-labelledby="antipasti-t">
       <div class="menu-course__head">
-        <p class="eyebrow">Per cominciare</p>
+        <p class="eyebrow">01 · Per cominciare</p>
         <h2 id="antipasti-t">Antipasti</h2>
+        <p class="lead">Fritti croccanti e piccoli assaggi freddi da dividere. Ordinateli in due giri: il primo per rompere il ghiaccio, il secondo mentre arriva il sushi.</p>
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">Fritti croccanti e piccoli assaggi freddi da dividere. Ordinateli in due giri: il primo per rompere il ghiaccio, il secondo mentre arriva il sushi.</p>
       <div class="dish-list">
@@ -223,8 +185,9 @@
 
     <section class="menu-course" data-cucina="italia" id="italiano" aria-labelledby="italiano-t">
       <div class="menu-course__head">
-        <p class="eyebrow">Cucina italiana</p>
+        <p class="eyebrow">02 · Cucina italiana</p>
         <h2 id="italiano-t">Primi, insalate e mozzarella</h2>
+        <p class="lead">Non tutti al tavolo vogliono sushi, e va benissimo. La linea italiana lavora in parallelo alle altre: primi al momento, verdure fresche, mozzarella e pomodoro come si deve.</p>
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">Non tutti al tavolo vogliono sushi, e va benissimo. La linea italiana lavora in parallelo alle altre: primi al momento, verdure fresche, mozzarella e pomodoro come si deve.</p>
       <div class="dish-list">
@@ -243,6 +206,7 @@
       <div class="menu-course__head">
         <p class="eyebrow eyebrow--cina">Dal cestello</p>
         <h2 id="vapore-t">Al vapore</h2>
+        <p class="lead">La parte più tradizionale della tavola cinese. I ravioli escono dal cestello di bambù quando li ordinate, mai prima.</p>
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">La parte più tradizionale della tavola cinese. I ravioli restano nel cestello di bambù e si prendono caldi.</p>
       <img class="menu-foto" src="uploads/vapore.webp"
@@ -260,8 +224,13 @@
 
     <section class="menu-course" data-cucina="giappone" id="sushi" aria-labelledby="sushi-t">
       <div class="menu-course__head">
-        <p class="eyebrow">Banco sushi</p>
+        <p class="eyebrow">04 · Banco sushi</p>
         <h2 id="sushi-t">Sushi e tartare</h2>
+        <p class="lead">Il sushi all you can eat a Savona che i nostri clienti abituali ordinano per primo. Riso preparato più volte durante il servizio, pesce porzionato a vista.</p>
+        <figure class="ph ph--square" style="margin:var(--sp-4) 0 0">
+          <span class="ph__label" role="img" aria-label="Sushi chef che prepara nigiri al banco"><em>Foto da inserire</em>Sushi chef che prepara nigiri al banco</span>
+            <!-- foto suggerita: https://source.unsplash.com/500x500/?sushi,chef -->
+        </figure>
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">Riso preparato più volte durante il servizio, pesce porzionato a vista al banco.</p>
       <img class="menu-foto" src="uploads/nigiri.webp"
@@ -287,6 +256,7 @@
       <div class="menu-course__head">
         <p class="eyebrow eyebrow--cina">Fuoco vivo</p>
         <h2 id="wok-t">Wok e primi</h2>
+        <p class="lead">Riso e spaghetti saltati in pochi secondi a fiamma alta. È la portata che consigliamo a metà cena, quando il tavolo ha già assaggiato tutto il resto.</p>
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">Riso e spaghetti saltati in pochi secondi a fiamma alta. Li consigliamo a metà cena, quando il tavolo ha già assaggiato il resto.</p>
       <div class="dish-list">
@@ -303,8 +273,9 @@
 
     <section class="menu-course" data-cucina="brasile" id="brace" aria-labelledby="brace-t">
       <div class="menu-course__head">
-        <p class="eyebrow">Churrasco</p>
-        <h2 id="brace-t">Brace brasiliana</h2>
+        <p class="eyebrow">06 · Churrasco</p>
+        <h2 id="carne-t">Brace brasiliana</h2>
+        <p class="lead">La parte brasiliana del menu: carne allo spiedo e alla brace, tagliata al momento e servita in porzioni piccole. Disponibile a pranzo e a cena, in tutte le formule.</p>
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">Carne allo spiedo e alla brace, tagliata al momento e servita in porzioni piccole. Disponibile a pranzo e a cena, in tutte le formule.</p>
       <div class="dish-list">
@@ -322,8 +293,9 @@
 
     <section class="menu-course" data-cucina="italia" id="dessert" aria-labelledby="dessert-t">
       <div class="menu-course__head">
-        <p class="eyebrow">Il finale</p>
+        <p class="eyebrow">07 · Il finale</p>
         <h2 id="dessert-t">Dessert</h2>
+        <p class="lead">Compresi nella formula, come tutto il resto. Se festeggiate un compleanno, portiamo il dolce con le candeline: basta dircelo al momento della prenotazione.</p>
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">Compresi nella formula, come tutto il resto. Per un compleanno portiamo il dolce con le candeline: basta dirlo al momento della prenotazione.</p>
       <div class="dish-list">
@@ -340,8 +312,9 @@
 
     <section class="menu-course" id="bevande" aria-labelledby="bevande-t">
       <div class="menu-course__head">
-        <p class="eyebrow">Da bere</p>
+        <p class="eyebrow">08 · Da bere</p>
         <h2 id="bevande-t">Bevande</h2>
+        <p class="lead">Le bevande <strong class="gold">non sono incluse</strong> nel menù fisso: si ordinano alla carta e si pagano a parte. Il listino completo con i prezzi è al tavolo.</p>
       </div>
       <p class="lead" style="margin-top:var(--sp-3)">Le bevande <strong>non sono incluse</strong> nel prezzo: si ordinano al tavolo e si pagano a parte. Il listino è al tavolo.</p>
       <img class="menu-foto" src="uploads/salsa-soia.webp"
@@ -359,11 +332,6 @@
       </div>
     </section>
 
-    <p class="no-results" id="no-results" hidden>
-      Nessun piatto corrisponde alla ricerca.
-      <button class="btn btn--ghost" type="button" id="reset-filters" style="margin-top:var(--sp-3)">Azzera i filtri</button>
-    </p>
-
   </div>
 
   </div><!-- /on-light: fine del tavolo -->
@@ -376,27 +344,19 @@
         <h2 id="formule-menu">Lo stesso menu, quattro fasce di prezzo</h2>
         <p class="lead">Cambia solo il momento in cui venite. Bevande escluse, giri illimitati.</p>
       </div>
-      <dl class="prezzi">
-        <div class="prezzo reveal"><dt>Pranzo · lun–ven</dt><dd>14,90 €<small>a persona</small></dd></div>
-        <div class="prezzo prezzo--hi reveal" style="--d:80ms"><dt>Cena · lun–ven</dt><dd>22,90 €<small>a persona</small></dd></div>
-        <div class="prezzo reveal" style="--d:160ms"><dt>Pranzo · weekend e festivi</dt><dd>18,90 €<small>a persona</small></dd></div>
-        <div class="prezzo reveal" style="--d:240ms"><dt>Cena · weekend e festivi</dt><dd>24,90 €<small>a persona</small></dd></div>
-      </dl>
-      <p class="lead reveal" style="margin-top:var(--sp-4)">
-        Bambini sotto i 120 cm: 9,90 € a pranzo e 12,90 € a cena.
-      </p>
+      <p class="lead" style="margin-top:var(--sp-4)">Allergie o intolleranze? Segnalatele in fase di prenotazione: la cucina prepara le alternative senza glutine, senza frutta a guscio e senza crostacei.</p>
     </div>
   </section>
 
   <section class="cta-band on-dark">
     <div class="wrap cta-band__inner">
-      <div class="reveal">
+      <div>
         <p class="eyebrow">Avete già scelto da dove partire?</p>
-        <h2 style="margin-top:var(--sp-3)">Prenotate il tavolo, al resto pensa la cucina</h2>
+        <h2>Prenotate il tavolo, al resto pensa la cucina</h2>
       </div>
-      <div class="reveal" style="--d:120ms;display:flex;flex-wrap:wrap;gap:var(--sp-3)">
-        <a class="btn btn--primary" href="prenota.html">Prenota un tavolo</a>
-        <a class="btn btn--ghost" href="tel:+390192213138">019 221 3138</a>
+      <div class="hero__actions" style="margin:0">
+        <a class="btn btn--gold" href="prenota.html">Prenota il tuo tavolo</a>
+        <a class="btn btn--ghost" href="tel:+390192213138">Chiama 019 221 3138</a>
       </div>
     </div>
   </section>
@@ -427,27 +387,28 @@
         </p>
       </div>
       <div>
-        <h2>Pagine</h2>
+        <h4>Link rapidi</h4>
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="menu.html">Menu</a></li>
           <li><a href="prenota.html">Prenota un tavolo</a></li>
-          <li><a href="index.html#dove">Dove siamo</a></li>
+          <li><a href="chi-siamo.html">Chi siamo</a></li>
+          <li><a href="contatti.html">Contatti</a></li>
           <li><a href="privacy.html">Informativa privacy</a></li>
         </ul>
       </div>
       <div>
-        <h2>Contatti</h2>
+        <h4>Dove siamo</h4>
         <ul>
           <li>Via Luigi Pirandello, 2r<br>17100 Savona (SV)</li>
           <li><a href="tel:+390192213138">+39 019 221 3138</a></li>
-          <li>Tutti i giorni<br>12:00–15:00 · 19:00–23:00</li>
+          <li>Tutti i giorni · 12:00–15:00 · 19:00–23:00</li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
       <span>© 2026 X-Sapori · Via Luigi Pirandello, 2r, 17100 Savona (SV)</span>
-      <span>P. IVA da inserire</span>
+      <span>P. IVA 00000000000</span>
     </div>
   </div>
 </footer>

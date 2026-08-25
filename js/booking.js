@@ -1,35 +1,33 @@
 /**
- * X-Sapori Savona — gestione del modulo di prenotazione.
+ * X-Sapori Savona — обработка формы бронирования столика.
  *
- * Nessuna dipendenza: niente jQuery, niente polyfill. Tutto quello che
- * serve (fetch, AbortController, Intl, closure) esiste in ogni browser
- * dal 2018 in poi.
+ * Без зависимостей: ни jQuery, ни полифилов. Всё используемое
+ * (fetch, AbortController, Intl, замыкания в классах) есть во всех
+ * браузерах с 2018 года.
  *
- * IMPORTANTE: questa validazione DUPLICA quella del server, non la
- * sostituisce. Serve a evitare al cliente una richiesta inutile, non a
- * proteggere il database: qualsiasi regola scritta qui si aggira dalla
- * console in cinque secondi. L'unica fonte di verità è api/booking.php.
- * Se cambiate una regola, modificate ENTRAMBI i file.
+ * ВАЖНО: валидация здесь ДУБЛИРУЕТ серверную, но не заменяет её.
+ * Задача клиентской проверки — избавить гостя от лишнего запроса,
+ * а не защитить базу. Любые правила ниже обходятся через консоль
+ * за пять секунд, поэтому единственный источник правды —
+ * api/booking.php. При изменении правил правьте ОБА файла.
  */
 
 (function () {
   'use strict';
 
   // ===================================================================
-  //  Costanti
+  //  Константы
   // ===================================================================
 
-  // L'indirizzo dell'API si legge dall'attributo action del modulo: così
-  // la stessa logica funziona sia da /prenota.html sia da /en/book.html,
-  // che ha bisogno di ../api/booking.php.
+  var ENDPOINT = 'api/booking.php';
 
-  // Il telefono sta in un punto solo: compare nei messaggi di errore di
-  // rete, di gruppo troppo numeroso e di limite richieste superato.
+  // Телефон в одном месте: используется в сообщениях об ошибке сети,
+  // о слишком большой компании и о превышении лимита заявок.
   var PHONE_TEXT = '019 221 3138';
   var PHONE_HREF = 'tel:+390192213138';
 
-  // Specchio di 'hours' in config.php. 1 = lunedì ... 7 = domenica.
-  // Array vuoto = chiuso.
+  // Зеркало 'hours' из config.php. 1 = lunedì ... 7 = domenica.
+  // Пустой массив = закрыто.
   var HOURS = {
     1: [['12:00', '15:00'], ['19:00', '23:00']],
     2: [['12:00', '15:00'], ['19:00', '23:00']],
@@ -40,10 +38,10 @@
     7: [['12:00', '15:00'], ['19:00', '23:00']]
   };
 
-  var CLOSED_DATES = [];          // chiusure straordinarie, formato YYYY-MM-DD
+  var CLOSED_DATES = [];          // разовые закрытия, формат YYYY-MM-DD
 
-  // Specchio di 'holidays' in config.php. Nei giorni festivi vale la
-  // tariffa del weekend anche se cadono in settimana. Formato MM-DD.
+  // Зеркало 'holidays' из config.php. В праздник действует тариф
+  // выходного дня, даже если это будни. Формат MM-DD.
   var HOLIDAYS = [
     '01-01',  // Capodanno
     '01-06',  // Epifania
@@ -58,46 +56,17 @@
     '12-26'   // Santo Stefano
   ];
 
-  var HOLIDAYS_EXTRA = [];        // festivi straordinari, formato YYYY-MM-DD
+  var HOLIDAYS_EXTRA = [];        // разовые праздники, формат YYYY-MM-DD
   var EASTER_HOLIDAYS = true;     // Pasqua e Lunedì dell'Angelo
-  var LAST_SEATING_BEFORE_CLOSE = 45;  // minuti prima della chiusura
-  var MIN_MINUTES_AHEAD = 30;     // per oggi: non prima di mezz'ora da adesso
+  var LAST_SEATING_BEFORE_CLOSE = 45;  // минут до закрытия
+  var MIN_MINUTES_AHEAD = 30;     // на сегодня — не раньше чем через полчаса
   var MAX_MONTHS_AHEAD = 6;
   var MIN_GUESTS = 1;
   var MAX_GUESTS = 40;
 
-  var REQUEST_TIMEOUT_MS = 15000; // oltre non ha senso aspettare
+  var REQUEST_TIMEOUT_MS = 15000; // дольше ждать бессмысленно
 
-  // Lingua della pagina. I testi rivolti al cliente esistono in due
-  // versioni: la logica di validazione e identica, cambiano solo le frasi.
-  var EN = (document.documentElement.lang || 'it').toLowerCase().indexOf('en') === 0;
-
-  var MSG_EN = {
-    dateEmpty:    'Please choose a date.',
-    dateInvalid:  'This date is not valid.',
-    datePast:     'You cannot book a date in the past.',
-    dateFar:      'We take bookings up to six months ahead. For later dates, please call us.',
-    dateClosed:   'We are closed that day. Please pick another date.',
-    dayClosed:    'We are not open that day. Please pick another date.',
-    timeEmpty:    'Please enter your arrival time.',
-    timeInvalid:  'This time is not valid.',
-    guestsEmpty:  'Please tell us how many of you there are.',
-    nameEmpty:    'Please enter your first name.',
-    nameLength:   'The first name must be between 2 and 60 characters.',
-    surnameEmpty: 'Please enter your last name.',
-    surnameLength:'The last name must be between 2 and 60 characters.',
-    phoneEmpty:   'Please leave a phone number: we call back to confirm.',
-    phoneInvalid: 'This phone number does not look right. Example: 019 221 3138.',
-    emailInvalid: 'This email address does not look right.',
-    privacy:      'To send the request you need to accept the privacy terms.',
-    formInvalid:  'Please check the fields marked below.',
-    sending:      'Sending…',
-    submitLabel:  'Send request',
-    serverError:  'Something went wrong on our side. Please try again in a few minutes.',
-    networkError: 'We could not send the request: check your connection and try again.'
-  };
-
-  // I testi italiani restano la versione di riferimento del sito.
+  // Тексты для пользователя — на итальянском, как и весь сайт.
   var MSG = {
     dateEmpty:    'Indicate la data della prenotazione.',
     dateInvalid:  'La data non è valida.',
@@ -123,21 +92,17 @@
     networkError: 'Non siamo riusciti a inviare la richiesta: controllate la connessione e riprovate.'
   };
 
-  if (EN) { MSG = MSG_EN; }
-
   // ===================================================================
-  //  Riferimenti agli elementi
+  //  Ссылки на элементы
   // ===================================================================
 
   var form = document.getElementById('booking-form');
-  if (!form) { return; }   // pagina senza modulo: usciamo in silenzio
-
-  var ENDPOINT = form.getAttribute('action') || 'api/booking.php';
+  if (!form) { return; }   // страница без формы — выходим молча
 
   var submitBtn = document.getElementById('booking-submit');
   var formMsg   = document.getElementById('form-msg');
 
-  /** Campi per cui mostriamo un errore. La chiave è il name lato server. */
+  /** Поля, для которых показываем ошибки. Ключ = name на сервере. */
   var FIELDS = ['data', 'orario', 'persone', 'formula', 'occasione',
                 'nome', 'cognome', 'telefono', 'email', 'privacy'];
 
@@ -146,31 +111,31 @@
   }
 
   // ===================================================================
-  //  Piccole utilità
+  //  Мелкие утилиты
   // ===================================================================
 
-  /** "HH:MM" -> minuti da mezzanotte, oppure null. */
+  /** "HH:MM" -> минуты от полуночи, либо null. */
   function toMinutes(hhmm) {
     var m = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(hhmm || '');
     return m ? parseInt(m[1], 10) * 60 + parseInt(m[2], 10) : null;
   }
 
-  /** Date -> "YYYY-MM-DD" in ora locale.
-   *  toISOString() non va bene: converte in UTC e in Italia, d'estate,
-   *  sposta la data al giorno prima per gli orari fino alle 02:00. */
+  /** Date -> "YYYY-MM-DD" по локальному времени.
+   *  toISOString() не годится: он переводит в UTC и в Италии
+   *  летом сдвигает дату на день назад для времени до 02:00. */
   function ymd(d) {
     var mm = String(d.getMonth() + 1).padStart(2, '0');
     var dd = String(d.getDate()).padStart(2, '0');
     return d.getFullYear() + '-' + mm + '-' + dd;
   }
 
-  /** Numero ISO del giorno della settimana: 1 = lunedì ... 7 = domenica. */
+  /** ISO-номер дня недели: 1 = понедельник ... 7 = воскресенье. */
   function isoWeekday(d) {
     return d.getDay() === 0 ? 7 : d.getDay();
   }
 
-  /** Data della Pasqua cattolica. Algoritmo Meeus/Jones/Butcher,
-   *  lo stesso di easter_date_for() in api/booking.php. */
+  /** Дата католической Пасхи. Алгоритм Meeus/Jones/Butcher,
+   *  тот же, что в easter_date_for() в api/booking.php. */
   function easterOf(year) {
     var a = year % 19,
         b = Math.floor(year / 100),
@@ -190,7 +155,7 @@
     return new Date(year, month - 1, day);
   }
 
-  /** Se il giorno è festivo. Specchio di is_festivo() sul server. */
+  /** Праздничный ли день. Зеркало is_festivo() на сервере. */
   function isFestivo(d) {
     var md = ymd(d).slice(5);
 
@@ -206,7 +171,7 @@
     return false;
   }
 
-  /** Quale servizio in base all'ora: 'pranzo' | 'cena' | null (fuori orario). */
+  /** Какая смена по времени: 'pranzo' | 'cena' | null (вне часов). */
   function serviceFor(date, minutes) {
     var windows = HOURS[isoWeekday(date)] || [];
 
@@ -220,7 +185,7 @@
     return null;
   }
 
-  /** L'unica formula corretta per questa data e questo orario. */
+  /** Единственно верная формула для этой даты и времени. */
   function expectedFormula(date, minutes) {
     var service = serviceFor(date, minutes);
     if (!service) { return null; }
@@ -229,9 +194,8 @@
     return service + '_' + (weekend ? 'weekend' : 'feriale');
   }
 
-  /** "YYYY-MM-DD" -> Date nel fuso locale, null se il valore non è valido.
-   *  new Date("2026-02-31") restituisce il 3 marzo senza avvisare: per
-   *  questo ricontrolliamo il risultato a ritroso. */
+  /** "YYYY-MM-DD" -> Date в местном поясе, либо null при мусоре.
+   *  new Date("2026-02-31") молча даёт 3 марта, поэтому сверяем обратно. */
   function parseDate(str) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(str || '')) { return null; }
     var p = str.split('-');
@@ -240,13 +204,13 @@
   }
 
   // ===================================================================
-  //  Errori sui campi
+  //  Ошибки у полей
   // ===================================================================
 
   /**
-   * Trova o crea lo <span class="field-error"> del campo.
-   * Lo creiamo da JavaScript e non nel markup: così l'HTML non porta
-   * dieci elementi vuoti e gli id non possono sfasarsi da aria-describedby.
+   * Находит или создаёт <span class="field-error"> для поля.
+   * Создаём из JS, а не в разметке: так в HTML нет десятка пустых
+   * элементов, и id гарантированно не разъедутся с aria-describedby.
    */
   function errorSlot(el) {
     var wrap = el.closest('.field') || el.closest('.checkbox');
@@ -272,8 +236,8 @@
     slot.textContent = message;
     el.setAttribute('aria-invalid', 'true');
 
-    // Colleghiamo il campo al testo dell'errore conservando l'eventuale
-    // aria-describedby già presente, se il campo ha un .hint.
+    // Связываем поле с текстом ошибки, сохраняя уже существующий
+    // aria-describedby, если у поля есть .hint.
     var described = (el.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
     if (described.indexOf(slot.id) === -1) {
       described.push(slot.id);
@@ -307,7 +271,7 @@
   }
 
   // ===================================================================
-  //  Messaggio generale
+  //  Общее сообщение
   // ===================================================================
 
   function showFormMessage(kind, html) {
@@ -324,12 +288,12 @@
     formMsg.className = 'form-msg';
   }
 
-  /** Il link «chiamateci» si compone in un punto solo. */
+  /** Ссылка «позвоните нам» — собирается в одном месте. */
   function callUsHtml() {
     return 'Potete anche chiamarci allo <a href="' + PHONE_HREF + '">' + PHONE_TEXT + '</a>.';
   }
 
-  /** Escape: tutto ciò che arriva dal server finisce dentro innerHTML. */
+  /** Экранирование: всё, что приходит с сервера, попадает в innerHTML. */
   function escapeHtml(str) {
     var div = document.createElement('div');
     div.textContent = String(str == null ? '' : str);
@@ -337,19 +301,19 @@
   }
 
   // ===================================================================
-  //  Validazione
+  //  Валидация
   // ===================================================================
 
   /**
-   * Restituisce un array [{field, message}]. Array vuoto = tutto a posto.
-   * L'ordine dei controlli segue l'ordine dei campi nel modulo, così che
-   * il «primo errore» su cui va il focus sia il più in alto sullo schermo.
+   * Возвращает массив [{field, message}]. Пустой массив = всё в порядке.
+   * Порядок проверок совпадает с порядком полей в форме, чтобы
+   * «первая ошибка» при переносе фокуса была самой верхней на экране.
    */
   function validate(values) {
     var errors = [];
     var add = function (field, message) { errors.push({ field: field, message: message }); };
 
-    // ---------- data ----------
+    // ---------- дата ----------
     var date = null;
     if (!values.data) {
       add('data', MSG.dateEmpty);
@@ -374,7 +338,7 @@
       }
     }
 
-    // ---------- orario ----------
+    // ---------- время ----------
     var minutes = null;
     if (!values.orario) {
       add('orario', MSG.timeEmpty);
@@ -383,9 +347,9 @@
       if (minutes === null) { add('orario', MSG.timeInvalid); }
     }
 
-    // ---------- data + orario: calendario di apertura ----------
-    // Solo se entrambe sono corrette per conto loro, altrimenti il cliente
-    // riceve due errori per lo stesso problema.
+    // ---------- дата + время: расписание ----------
+    // Только если обе части корректны сами по себе, иначе гость
+    // получит две ошибки об одном и том же.
     if (date && minutes !== null && !errors.length) {
       var windows = HOURS[isoWeekday(date)] || [];
 
@@ -410,7 +374,7 @@
               human.join(' e ') + '. L\'ultimo ingresso è ' +
               LAST_SEATING_BEFORE_CLOSE + ' minuti prima della chiusura.');
         } else {
-          // Prenotazione per oggi, ma l'orario è passato o troppo vicino.
+          // Бронь на сегодня, но время уже прошло или слишком близко.
           var slot = new Date(date);
           slot.setHours(Math.floor(minutes / 60), minutes % 60, 0, 0);
 
@@ -426,7 +390,7 @@
       }
     }
 
-    // ---------- numero di persone ----------
+    // ---------- гости ----------
     if (!values.persone) {
       add('persone', MSG.guestsEmpty);
     } else {
@@ -437,9 +401,9 @@
       }
     }
 
-    // ---------- nome e cognome ----------
-    // Lunghezza in caratteri: .length in JavaScript conta unità UTF-16,
-    // per l'alfabeto latino e gli accenti italiani è più che sufficiente.
+    // ---------- имя и фамилия ----------
+    // Длина в символах: строковый .length в JS считает единицы UTF-16,
+    // для латиницы и итальянских диакритиков этого достаточно.
     if (!values.nome) {
       add('nome', MSG.nameEmpty);
     } else if (values.nome.length < 2 || values.nome.length > 60) {
@@ -452,7 +416,7 @@
       add('cognome', MSG.surnameLength);
     }
 
-    // ---------- telefono ----------
+    // ---------- телефон ----------
     if (!values.telefono) {
       add('telefono', MSG.phoneEmpty);
     } else {
@@ -462,19 +426,19 @@
       }
     }
 
-    // ---------- email (facoltativa) ----------
-    // Controllo volutamente permissivo: le espressioni regolari severe
-    // scartano indirizzi validi più spesso di quanto trovino errori di
-    // battitura. La verifica vera la fa filter_var sul server.
+    // ---------- email (необязательный) ----------
+    // Проверка нарочно мягкая. Строгие регулярки на email отсекают
+    // живые адреса чаще, чем ловят опечатки; настоящую проверку
+    // делает filter_var на сервере.
     if (values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(values.email)) {
       add('email', MSG.emailInvalid);
     }
 
-    // ---------- la formula deve corrispondere a data e orario ----------
-    // Duplica il controllo del server. In pratica non ci si arriva quasi
-    // mai: syncFormula(), più sotto, aggiorna la tendina da sola appena il
-    // cliente cambia data od orario. Il controllo serve nel caso il valore
-    // sia stato inserito scavalcando l'interfaccia.
+    // ---------- формула должна соответствовать дате и времени ----------
+    // Дублирует серверную проверку. На практике сюда почти не попадают:
+    // syncFormula() ниже переключает список сам, как только гость
+    // меняет дату или время. Проверка нужна на случай, если значение
+    // подставили в обход интерфейса.
     if (date && minutes !== null) {
       var expected = expectedFormula(date, minutes);
 
@@ -498,7 +462,7 @@
       }
     }
 
-    // ---------- consenso privacy ----------
+    // ---------- согласие ----------
     if (!values.privacy) {
       add('privacy', MSG.privacy);
     }
@@ -507,16 +471,16 @@
   }
 
   // ===================================================================
-  //  Formula impostata in automatico
+  //  Автоподстановка формулы
   // ===================================================================
 
   /**
-   * Seleziona nella tendina la formula corrispondente a data e orario.
+   * Выставляет в списке формулу, соответствующую дате и времени.
    *
-   * La tariffa si ricava senza ambiguità da data e orario, quindi non ha
-   * senso lasciar sbagliare il cliente: scelto martedì alle 20:30, nella
-   * tendina compare da sola «Cena feriale». La scelta non viene bloccata:
-   * la tendina resta normale, solo con il valore giusto già impostato.
+   * Тариф однозначно выводится из даты и времени, поэтому давать
+   * гостю ошибаться незачем: как только он выбрал вторник и 20:30,
+   * в списке сама встаёт «Cena feriale». Выбор при этом не заблокирован —
+   * список остаётся обычным, просто с правильным значением.
    */
   function syncFormula() {
     var el = input('formula');
@@ -536,7 +500,7 @@
   }
 
   // ===================================================================
-  //  Raccolta dei valori
+  //  Сбор значений
   // ===================================================================
 
   function collect() {
@@ -565,7 +529,7 @@
   }
 
   // ===================================================================
-  //  Stato del pulsante
+  //  Состояние кнопки
   // ===================================================================
 
   function setLoading(on) {
@@ -582,7 +546,7 @@
   }
 
   // ===================================================================
-  //  Visualizzazione degli errori
+  //  Отображение ошибок
   // ===================================================================
 
   function showErrors(errors) {
@@ -594,7 +558,7 @@
         setFieldError(e.field, e.message);
         if (!firstNamed) { firstNamed = e.field; }
       } else {
-        // Errore senza campo associato (429, 403, 500): va nel blocco generale.
+        // Ошибка без поля (429, 403, 500) — в общий блок.
         general.push(e.message);
       }
     });
@@ -605,13 +569,12 @@
       showFormMessage('error', escapeHtml(MSG.formInvalid));
     }
 
-    // Focus sul primo campo problematico: senza, da telefono il cliente
-    // vede solo il pulsante e non capisce cosa sia andato storto.
+    // Фокус на первое проблемное поле: без этого на мобильном
+    // гость видит только кнопку и не понимает, что пошло не так.
     var target = firstNamed ? input(firstNamed) : formMsg;
     if (target) {
-      // Il blocco messaggio non è focalizzabile per natura: lo rendiamo
-      // tale, altrimenti il focus resta sul pulsante e l'errore passa
-      // inosservato.
+      // Блок сообщения по умолчанию не фокусируемый — делаем его таким,
+      // иначе фокус останется на кнопке и ошибка пройдёт мимо внимания.
       if (target === formMsg) { formMsg.setAttribute('tabindex', '-1'); }
       if (typeof target.focus === 'function') {
         target.focus({ preventScroll: true });
@@ -620,123 +583,10 @@
     }
   }
 
-  /* ------------------------------------------------------------------
-   *  Conferma
-   *  Se la pagina contiene il riquadro #esito mostriamo una vera
-   *  schermata di conferma con il riepilogo e il file .ics. Se non c'è
-   *  (o se qualcosa va storto) restiamo sul messaggio di testo: il
-   *  percorso vecchio non viene mai lasciato senza rete di sicurezza.
-   * ------------------------------------------------------------------ */
-
-  var ETICHETTE_FORMULA = EN ? {
-    pranzo_feriale: 'Lunch · €14.90 (Mon–Fri)',
-    cena_feriale:   'Dinner · €22.90 (Mon–Fri)',
-    pranzo_weekend: 'Lunch · €18.90 (weekends and holidays)',
-    cena_weekend:   'Dinner · €24.90 (weekends and holidays)'
-  } : {
-    pranzo_feriale: 'Pranzo · 14,90 € (lun–ven)',
-    cena_feriale:   'Cena · 22,90 € (lun–ven)',
-    pranzo_weekend: 'Pranzo · 18,90 € (weekend e festivi)',
-    cena_weekend:   'Cena · 24,90 € (weekend e festivi)'
-  };
-
-  var ETICHETTE_RIEPILOGO = EN
-    ? ['When', 'Guests', 'Set menu', 'Name', 'Phone']
-    : ['Quando', 'Persone', 'Formula', 'A nome di', 'Telefono'];
-
-  /** "2026-09-15" -> "martedì 15 settembre 2026" */
-  function dataEstesa(iso) {
-    var p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
-    if (!p) { return iso || ''; }
-    var d = new Date(Number(p[1]), Number(p[2]) - 1, Number(p[3]));
-    try {
-      return d.toLocaleDateString(EN ? 'en-GB' : 'it-IT', {
-        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-      });
-    } catch (e) {
-      return p[3] + '/' + p[2] + '/' + p[1];
-    }
-  }
-
-  /** File .ics con la sola data e ora richieste: due ore di durata. */
-  function costruisciIcs(values) {
-    var p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(values.data || '');
-    var t = /^(\d{2}):(\d{2})$/.exec(values.orario || '');
-    if (!p || !t) { return null; }
-
-    var inizio = new Date(Number(p[1]), Number(p[2]) - 1, Number(p[3]), Number(t[1]), Number(t[2]));
-    var fine = new Date(inizio.getTime() + 2 * 60 * 60 * 1000);
-
-    // Orario locale senza fuso: l'evento vale nell'ora del ristorante.
-    var fmt = function (d) {
-      var due = function (n) { return (n < 10 ? '0' : '') + n; };
-      return d.getFullYear() + due(d.getMonth() + 1) + due(d.getDate()) +
-             'T' + due(d.getHours()) + due(d.getMinutes()) + '00';
-    };
-
-    var righe = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//X-Sapori//Prenotazione//IT',
-      'BEGIN:VEVENT',
-      'UID:' + Date.now() + '@x-sapori',
-      'DTSTAMP:' + fmt(new Date()) + 'Z',
-      'DTSTART:' + fmt(inizio),
-      'DTEND:' + fmt(fine),
-      'SUMMARY:' + (EN ? 'Dinner at X-Sapori (' + values.persone + ' guests)' : 'Cena da X-Sapori (' + values.persone + ' persone)'),
-      'LOCATION:Via Luigi Pirandello 2r\\, 17100 Savona SV',
-      'DESCRIPTION:' + (EN ? 'Booking request sent. Confirmation comes by phone on ' : 'Richiesta di prenotazione inviata. La conferma arriva per telefono allo ') + PHONE_TEXT + '.',
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ];
-    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(righe.join('\r\n'));
-  }
-
-  function showSuccess(values) {
-    // L'ordine conta: reset ripulisce gli errori tramite il suo handler,
-    // solo dopo disegniamo la conferma.
+  function showSuccess() {
+    // Порядок важен: reset синхронно чистит ошибки через свой обработчик,
+    // и только после этого рисуем подтверждение.
     form.reset();
-
-    var esito = document.getElementById('esito');
-    var riepilogo = document.getElementById('esito-riepilogo');
-
-    if (esito && riepilogo && values) {
-      var righe = [
-        [ETICHETTE_RIEPILOGO[0], dataEstesa(values.data) + (EN ? ' at ' : ' alle ') + (values.orario || '')],
-        [ETICHETTE_RIEPILOGO[1], String(values.persone || '')],
-        [ETICHETTE_RIEPILOGO[2], ETICHETTE_FORMULA[values.formula] || values.formula || ''],
-        [ETICHETTE_RIEPILOGO[3], ((values.nome || '') + ' ' + (values.cognome || '')).trim()],
-        [ETICHETTE_RIEPILOGO[4], values.telefono || '']
-      ];
-
-      riepilogo.innerHTML = '';
-      righe.forEach(function (r) {
-        if (!r[1]) { return; }
-        var div = document.createElement('div');
-        var etichetta = document.createElement('span');
-        var valore = document.createElement('strong');
-        etichetta.textContent = r[0];
-        valore.textContent = r[1];
-        div.appendChild(etichetta);
-        div.appendChild(valore);
-        riepilogo.appendChild(div);
-      });
-
-      var ics = document.getElementById('esito-ics');
-      var href = costruisciIcs(values);
-      if (ics) {
-        if (href) { ics.href = href; ics.hidden = false; }
-        else { ics.hidden = true; }
-      }
-
-      form.hidden = true;
-      esito.dataset.visible = 'true';
-      esito.focus({ preventScroll: true });
-      esito.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
-    }
-
-    // Rete di sicurezza: pagina senza riquadro di conferma.
     showFormMessage('ok',
       '<strong>Richiesta inviata</strong>' +
       'Grazie! Abbiamo ricevuto la vostra richiesta di prenotazione. ' +
@@ -745,8 +595,8 @@
     );
 
     if (formMsg) {
-      // tabindex -1 e focus: screen reader e tastiera arrivano diretti
-      // sulla conferma invece di restare sul pulsante.
+      // tabindex -1 + focus: скринридер и клавиатура попадают
+      // прямо на подтверждение, а не остаются на кнопке.
       formMsg.setAttribute('tabindex', '-1');
       formMsg.focus({ preventScroll: true });
       formMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -754,13 +604,13 @@
   }
 
   // ===================================================================
-  //  Invio
+  //  Отправка
   // ===================================================================
 
   form.addEventListener('submit', function (event) {
     event.preventDefault();
 
-    if (submitBtn && submitBtn.disabled) { return; }   // protezione dal doppio clic
+    if (submitBtn && submitBtn.disabled) { return; }   // защита от двойного клика
 
     clearAllErrors();
 
@@ -778,8 +628,8 @@
   function send(values) {
     setLoading(true);
 
-    // AbortController: senza timeout una richiesta bloccata lascerebbe il
-    // pulsante disabilitato per sempre.
+    // AbortController: без таймаута зависший запрос оставил бы
+    // кнопку заблокированной навсегда.
     var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
     var timer = setTimeout(function () {
       if (controller) { controller.abort(); }
@@ -796,9 +646,9 @@
       signal: controller ? controller.signal : undefined
     })
       .then(function (response) {
-        // Leggiamo il corpo in ogni caso: messaggi utili arrivano sia con
-        // 422 sia con 429. Se al posto del JSON arriva la pagina di errore
-        // dell'hosting, json() solleva un'eccezione: la prendiamo più sotto.
+        // Читаем тело в любом случае: осмысленные сообщения приходят
+        // и с кодом 422, и с 429. Если вместо JSON пришла HTML-страница
+        // ошибки хостинга — json() бросит, ловим ниже.
         return response.json()
           .catch(function () { return null; })
           .then(function (data) {
@@ -810,7 +660,7 @@
         setLoading(false);
 
         if (result.data && result.data.ok === true) {
-          showSuccess(values);
+          showSuccess();
           return;
         }
 
@@ -819,16 +669,16 @@
           return;
         }
 
-        // Il server ha risposto ma non nel formato atteso: 500 senza JSON,
-        // pagina di cortesia dell'hosting, PHP interrotto da un errore fatale.
+        // Сервер ответил, но не в ожидаемом формате: 500 без JSON,
+        // страница-заглушка хостинга, обрыв PHP по фатальной ошибке.
         showFormMessage('error', escapeHtml(MSG.serverError) + '<br>' + callUsHtml());
       })
       .catch(function (error) {
         clearTimeout(timer);
         setLoading(false);
 
-        // Qui si arriva per rete caduta, DNS, CORS o timeout. Distinguerli
-        // per il cliente non serve: quel che conta è dargli il telefono.
+        // Сюда попадаем при обрыве сети, DNS, CORS и по таймауту.
+        // Различать их для гостя смысла нет — важно дать телефон.
         var text = (error && error.name === 'AbortError')
           ? 'La richiesta ha impiegato troppo tempo.'
           : MSG.networkError;
@@ -840,11 +690,11 @@
   }
 
   // ===================================================================
-  //  Reazione alle modifiche dei campi
+  //  Реакция на правку полей
   // ===================================================================
 
-  // L'errore sparisce appena il cliente inizia a correggere il campo.
-  // Tenere il bordo rosso mentre scrive è solo fastidioso.
+  // Ошибка снимается, как только гость начал исправлять поле.
+  // Держать красную рамку, пока он печатает, — раздражает.
   FIELDS.forEach(function (name) {
     var el = input(name);
     if (!el) { return; }
@@ -856,27 +706,27 @@
     el.addEventListener(eventName, function () { clearFieldError(name); });
   });
 
-  // Data e orario determinano la tariffa: ricalcoliamo la formula quando cambiano.
+  // Дата и время определяют тариф — пересчитываем формулу при их смене.
   ['data', 'orario'].forEach(function (name) {
     var el = input(name);
     if (el) { el.addEventListener('change', syncFormula); }
   });
 
-  // Questo handler è sincrono DI PROPOSITO. La tentazione di rimandarlo a
-  // un setTimeout è forte, ma showSuccess() chiama form.reset() da sé: una
-  // pulizia differita cancellerebbe la conferma un millisecondo dopo averla
-  // mostrata. Qui non serve leggere i valori dei campi, e reset non tocca
-  // min e max della data: non c'è niente da aspettare.
+  // Обработчик синхронный СОЗНАТЕЛЬНО. Соблазн отложить его на setTimeout
+  // велик, но showSuccess() сам вызывает form.reset() — отложенная очистка
+  // стёрла бы сообщение об успешной брони через миллисекунду после показа.
+  // Читать значения полей здесь не нужно, а min/max на дате reset не трогает,
+  // поэтому ждать окончания сброса незачем.
   form.addEventListener('reset', function () {
     clearAllErrors();
   });
 
   // ===================================================================
-  //  Inizializzazione
+  //  Инициализация
   // ===================================================================
 
-  /** Limiti del calendario: da oggi a sei mesi avanti.
-   *  È un suggerimento, non una protezione: il controllo lo fa il server. */
+  /** Границы календаря: от сегодня до +6 месяцев.
+   *  Это подсказка, а не защита — проверку всё равно делает сервер. */
   function applyDateBounds() {
     var el = input('data');
     if (!el) { return; }

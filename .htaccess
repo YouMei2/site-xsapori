@@ -1,30 +1,33 @@
 # =====================================================================
-#  X-Sapori Savona — configurazione Apache
-#  Apache 2.4 su hosting condiviso. Per nginx vedere README.md.
+#  X-Sapori Savona — защита служебных файлов
+#  Apache 2.4 (шаред-хостинг). Если хостинг на nginx — см. README.md.
 # =====================================================================
 
 # ---------------------------------------------------------------------
-#  File che non devono mai essere serviti via HTTP
+#  Файлы, которые не должны отдаваться по HTTP никогда
 # ---------------------------------------------------------------------
-# Non contengono password, ma rivelano la struttura del database, il nome
-# utente e il funzionamento interno: materiale pronto per un attacco.
-# Verificato: senza questa regola /schema.sql si scarica da link diretto.
+# Пароли внутри они не содержат, но выдают структуру базы, имя
+# пользователя БД и внутреннее устройство — это готовая разведка
+# для атакующего. Проверено: без этого правила схема скачивается
+# по прямой ссылке /schema.sql.
 <FilesMatch "(?i)\.(sql|md|log|bak|old|orig|save|swp|dist|example)$">
   Require all denied
 </FilesMatch>
 
-# La configurazione sull'hosting sta sopra la radice del sito, ma se per
-# errore finisce qui accanto meglio un 403 che il suo contenuto.
+# Конфиг на хостинге лежит выше корня сайта, но если его случайно
+# положат рядом — пусть лучше отдаст 403, чем содержимое.
 <FilesMatch "(?i)^config.*\.php$">
   Require all denied
 </FilesMatch>
 
-# File che iniziano con un punto: .gitignore, .env, .htpasswd e simili.
+# Точечные файлы: .gitignore, .env, .htpasswd и прочее.
 <FilesMatch "(?i)^\.">
   Require all denied
 </FilesMatch>
 
-# notify.php è una libreria, non un endpoint: la richiama booking.php.
+# notify.php — библиотека, а не endpoint. Подключается из booking.php.
+# Прямой вызов ничего не делает и ничего не выводит, но открытым
+# держать незачем.
 <Files "notify.php">
   Require all denied
 </Files>
@@ -56,83 +59,35 @@
 </IfModule>
 
 # ---------------------------------------------------------------------
-#  Pagina di errore
-# ---------------------------------------------------------------------
-ErrorDocument 404 /404.html
-
-# ---------------------------------------------------------------------
-#  Intestazioni di sicurezza
+#  Заголовки безопасности
 # ---------------------------------------------------------------------
 <IfModule mod_headers.c>
-  # Il browser non deve indovinare il tipo di contenuto.
+  # Браузер не должен угадывать тип содержимого.
   Header always set X-Content-Type-Options "nosniff"
-  # Il sito non è pensato per essere incorniciato su domini altrui.
+  # Сайт не предназначен для вставки в iframe на чужих доменах.
   Header always set X-Frame-Options "SAMEORIGIN"
-  # Il referer verso l'esterno non rivela il percorso completo.
+  # Referer при переходе на внешние ссылки не раскрывает полный путь.
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
-  # Funzioni del dispositivo che il sito non usa.
-  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
-
-  # Content-Security-Policy.
-  # frame-src google.com: serve alla mappa, che parte solo su richiesta.
-  # 'unsafe-inline' su script: le pagine contengono la riga che aggiunge
-  # la classe .js; toglierlo richiede spostarla in un file esterno, ma
-  # allora comparirebbe uno sfarfallio del contenuto al caricamento.
-  Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; frame-src https://www.google.com; form-action 'self'; base-uri 'self'; object-src 'none'"
-
-  # Moduli e API non devono essere messi in cache da proxy intermedi.
+  # Формы и API нельзя кешировать промежуточным прокси.
   <FilesMatch "\.php$">
     Header always set Cache-Control "no-store"
   </FilesMatch>
-
-  # Risorse con nome stabile: cache lunga solo dove è sicuro.
-  <FilesMatch "\.(woff2|svg|webp|avif|jpg|jpeg|png|ico)$">
-    Header set Cache-Control "public, max-age=31536000, immutable"
-  </FilesMatch>
-  # CSS e JS cambiano a ogni modifica del sito: cache breve e rivalidata.
-  <FilesMatch "\.(css|js)$">
-    Header set Cache-Control "public, max-age=604800, must-revalidate"
-  </FilesMatch>
-  <FilesMatch "\.html$">
-    Header set Cache-Control "public, max-age=3600, must-revalidate"
-  </FilesMatch>
 </IfModule>
 
 # ---------------------------------------------------------------------
-#  Compressione
+#  Ошибки PHP не должны попадать в браузер
 # ---------------------------------------------------------------------
-<IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
-  AddOutputFilterByType DEFLATE application/javascript application/json
-  AddOutputFilterByType DEFLATE image/svg+xml application/manifest+json
-</IfModule>
-# I woff2 sono già compressi: ricomprimerli è solo lavoro sprecato.
-<IfModule mod_brotli.c>
-  AddOutputFilterByType BROTLI_COMPRESS text/html text/css application/javascript image/svg+xml
-</IfModule>
-
-# ---------------------------------------------------------------------
-#  Tipi MIME che alcuni hosting non conoscono
-# ---------------------------------------------------------------------
-<IfModule mod_mime.c>
-  AddType font/woff2 .woff2
-  AddType image/webp .webp
-  AddType image/avif .avif
-  AddType application/manifest+json .webmanifest
-</IfModule>
-
-# ---------------------------------------------------------------------
-#  Errori PHP mai visibili nel browser
-# ---------------------------------------------------------------------
-# booking.php lo imposta da sé con ini_set, ma se l'hosting esegue PHP
-# in modo che ini_set non abbia effetto, questa è la rete di sicurezza.
+# booking.php выставляет это сам через ini_set, но если хостинг
+# запускает PHP так, что ini_set не срабатывает, — вот подстраховка.
 <IfModule mod_php.c>
   php_flag display_errors off
   php_flag log_errors on
 </IfModule>
 
 # ---------------------------------------------------------------------
-#  Varie
+#  Индексы каталогов
 # ---------------------------------------------------------------------
+# Без этого /uploads/ показывал бы список всех файлов.
 Options -Indexes
+
 DirectoryIndex index.html index.php
