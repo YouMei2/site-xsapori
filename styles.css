@@ -563,31 +563,101 @@ button,input,select,textarea{font:inherit;color:inherit;}
    ========================================================= */
 @property --anello{ syntax:'<angle>'; initial-value:0deg; inherits:false; }
 
+/* I RIFLESSI SONO QUATTRO, NON DIECI, e non e' una scelta estetica: e' il
+   parametro `u_repetition: 4` dello shader originale. Il motivo del metallo
+   si ripete quattro volte lungo l'anello, e ogni ripetizione e' sempre la
+   stessa sequenza — cresta chiara, frangia calda, valle scura, frangia
+   fredda. Le due frange vengono da `u_shiftRed: 0.3` e `u_shiftBlue: 0.3`,
+   cioe' dall'aberrazione cromatica: e' quella che fa sembrare metallo
+   invece che grigio sfumato. Prima ne avevo messe dieci a caso e il
+   risultato era un arcobaleno slavato.
+   `from 45deg` e' `u_angle: 45`. */
+
 .btn--primary{
   position:relative;isolation:isolate;
-  background:var(--accent-fill);color:#fff;border-color:transparent;
+  color:#fff;border-color:transparent;
+  /* La faccia ha un gradiente verticale, come l'originale (#202020 → #000).
+     Qui sono i due petroli che il sistema ha gia': il chiaro in alto prende
+     la luce, lo scuro in basso la perde. Un fondo piatto sotto un anello di
+     metallo sembra un adesivo. */
+  /* IL GRADIENTE SCURISCE IN BASSO, NON SCHIARISCE IN ALTO, e la differenza
+     e' tutta di contrasto. L'originale va da #202020 a #000000: chiaro
+     sopra, scuro sotto. Riprodurlo schiarendo il petrolio non si puo':
+     il bianco sul petrolio sta gia' a 4,59:1, cioe' a nove centesimi dalla
+     soglia di 4,5. Schiarendo il fondo del 14% scendeva a 3,60 — calcolato.
+     Scurendo verso il basso si ottiene la stessa lettura — luce sopra,
+     ombra sotto — e il contrasto puo' solo salire.
+
+     Due errori evitati per la stessa ragione, cioe' misurando:
+     prima avevo scritto `var(--accent-hover)`, che sul registro scuro vale
+     `#B4E2EF`, un azzurro pallido: il testo bianco sopra dava 1,39:1. I
+     token `--accent` e `--accent-fill` esistono separati proprio per questo
+     — uno e' il colore di un LINK, l'altro il RIEMPIMENTO di un pulsante. */
+  background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.18) 100%),
+             var(--accent-fill);
+  /* La scala di ombre dell'originale: quattro strati da 2px a 36px. E'
+     questa, piu' dell'anello, a dare la profondita'. */
+  box-shadow:0 0 0 1px rgba(0,0,0,.30),
+             0 36px 14px rgba(0,0,0,.02),
+             0 20px 12px rgba(0,0,0,.08),
+             0 9px  9px  rgba(0,0,0,.12),
+             0 2px  5px  rgba(0,0,0,.15);
+  transition:background-color var(--dur-fast) var(--ease-out),
+             border-color var(--dur-fast) var(--ease-out),
+             color var(--dur-fast) var(--ease-out),
+             transform var(--dur-fast) var(--ease-out),
+             box-shadow var(--dur-fast) var(--ease-out);
 }
 .btn--primary::before{
   content:"";position:absolute;inset:-2px;z-index:-1;
   border-radius:inherit;padding:2px;
-  background:conic-gradient(from var(--anello),
-    #6f7d85   0deg, #e9eff2  38deg, #aebcc4  72deg,
-    #f2dcb0 104deg, #cfe6f2 136deg, #8496a0 172deg,
-    #f1f6f9 208deg, #d8c6e8 244deg, #93a2ab 282deg,
-    #e9eff2 322deg, #6f7d85 360deg);
+  background:conic-gradient(from calc(45deg + var(--anello)),
+    /* ciclo 1 */
+    #8b989f 0deg,   #f4f8fa 12deg,  #f2ddb4 20deg,  #9fb0b8 30deg,
+    #5e6c74 45deg,  #9fb0b8 60deg,  #cfe4f2 70deg,  #f4f8fa 78deg,
+    /* ciclo 2 */
+    #8b989f 90deg,  #f4f8fa 102deg, #f2ddb4 110deg, #9fb0b8 120deg,
+    #5e6c74 135deg, #9fb0b8 150deg, #cfe4f2 160deg, #f4f8fa 168deg,
+    /* ciclo 3 */
+    #8b989f 180deg, #f4f8fa 192deg, #f2ddb4 200deg, #9fb0b8 210deg,
+    #5e6c74 225deg, #9fb0b8 240deg, #cfe4f2 250deg, #f4f8fa 258deg,
+    /* ciclo 4 */
+    #8b989f 270deg, #f4f8fa 282deg, #f2ddb4 290deg, #9fb0b8 300deg,
+    #5e6c74 315deg, #9fb0b8 330deg, #cfe4f2 340deg, #f4f8fa 348deg,
+    #8b989f 360deg);
   /* La maschera svuota il centro: resta solo la cornice. */
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
           mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
           mask-composite:exclude;
   transition:--anello 1.6s var(--ease-soft),opacity var(--dur-fast) var(--ease-out);
-  opacity:.85;
+  opacity:.9;
 }
+/* Al passaggio il metallo compie un quarto di giro: con quattro ripetizioni
+   novanta gradi bastano a riportare il motivo su se stesso, e il movimento
+   resta breve invece di essere un giro completo che nessuno guarda fino in
+   fondo. */
 .btn--primary:hover::before,
-.btn--primary:focus-visible::before{ --anello:360deg; opacity:1; }
+.btn--primary:focus-visible::before{ --anello:90deg; opacity:1; }
 
-.btn--primary:hover{background:var(--accent-fill-hover);color:#fff;transform:translateY(-2px);}
-/* Premuto: l'anello si spegne e il pulsante rientra, come un tasto vero. */
+.btn--primary:hover{
+  transform:translateY(-2px);
+  /* Al passaggio l'ombra si stringe: l'oggetto si avvicina. */
+  box-shadow:0 0 0 1px rgba(0,0,0,.40),
+             0 12px 6px rgba(0,0,0,.05),
+             0 8px  5px rgba(0,0,0,.10),
+             0 4px  4px rgba(0,0,0,.15),
+             0 1px  2px rgba(0,0,0,.20);
+}
+/* Premuto: rientra e si schiaccia, con le due ombre interne dell'originale.
+   E' il dettaglio che lo fa sentire un tasto invece di un rettangolo. */
+.btn--primary:active{
+  transform:translateY(1px) scale(.98);
+  box-shadow:0 0 0 1px rgba(0,0,0,.50),
+             0 1px 2px rgba(0,0,0,.30),
+             inset 0 2px 4px rgba(0,0,0,.40),
+             inset 0 1px 2px rgba(0,0,0,.30);
+}
 .btn--primary:active::before{opacity:.6;}
 
 /* Senza `@property` il gradiente non si puo' animare: l'anello resta fermo,
@@ -604,7 +674,12 @@ button,input,select,textarea{font:inherit;color:inherit;}
 .btn--ghost{border-color:var(--rule-strong);color:var(--on-surface);}
 .btn--ghost:hover{border-color:var(--detail);color:var(--detail-text);}
 .on-dark .btn--ghost:hover{color:var(--ottone-30);}
-.btn:active{transform:translateY(0);}
+/* `:not(.btn--primary)` perche' il primario ha il suo stato premuto, con lo
+   schiacciamento e le ombre interne. Senza l'esclusione questa riga vinceva:
+   sta piu' in basso e ha la STESSA specificita' (0,2,0), quindi il pulsante
+   non rientrava piu' e l'effetto spariva senza che niente segnalasse
+   l'errore. Stessa trappola di `.stima--doppione`. */
+.btn:active:not(.btn--primary){transform:translateY(0);}
 .btn[disabled],.btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed;transform:none;}
 .btn__spinner{
   width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;
