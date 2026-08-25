@@ -264,6 +264,39 @@
     }, 1200);
   }
 
+  /* --- Il metallo gira solo quando lo si puo' vedere ------ */
+  /* L'anello del pulsante principale ha due animazioni infinite a testa —
+     l'anello e il suo alone sfocato — e sulla home di pulsanti primari ce
+     ne sono cinque. Dieci gradienti conici ridipinti a ogni fotogramma per
+     sempre, la maggior parte fuori dallo schermo, e' un costo che nessuno
+     vede. Qui l'animazione si ferma quando il pulsante esce dalla vista e
+     riparte quando rientra.
+
+     La pausa passa da una CLASSE e non dallo stile in linea, e non e' un
+     dettaglio: le animazioni stanno su `::before` e `::after`, e
+     `animation-play-state` non e' una proprieta' ereditata — messa sul
+     pulsante non arriverebbe mai ai suoi pseudo-elementi. Serve una regola
+     CSS che li nomini.
+
+     `paused` mette in pausa senza azzerare: il motivo riprende dal punto in
+     cui si era fermato, quindi tornare indietro con lo scroll non fa
+     ripartire il giro da capo.
+
+     Se `IntersectionObserver` manca non si fa niente: il caso peggiore e'
+     che girino tutti, cioe' il comportamento di prima. Con "riduci
+     movimento" non c'e' niente da fermare — il CSS ha gia' spento il giro. */
+  if (!reduced && 'IntersectionObserver' in window) {
+    var metallo = document.querySelectorAll('.btn--primary');
+    if (metallo.length) {
+      var ioMetallo = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          entry.target.classList.toggle('metallo-fermo', !entry.isIntersecting);
+        });
+      }, { rootMargin: '100px' });
+      metallo.forEach(function (el) { ioMetallo.observe(el); });
+    }
+  }
+
   /* --- "Aperto ora" calcolato sull'ora di Roma ------------ */
   var stato = document.getElementById('stato-apertura');
   if (stato) {
