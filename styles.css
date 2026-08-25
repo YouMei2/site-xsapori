@@ -541,8 +541,66 @@ button,input,select,textarea{font:inherit;color:inherit;}
              color var(--dur-fast) var(--ease-out),
              transform var(--dur-fast) var(--ease-out);
 }
-.btn--primary{background:var(--accent-fill);color:#fff;border-color:var(--detail);}
+/* =========================================================
+   L'ANELLO DI METALLO SUL PULSANTE PRINCIPALE
+
+   Nasce da un componente React che disegnava il metallo con uno shader
+   WebGL. Qui non si poteva usare: il sito e' HTML, CSS e JavaScript puro,
+   senza npm, e va caricato via FTP. Ma l'effetto non ha bisogno di WebGL —
+   e' un `conic-gradient` con i riflessi al posto giusto, ritagliato ad
+   anello da una maschera. Zero dipendenze, zero JavaScript, un elemento.
+
+   DUE COSE DELL'ORIGINALE NON SONO STATE COPIATE, ed e' voluto:
+
+   1. Il fondo NERO. Nel sistema di questo sito il colore delle azioni e' il
+      petrolio, non il metallo — sta scritto in MASTER.md come regola non
+      negoziabile, e viene dal filetto d'ottone della sala vera. L'anello si
+      aggiunge al petrolio invece di sostituirlo.
+   2. L'etichetta GRIGIA. Nell'originale e' `#666666` su nero: misurato,
+      3,66:1, sotto la soglia di 4,5 per un testo da 14px. Sarebbe stato il
+      primo contrasto insufficiente di un sito che non ne ha nessuno. Qui
+      resta bianca sul petrolio, che sta a 4,59:1.
+   ========================================================= */
+@property --anello{ syntax:'<angle>'; initial-value:0deg; inherits:false; }
+
+.btn--primary{
+  position:relative;isolation:isolate;
+  background:var(--accent-fill);color:#fff;border-color:transparent;
+}
+.btn--primary::before{
+  content:"";position:absolute;inset:-2px;z-index:-1;
+  border-radius:inherit;padding:2px;
+  background:conic-gradient(from var(--anello),
+    #6f7d85   0deg, #e9eff2  38deg, #aebcc4  72deg,
+    #f2dcb0 104deg, #cfe6f2 136deg, #8496a0 172deg,
+    #f1f6f9 208deg, #d8c6e8 244deg, #93a2ab 282deg,
+    #e9eff2 322deg, #6f7d85 360deg);
+  /* La maschera svuota il centro: resta solo la cornice. */
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+          mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+          mask-composite:exclude;
+  transition:--anello 1.6s var(--ease-soft),opacity var(--dur-fast) var(--ease-out);
+  opacity:.85;
+}
+.btn--primary:hover::before,
+.btn--primary:focus-visible::before{ --anello:360deg; opacity:1; }
+
 .btn--primary:hover{background:var(--accent-fill-hover);color:#fff;transform:translateY(-2px);}
+/* Premuto: l'anello si spegne e il pulsante rientra, come un tasto vero. */
+.btn--primary:active::before{opacity:.6;}
+
+/* Senza `@property` il gradiente non si puo' animare: l'anello resta fermo,
+   che e' comunque il novanta per cento dell'effetto. */
+@supports not (background:conic-gradient(from 0deg,#000,#fff)){
+  .btn--primary::before{display:none;}
+  .btn--primary{border-color:var(--detail);}
+}
+@media (prefers-reduced-motion:reduce){
+  .btn--primary::before{transition:opacity var(--dur-fast) var(--ease-out);}
+  .btn--primary:hover::before,
+  .btn--primary:focus-visible::before{--anello:0deg;}
+}
 .btn--ghost{border-color:var(--rule-strong);color:var(--on-surface);}
 .btn--ghost:hover{border-color:var(--detail);color:var(--detail-text);}
 .on-dark .btn--ghost:hover{color:var(--ottone-30);}
