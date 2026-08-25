@@ -14,6 +14,22 @@ Tre conseguenze non negoziabili:
 
 1. **Il petrolio è il colore delle azioni**, non l'oro. L'oro nella sala vera è
    solo un filetto sui bordi dei tavoli: nel sito resta filetto.
+
+   > **Con un'eccezione, dal 25 agosto 2026: il pulsante principale.** È
+   > scuro — `--sala-70` in alto, `--sala-90` in basso — con un anello di
+   > metallo intorno. Il petrolio resta il colore dei link, dei bordi, degli
+   > stati e del pulsante fantasma: cambia solo l'azione principale.
+   >
+   > **Il motivo è misurabile, non di gusto.** L'anello di metallo si vede
+   > come metallo soltanto se è la cosa più chiara del suo intorno. Sul
+   > petrolio acceso lo stesso anello leggeva come un bordino chiaro
+   > qualunque: confrontando fotogramma per fotogramma la versione col
+   > petrolio e quella di riferimento, la differenza non era l'anello — era
+   > il fondo sotto.
+   >
+   > L'etichetta è `#8B979D`, non il `#666666` del riferimento: quello dà
+   > 3,66:1 su nero e non passa la soglia. `#8B979D` è il grigio più vicino
+   > che regge, a 4,64:1 sul punto più chiaro della faccia.
 2. **Lo scuro è il registro base, il chiaro è il tavolo.** *(Rovesciato il
    21 agosto 2026, guardando la fotografia ad alta risoluzione della sala:
    pareti in marmo quasi nero, lamelle retroilluminate, buffet come pozza di

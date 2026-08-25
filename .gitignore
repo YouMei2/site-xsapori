@@ -31,3 +31,6 @@ uploads/da-integrare/
 # Configurazione locale dell'anteprima (porta 4173): come .dev-server.js,
 # serve solo su questo computer.
 .claude/
+
+# I video e i fotogrammi di lavorazione restano fuori dal repo.
+_video/

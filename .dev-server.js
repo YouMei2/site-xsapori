@@ -28,7 +28,8 @@ const TYPES = {
   '.js':'text/javascript; charset=utf-8', '.json':'application/json',
   '.svg':'image/svg+xml', '.webp':'image/webp', '.png':'image/png',
   '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.avif':'image/avif',
-  '.woff2':'font/woff2', '.ico':'image/x-icon', '.webmanifest':'application/manifest+json'
+  '.woff2':'font/woff2', '.ico':'image/x-icon', '.webmanifest':'application/manifest+json',
+  '.mp4':'video/mp4', '.webm':'video/webm'
 };
 
 // Stessi divieti di .htaccess, cosi' l'anteprima non mostra piu' del sito vero.
@@ -99,6 +100,7 @@ http.createServer((req, res) => {
   const nome = path.basename(url);
 
   if (DA_INOLTRARE.test(url)) { inoltraAdApache(req, res); return; }
+
 
 
   // `/api/` non arriva piu' fin qui: viene inoltrato ad Apache molto prima.

@@ -575,26 +575,26 @@ button,input,select,textarea{font:inherit;color:inherit;}
 
 .btn--primary{
   position:relative;isolation:isolate;
-  color:#fff;border-color:transparent;
-  /* La faccia ha un gradiente verticale, come l'originale (#202020 → #000).
-     Qui sono i due petroli che il sistema ha gia': il chiaro in alto prende
-     la luce, lo scuro in basso la perde. Un fondo piatto sotto un anello di
-     metallo sembra un adesivo. */
-  /* IL GRADIENTE SCURISCE IN BASSO, NON SCHIARISCE IN ALTO, e la differenza
-     e' tutta di contrasto. L'originale va da #202020 a #000000: chiaro
-     sopra, scuro sotto. Riprodurlo schiarendo il petrolio non si puo':
-     il bianco sul petrolio sta gia' a 4,59:1, cioe' a nove centesimi dalla
-     soglia di 4,5. Schiarendo il fondo del 14% scendeva a 3,60 — calcolato.
-     Scurendo verso il basso si ottiene la stessa lettura — luce sopra,
-     ombra sotto — e il contrasto puo' solo salire.
+  /* LA FACCIA E' SCURA, E QUESTA E' LA COSA CHE FA FUNZIONARE TUTTO.
+     Con il petrolio acceso sotto, lo stesso anello leggeva come un bordino
+     chiaro qualunque: confrontando i due video fotogramma per fotogramma la
+     differenza non era l'anello, era il fondo. Il metallo si vede solo se e'
+     la cosa piu' chiara dell'inquadratura, e su un fondo acceso non lo e'.
 
-     Due errori evitati per la stessa ragione, cioe' misurando:
-     prima avevo scritto `var(--accent-hover)`, che sul registro scuro vale
-     `#B4E2EF`, un azzurro pallido: il testo bianco sopra dava 1,39:1. I
-     token `--accent` e `--accent-fill` esistono separati proprio per questo
-     — uno e' il colore di un LINK, l'altro il RIEMPIMENTO di un pulsante. */
-  background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.18) 100%),
-             var(--accent-fill);
+     Gradiente come l'originale (#202020 → #000000), qui con i grigi della
+     sala: `--sala-70` in alto prende la luce, `--sala-90` in basso la perde.
+
+     COSTA UNA REGOLA DEL SISTEMA, e va detto. MASTER.md diceva «il petrolio
+     e' il colore delle azioni»: adesso il petrolio resta il colore dei link,
+     dei bordi e degli stati, ma l'azione principale e' scura col bordo di
+     metallo. E' una richiesta esplicita, ripetuta dopo aver visto entrambe
+     le versioni. MASTER.md e' stato aggiornato invece che contraddetto. */
+  background:linear-gradient(180deg,var(--sala-70) 0%,var(--sala-90) 100%);
+  /* L'etichetta e' grigia e smorzata come nell'esempio, ma non uguale:
+     l'esempio usa `#666666` su nero, cioe' 3,66:1, sotto la soglia di 4,5.
+     `#8B979D` e' il grigio piu' vicino che passa — 4,64:1 sul punto piu'
+     chiaro della faccia, 6,20 su quello piu' scuro. */
+  color:#8B979D;border-color:transparent;
   /* La scala di ombre dell'originale: quattro strati da 2px a 36px. E'
      questa, piu' dell'anello, a dare la profondita'. */
   box-shadow:0 0 0 1px rgba(0,0,0,.30),
@@ -608,39 +608,64 @@ button,input,select,textarea{font:inherit;color:inherit;}
              transform var(--dur-fast) var(--ease-out),
              box-shadow var(--dur-fast) var(--ease-out);
 }
+/* IL METALLO, in una variabile sola perche' lo usano in due: l'anello e il
+   suo alone.
+
+   QUATTRO ARCHI STRETTI, non otto creste diffuse. Guardando il video
+   ingrandito, nell'esempio quasi tutto il perimetro e' scuro e la luce sta
+   concentrata in pochi punti — una lunga sciabolata sopra, una sotto, e due
+   guizzi ambrati sulle estremita' tonde. E' `u_repetition: 4` con
+   `from 45deg`: le quattro creste cadono a 45, 135, 225 e 315 gradi, e su
+   una pillola larga le prime due si distendono lungo i lati lunghi mentre
+   le altre due si schiacciano nelle testate. La mia versione precedente ne
+   aveva otto e mezze accese: il perimetro era chiaro tutt'intorno e non
+   sembrava metallo, sembrava un filo di luce.
+
+   La valle e' `#28313a`, cioe' vicinissima alla faccia: e' quello che tiene
+   scuri i tre quarti dell'anello. Ambra prima della cresta, azzurro dopo:
+   `u_shiftRed` e `u_shiftBlue`. */
+:root{
+  --metallo:conic-gradient(from calc(45deg + var(--anello)),
+    #151b20 0deg,   #1b232a 18deg,  #d9a86a 30deg,  #fbfdff 42deg,  #fbfdff 52deg,  #8cc2ea 62deg,  #1b232a 74deg,
+    #151b20 90deg,  #1b232a 108deg, #d9a86a 120deg, #fbfdff 132deg, #fbfdff 142deg, #8cc2ea 152deg, #1b232a 164deg,
+    #151b20 180deg, #1b232a 198deg, #d9a86a 210deg, #fbfdff 222deg, #fbfdff 232deg, #8cc2ea 242deg, #1b232a 254deg,
+    #151b20 270deg, #1b232a 288deg, #d9a86a 300deg, #fbfdff 312deg, #fbfdff 322deg, #8cc2ea 332deg, #1b232a 344deg,
+    #151b20 360deg);
+}
 .btn--primary::before{
-  content:"";position:absolute;inset:-2px;z-index:-1;
-  border-radius:inherit;padding:2px;
-  background:conic-gradient(from calc(45deg + var(--anello)),
-    /* ciclo 1 */
-    #8b989f 0deg,   #f4f8fa 12deg,  #f2ddb4 20deg,  #9fb0b8 30deg,
-    #5e6c74 45deg,  #9fb0b8 60deg,  #cfe4f2 70deg,  #f4f8fa 78deg,
-    /* ciclo 2 */
-    #8b989f 90deg,  #f4f8fa 102deg, #f2ddb4 110deg, #9fb0b8 120deg,
-    #5e6c74 135deg, #9fb0b8 150deg, #cfe4f2 160deg, #f4f8fa 168deg,
-    /* ciclo 3 */
-    #8b989f 180deg, #f4f8fa 192deg, #f2ddb4 200deg, #9fb0b8 210deg,
-    #5e6c74 225deg, #9fb0b8 240deg, #cfe4f2 250deg, #f4f8fa 258deg,
-    /* ciclo 4 */
-    #8b989f 270deg, #f4f8fa 282deg, #f2ddb4 290deg, #9fb0b8 300deg,
-    #5e6c74 315deg, #9fb0b8 330deg, #cfe4f2 340deg, #f4f8fa 348deg,
-    #8b989f 360deg);
+  content:"";position:absolute;inset:-1.5px;z-index:-1;
+  border-radius:inherit;padding:1.5px;
+  background:var(--metallo);
   /* La maschera svuota il centro: resta solo la cornice. */
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
           mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
           mask-composite:exclude;
   transition:--anello 1.6s var(--ease-soft),opacity var(--dur-fast) var(--ease-out);
-  opacity:.9;
+  opacity:1;
+}
+/* L'ALONE. Nell'esempio la luce degli archi sborda un poco oltre il bordo:
+   e' quello che fa sembrare il metallo illuminato invece che disegnato.
+   E' lo stesso gradiente, piu' largo, sfocato e tenue, dietro all'anello. */
+.btn--primary::after{
+  content:"";position:absolute;inset:-5px;z-index:-2;
+  border-radius:inherit;
+  background:var(--metallo);
+  filter:blur(5px);opacity:.28;
+  transition:--anello 1.6s var(--ease-soft),opacity var(--dur-fast) var(--ease-out);
+  pointer-events:none;
 }
 /* Al passaggio il metallo compie un quarto di giro: con quattro ripetizioni
    novanta gradi bastano a riportare il motivo su se stesso, e il movimento
    resta breve invece di essere un giro completo che nessuno guarda fino in
    fondo. */
 .btn--primary:hover::before,
-.btn--primary:focus-visible::before{ --anello:90deg; opacity:1; }
+.btn--primary:focus-visible::before{ --anello:90deg; }
+.btn--primary:hover::after,
+.btn--primary:focus-visible::after{ --anello:90deg; opacity:.5; }
 
 .btn--primary:hover{
+  color:#C6D0D4;
   transform:translateY(-2px);
   /* Al passaggio l'ombra si stringe: l'oggetto si avvicina. */
   box-shadow:0 0 0 1px rgba(0,0,0,.40),
@@ -658,18 +683,23 @@ button,input,select,textarea{font:inherit;color:inherit;}
              inset 0 2px 4px rgba(0,0,0,.40),
              inset 0 1px 2px rgba(0,0,0,.30);
 }
-.btn--primary:active::before{opacity:.6;}
+.btn--primary:active::before{opacity:.65;}
+.btn--primary:active::after{opacity:.18;}
 
 /* Senza `@property` il gradiente non si puo' animare: l'anello resta fermo,
    che e' comunque il novanta per cento dell'effetto. */
 @supports not (background:conic-gradient(from 0deg,#000,#fff)){
-  .btn--primary::before{display:none;}
+  .btn--primary::before,.btn--primary::after{display:none;}
+  /* Senza anello il pulsante scuro avrebbe un bordo invisibile sul fondo
+     scuro: torna il filetto d'ottone, che lo stacca comunque. */
   .btn--primary{border-color:var(--detail);}
 }
 @media (prefers-reduced-motion:reduce){
-  .btn--primary::before{transition:opacity var(--dur-fast) var(--ease-out);}
-  .btn--primary:hover::before,
-  .btn--primary:focus-visible::before{--anello:0deg;}
+  .btn--primary::before,.btn--primary::after{
+    transition:opacity var(--dur-fast) var(--ease-out);
+  }
+  .btn--primary:hover::before,.btn--primary:focus-visible::before,
+  .btn--primary:hover::after,.btn--primary:focus-visible::after{--anello:0deg;}
 }
 .btn--ghost{border-color:var(--rule-strong);color:var(--on-surface);}
 .btn--ghost:hover{border-color:var(--detail);color:var(--detail-text);}
