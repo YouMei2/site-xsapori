@@ -561,7 +561,77 @@ button,input,select,textarea{font:inherit;color:inherit;}
       primo contrasto insufficiente di un sito che non ne ha nessuno. Qui
       resta bianca sul petrolio, che sta a 4,59:1.
    ========================================================= */
-@property --anello{ syntax:'<angle>'; initial-value:0deg; inherits:false; }
+/* DUE POSIZIONI, NON UNA, e la ragione e' che si sommano invece di
+   litigare.
+
+   `--scorri` e' lo scorrimento continuo e lo muove una `animation`.
+   `--spinta` e' l'accelerazione al passaggio del mouse e al clic, e la
+   muove una `transition`. Lo sfondo le somma:
+   `background-position: calc(var(--scorri) + var(--spinta)) 0`.
+
+   Se fossero la stessa proprieta' non funzionerebbe: l'animazione vince
+   sempre sulla transizione, quindi il passaggio del mouse non si vedrebbe
+   affatto. E l'alternativa ovvia — cambiare la DURATA all'hover, come lo
+   shader cambia `setSpeed` — in CSS produce uno scatto: il browser rimappa
+   il tempo gia' trascorso sulla durata nuova, e il motivo salta nell'istante
+   in cui il mouse arriva. Sommando due posizioni lo scorrimento non si
+   interrompe mai e la spinta ci si posa sopra. */
+@property --scorri{ syntax:'<length>'; initial-value:0px; inherits:false; }
+@property --spinta{ syntax:'<length>'; initial-value:0px; inherits:false; }
+
+/* IL PERIODO E' IN PIXEL, NON IN PERCENTUALE, e la ragione e' un vincolo
+   che si scopre solo facendo i conti.
+
+   In percentuale lo spostamento a fine ciclo vale `(S/100 - 1)` larghezze,
+   con `S` la `background-size`, e il periodo vale `S/(100 K)` larghezze con
+   `K` periodi nell'immagine. Perche' il ciclo si chiuda senza salto lo
+   spostamento deve essere un multiplo intero del periodo, e mettendo a
+   sistema le due cose viene `S = 100 K/(K-m)`: tutte le soluzioni intere
+   danno un periodo MINORE O UGUALE alla larghezza del pulsante. Non esiste
+   una percentuale che dia un periodo piu' lungo del pulsante.
+
+   E serve piu' lungo. Con il periodo pari alla larghezza, la fascia di luce
+   e' larga quasi meta' del pulsante e sul perimetro resta acceso il 46 % —
+   misurato — con la mediana a 0,32, cioe' oltre il tetto della faccia. Il
+   riflesso era lungo, ma non c'era piu' abbastanza buio intorno perche' si
+   leggesse come riflesso.
+
+   In pixel il vincolo sparisce: una piastrella larga `--periodo` che si
+   ripete, e lo scorrimento va da 0 a `--periodo`. Uno spostamento pari
+   esattamente alla piastrella e' invisibile per costruzione, qualunque sia
+   la larghezza del pulsante. Il periodo diventa cosi' una misura del mondo
+   — quanto e' distante la sorgente di luce — invece di una frazione del
+   bottone: due pulsanti di larghezza diversa prendono la stessa luce, che e'
+   quello che succede davvero.
+
+   Il seme del disegno sta ai due estremi della piastrella, che sono
+   entrambi il colore del pavimento e piatti: cosi' la cucitura fra una
+   piastrella e l'altra non si vede.
+
+   IL PERIODO E' 190 px, E IL LIMITE SUPERIORE LO DECIDE LA FASE SPENTA.
+   A 340 px la fascia di luce passava interamente FUORI dal pulsante per un
+   tratto del ciclo: in quella fase il picco su tutto il perimetro scendeva
+   a 0,118, cioe' il metallo spariva per qualche secondo. A 240 px la fase
+   spenta era piu' corta ma c'era ancora — si vede, renderizzando le quattro
+   fasi affiancate: la quarta e' un pulsante liscio. A 190 px, su una
+   larghezza di 174, c'e' sempre una parte di fascia addosso al bordo.
+
+   E' il compromesso fra due difetti opposti: periodo corto e l'anello e'
+   sempre tutto acceso, periodo lungo e ogni tanto e' tutto spento.
+
+   CINQUE SECONDI, NON QUATTORDICI, e questa e' la correzione che e' costata
+   di piu' capire. Per due tarature ho misurato il contrasto NELLO SPAZIO —
+   quanto e' chiara la cresta rispetto al resto dell'anello, a un istante
+   fermo — e i numeri erano giusti: escursione da 0,036 a 0,5 in un punto
+   fisso, quattordici volte. Ma quello che si vede muoversi non e' il
+   contrasto nello spazio: e' il contrasto NEL TEMPO, cioe' quanto cambia un
+   punto fisso al secondo. Con il ciclo a 14 secondi ogni fase restava
+   ferma tre secondi e mezzo su una riga alta 2 px, e il movimento c'era ma
+   nessuno lo notava. Era stato riferito come «non si muove piu'», e la
+   misura dello spazio diceva che andava tutto bene.
+
+   190 px in 5 secondi sono 38 px al secondo, contro i 17 di prima. */
+@keyframes metallo-scorre{ from{ --scorri:0px } to{ --scorri:var(--periodo) } }
 
 /* I RIFLESSI SONO QUATTRO, NON DIECI, e non e' una scelta estetica: e' il
    parametro `u_repetition: 4` dello shader originale. Il motivo del metallo
@@ -575,26 +645,30 @@ button,input,select,textarea{font:inherit;color:inherit;}
 
 .btn--primary{
   position:relative;isolation:isolate;
-  /* LA FACCIA E' SCURA, E QUESTA E' LA COSA CHE FA FUNZIONARE TUTTO.
-     Con il petrolio acceso sotto, lo stesso anello leggeva come un bordino
-     chiaro qualunque: confrontando i due video fotogramma per fotogramma la
-     differenza non era l'anello, era il fondo. Il metallo si vede solo se e'
-     la cosa piu' chiara dell'inquadratura, e su un fondo acceso non lo e'.
+  /* LA FACCIA E' PETROLIO, COME LE SEDIE DELLA SALA.
 
-     Gradiente come l'originale (#202020 → #000000), qui con i grigi della
-     sala: `--sala-70` in alto prende la luce, `--sala-90` in basso la perde.
+     C'e' stato un giro in cui era scura, sul ragionamento che «il metallo si
+     vede solo se e' la cosa piu' chiara dell'intorno». Guardata a schermo,
+     quella versione non era il pulsante di questo sito: un tassello grigio
+     con un alone iridato addosso, mentre il colore delle azioni qui e' il
+     petrolio e viene dalle sedie e dal filetto d'ottone della sala vera.
+     Tolto il grigio, MASTER.md torna a dire il vero senza eccezioni: il
+     petrolio e' il colore delle azioni, punto.
 
-     COSTA UNA REGOLA DEL SISTEMA, e va detto. MASTER.md diceva «il petrolio
-     e' il colore delle azioni»: adesso il petrolio resta il colore dei link,
-     dei bordi e degli stati, ma l'azione principale e' scura col bordo di
-     metallo. E' una richiesta esplicita, ripetuta dopo aver visto entrambe
-     le versioni. MASTER.md e' stato aggiornato invece che contraddetto. */
-  background:linear-gradient(180deg,var(--sala-70) 0%,var(--sala-90) 100%);
-  /* L'etichetta e' grigia e smorzata come nell'esempio, ma non uguale:
-     l'esempio usa `#666666` su nero, cioe' 3,66:1, sotto la soglia di 4,5.
-     `#8B979D` e' il grigio piu' vicino che passa — 4,64:1 sul punto piu'
-     chiaro della faccia, 6,20 su quello piu' scuro. */
-  color:#8B979D;border-color:transparent;
+     Il ragionamento sul metallo pero' non era sbagliato, era incompleto:
+     quello che conta non e' che la faccia sia scura, e' che la CRESTA sia
+     molto piu' chiara della faccia. `#fbfdff` sta a luminanza 0,98, il
+     petrolio a 0,18: cinque volte. La cresta si stacca lo stesso.
+
+     Gradiente verticale come nell'originale: `--petrolio-60` in alto prende
+     la luce, `--petrolio-80` in basso la perde. */
+  background:linear-gradient(180deg,var(--petrolio-60) 0%,var(--petrolio-80) 100%);
+  /* L'etichetta torna bianca. Misurato sul punto piu' sfavorevole della
+     faccia — `--petrolio-60`, in alto — sta a 4,59:1; in basso, su
+     `--petrolio-80`, a 9,32:1. Sopra la soglia di 4,5 su tutta l'altezza.
+     (L'originale usava `#666666` su nero, cioe' 3,66:1: sarebbe stato il
+     primo contrasto insufficiente di un sito che non ne ha nessuno.) */
+  color:#fff;border-color:transparent;
   /* La scala di ombre dell'originale: quattro strati da 2px a 36px. E'
      questa, piu' dell'anello, a dare la profondita'. */
   box-shadow:0 0 0 1px rgba(0,0,0,.30),
@@ -611,37 +685,128 @@ button,input,select,textarea{font:inherit;color:inherit;}
 /* IL METALLO, in una variabile sola perche' lo usano in due: l'anello e il
    suo alone.
 
-   QUATTRO ARCHI STRETTI, non otto creste diffuse. Guardando il video
-   ingrandito, nell'esempio quasi tutto il perimetro e' scuro e la luce sta
-   concentrata in pochi punti — una lunga sciabolata sopra, una sotto, e due
-   guizzi ambrati sulle estremita' tonde. E' `u_repetition: 4` con
-   `from 45deg`: le quattro creste cadono a 45, 135, 225 e 315 gradi, e su
-   una pillola larga le prime due si distendono lungo i lati lunghi mentre
-   le altre due si schiacciano nelle testate. La mia versione precedente ne
-   aveva otto e mezze accese: il perimetro era chiaro tutt'intorno e non
-   sembrava metallo, sembrava un filo di luce.
+   E' UN GRADIENTE LINEARE, NON PIU' CONICO, e il cambio e' stato imposto da
+   una misura. Le prime quattro versioni giravano la luce INTORNO al
+   perimetro con un `conic-gradient`; la richiesta era una sciabolata lunga
+   lungo il lato lungo, come nel riferimento, e con un conico non si ottiene.
 
-   La valle e' `#28313a`, cioe' vicinissima alla faccia: e' quello che tiene
-   scuri i tre quarti dell'anello. Ambra prima della cresta, azzurro dopo:
-   `u_shiftRed` e `u_shiftBlue`. */
-:root{
-  --metallo:conic-gradient(from calc(45deg + var(--anello)),
-    #151b20 0deg,   #1b232a 18deg,  #d9a86a 30deg,  #fbfdff 42deg,  #fbfdff 52deg,  #8cc2ea 62deg,  #1b232a 74deg,
-    #151b20 90deg,  #1b232a 108deg, #d9a86a 120deg, #fbfdff 132deg, #fbfdff 142deg, #8cc2ea 152deg, #1b232a 164deg,
-    #151b20 180deg, #1b232a 198deg, #d9a86a 210deg, #fbfdff 222deg, #fbfdff 232deg, #8cc2ea 242deg, #1b232a 254deg,
-    #151b20 270deg, #1b232a 288deg, #d9a86a 300deg, #fbfdff 312deg, #fbfdff 322deg, #8cc2ea 332deg, #1b232a 344deg,
-    #151b20 360deg);
+   IL MOTIVO E' GEOMETRICO. Su una pillola di 171x52 il lato lungo di sopra
+   copre 146 gradi di angolo visti dal centro, ma li copre in modo
+   ferocemente disuguale: i primi 26 px a partire dal centro si prendono 45
+   gradi, gli ultimi 26 px prima della testata se ne prendono 7. Una cresta
+   larga in ANGOLO resta corta in PIXEL proprio dove serve lunga, e per
+   allungarla al centro servirebbe una cresta da 120 gradi — che
+   accenderebbe due terzi dell'anello e riporterebbe il difetto del contorno
+   uniforme.
+
+   Misurato sulla versione conica meglio riuscita: sciabolata di 26 px su un
+   lato lungo di 118. Un quinto.
+
+   Un gradiente lineare inclinato non ha questo problema: e' una FASCIA che
+   attraversa il pulsante, quindi illumina un tratto di lato lungo pari alla
+   sua larghezza, uguale al centro e alle estremita'. E si muove traslando
+   invece che ruotando, che e' anche il gesto giusto — la luce non gira
+   intorno a una barra di metallo, ci passa sopra.
+
+   L'INCLINAZIONE E' 115 GRADI, non 90, e serve a sfasare le due sciabolate.
+   Con la fascia verticale, sopra e sotto si accenderebbero nello stesso
+   punto e il pulsante sembrerebbe attraversato da una sbarra. A 25 gradi
+   fuori squadra lo scarto fra le due e' di 52 x tan(25) = 24 px: si vede che
+   sono due riflessi su due spigoli diversi, non un taglio solo.
+
+   IL PROFILO, su un periodo, e' asimmetrico: salita corta e coda lunga.
+   Dal fondo alla cresta ci sono 8 punti percentuali, dalla cresta al fondo
+   ce ne sono 16. E' il profilo di un riflesso che SCORRE — netto davanti,
+   trascinato dietro. Simmetrico sembrerebbe fermo anche mentre si muove.
+
+   L'ALTOPIANO e' largo 11 punti su 50, cioe' il 22 % del periodo: circa
+   38 px di luce piena su un lato lungo di 118. Con le frange il tratto
+   illuminato arriva a poco piu' della meta' del lato.
+
+   IL PAVIMENTO NON E' PIATTO: a meta' del tratto spento c'e' un
+   avvallamento a `#3D4A54`. Anche dove non c'e' riflesso il metallo non e'
+   mai una tinta sola — e' quello che tiene lontana la lettura
+   «contorno grigio».
+
+   IL TETTO E' LA FACCIA, 0,18 di luminanza. Finche' la mediana dell'anello
+   resta sotto, l'anello e' uno spigolo in ombra intorno a una superficie
+   accesa; appena la supera diventa un contorno chiaro disegnato addosso al
+   pulsante, che e' il difetto della primissima versione. Una taratura
+   intermedia era arrivata a 0,204 ed e' stata riportata giu' abbassando le
+   spalle, senza toccare l'altopiano. Se si rialza il livello, e' questo il
+   numero da guardare, non il picco.
+
+   IL PICCO E' TENUE, ED E' LA COSA PIU' CONTROINTUITIVA DI TUTTE.
+
+   Per quattro versioni il picco e' stato quasi bianco — `#EDF3F6`, 0,888 —
+   sul presupposto che un riflesso di metallo debba essere abbagliante. Ma
+   il riferimento, misurato, non ci arriva nemmeno vicino: il suo perimetro
+   sta a 0,281 al NOVANTESIMO percentile. La sua sciabolata e' lunga e
+   TENUE, non corta e incandescente. Sembra brillante perche' intorno c'e'
+   il nero, non perche' sia chiara.
+
+   `#AEBEC8` sta a 0,506. Piu' alto del riferimento, perche' qui la faccia
+   sotto e' azzurra e accesa invece che nera e il contrasto disponibile e'
+   minore, ma lontano dallo specchio. Il bianco pieno, oltre a essere
+   sbagliato, da' un puntino durissimo: metallo satinato invece che cromato.
+
+   LE FRANGE — `#C79A62` calda prima, `#9CC6E4` fredda dopo — sono
+   `u_shiftRed` e `u_shiftBlue` dello shader, cioe' l'aberrazione
+   cromatica. E' quella che distingue il metallo da un grigio sfumato.
+
+   DICHIARATO SUI DUE PSEUDO-ELEMENTI, NON SU `:root`. Ci e' stato per due
+   giorni, ed e' il motivo per cui l'anello non si e' mai mosso — ne' da
+   solo ne' al passaggio del mouse. `var()` dentro una custom property viene
+   sostituito quando quella property si CALCOLA, cioe' sull'elemento dove e'
+   dichiarata: su `:root` la posizione veniva risolta li', dove vale sempre
+   zero, e quello che scendeva per eredita' era gia' la stringa finita.
+   L'animazione girava per davvero sui pseudo, ma nessuno la stava leggendo.
+   Il sintomo era un numero che non tornava — la proprieta' avanzava e lo
+   sfondo dipinto no — e l'avevo visto senza capirlo. */
+.btn--primary::before,
+.btn--primary::after{
+  --periodo:190px;
+  --metallo:linear-gradient(115deg,
+    #3A464F 0%,  #3A464F 7%,  #2C363E 15%, #3A464F 25%,
+    #46535D 34%, #8F7448 41%, #AEBEC8 47%, #AEBEC8 60%, #6E8FA8 67%,
+    #46535D 80%, #3A464F 93%, #3A464F 100%);
 }
+/* `background-size` e `background-position` NON possono stare qui sopra
+   insieme al gradiente, e ci sono stati per un giro.
+
+   Le due regole `.btn--primary::before` e `.btn--primary::after` qui sotto
+   dichiarano `background:var(--metallo)`, che e' lo SHORTHAND: azzera
+   `background-size` e `background-position` ai valori iniziali. Stando piu'
+   in basso vinceva, e la misura lo diceva chiaro — `background-size`
+   risultava `auto` invece di `200% 100%`, e la posizione restava `0% 0%` a
+   qualunque istante dell'animazione.
+
+   E' la terza volta in questo foglio che a parita' di specificita' vince
+   chi sta piu' in basso, e perde in silenzio. Qui la cura e' `background-
+   image` al posto di `background`, cosi' lo shorthand non c'e' piu' e non
+   azzera niente. */
 .btn--primary::before{
-  content:"";position:absolute;inset:-1.5px;z-index:-1;
-  border-radius:inherit;padding:1.5px;
-  background:var(--metallo);
+  /* DUE PIXEL. E' l'unico parametro di questo blocco senza una misura
+     dietro: e' stato scelto guardando, perche' per «spesso il giusto» una
+     misura non esiste. Provato a 3 px e riportato a 2 — a 3 l'anello
+     smetteva di essere un filo di metallo e cominciava a essere una
+     cornice. Se un giorno lo si rialza, va rialzato anche l'`inset`
+     dell'alone qui sotto, o l'alone finisce sotto l'anello e sparisce.
+
+     Non tocca il layout: lo pseudo-elemento e' assoluto e sborda senza
+     spostare niente, e il bersaglio da 44 px resta quello del pulsante. */
+  content:"";position:absolute;inset:-2px;z-index:-1;
+  border-radius:inherit;padding:2px;
+  background-image:var(--metallo);
+  background-size:var(--periodo) 100%;
+  background-position:calc(var(--scorri) + var(--spinta)) 0;
   /* La maschera svuota il centro: resta solo la cornice. */
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
           mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
           mask-composite:exclude;
-  transition:--anello 1.6s var(--ease-soft),opacity var(--dur-fast) var(--ease-out);
+  animation:metallo-scorre 5s linear infinite;
+  transition:--spinta 1.6s var(--ease-soft),opacity var(--dur-fast) var(--ease-out);
   opacity:1;
 }
 /* L'ALONE. Nell'esempio la luce degli archi sborda un poco oltre il bordo:
@@ -655,28 +820,48 @@ button,input,select,textarea{font:inherit;color:inherit;}
    il resto del perimetro rimane scuro, come nel riferimento.
    Piu' stretto e piu' tenue: 3px di sfocatura al 16%, non 5 al 28%. */
 .btn--primary::after{
+  /* La banda dell'alone va da -3 a 0 px: copre l'ultimo pixel dell'anello e
+     sborda di 1 fuori. Deve sempre stare PIU' FUORI dell'anello, o finisce
+     sotto di lui e non si vede piu' — ed e' il chiarore oltre il bordo che
+     fa sembrare il metallo illuminato invece che disegnato. */
   content:"";position:absolute;inset:-3px;z-index:-2;
   border-radius:inherit;padding:3px;
-  background:var(--metallo);
+  background-image:var(--metallo);
+  /* Il periodo dell'alone e' piu' lungo di quello dell'anello, 230 contro
+     190: i due non tornano mai esattamente in fase, e il chiarore sfocato
+     scivola sopra la sciabolata invece di starle attaccato. */
+  --periodo:230px;
+  background-size:var(--periodo) 100%;
+  background-position:calc(var(--scorri) + var(--spinta)) 0;
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
           mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
           mask-composite:exclude;
-  filter:blur(3px);opacity:.16;
-  transition:--anello 1.6s var(--ease-soft),opacity var(--dur-fast) var(--ease-out);
+  filter:blur(4px);opacity:.20;
+  /* PIU' LENTO DELL'ANELLO, ed e' questa la differenza fra una lastra sola
+     che scivola e due riflessi su due spigoli diversi. A 21 secondi contro
+     14 il chiarore sfocato scivola sopra la sciabolata invece di starle
+     attaccato, e il rapporto 3:2 fa in modo che i due motivi non tornino in
+     fase prima di 42 secondi. */
+  animation:metallo-scorre 7.5s linear infinite;
+  transition:--spinta 1.6s var(--ease-soft),opacity var(--dur-fast) var(--ease-out);
   pointer-events:none;
 }
-/* Al passaggio il metallo compie un quarto di giro: con quattro ripetizioni
-   novanta gradi bastano a riportare il motivo su se stesso, e il movimento
-   resta breve invece di essere un giro completo che nessuno guarda fino in
-   fondo. */
+/* Al passaggio il metallo scatta avanti SOPRA il giro continuo, che non si
+   ferma: e' l'equivalente di `setSpeed(1)` dello shader, tradotto in una
+   cosa che il CSS sa fare senza rimappare il tempo.
+
+   Mezzo periodo: la fascia di luce salta dall'altra parte. Al clic un
+   periodo intero, che riporta il motivo su se stesso — il doppio di strada
+   nello stesso tempo, come `setSpeed(2.4)`. Scritti in funzione di
+   `--periodo`, cosi' cambiarne uno solo non li scolla. */
 .btn--primary:hover::before,
-.btn--primary:focus-visible::before{ --anello:90deg; }
+.btn--primary:focus-visible::before{ --spinta:calc(var(--periodo) / 2); }
 .btn--primary:hover::after,
-.btn--primary:focus-visible::after{ --anello:90deg; opacity:.26; }
+.btn--primary:focus-visible::after{ --spinta:calc(var(--periodo) / 2); opacity:.30; }
 
 .btn--primary:hover{
-  color:#C6D0D4;
+  color:#fff;
   transform:translateY(-2px);
   /* Al passaggio l'ombra si stringe: l'oggetto si avvicina. */
   box-shadow:0 0 0 1px rgba(0,0,0,.40),
@@ -694,23 +879,46 @@ button,input,select,textarea{font:inherit;color:inherit;}
              inset 0 2px 4px rgba(0,0,0,.40),
              inset 0 1px 2px rgba(0,0,0,.30);
 }
-.btn--primary:active::before{opacity:.65;}
-.btn--primary:active::after{opacity:.10;}
+/* Premuto, l'anello si accende mentre la faccia rientra. */
+.btn--primary:active::before{opacity:.65;--spinta:var(--periodo);}
+.btn--primary:active::after{opacity:.10;--spinta:var(--periodo);}
 
-/* Senza `@property` il gradiente non si puo' animare: l'anello resta fermo,
-   che e' comunque il novanta per cento dell'effetto. */
-@supports not (background:conic-gradient(from 0deg,#000,#fff)){
-  .btn--primary::before,.btn--primary::after{display:none;}
-  /* Senza anello il pulsante scuro avrebbe un bordo invisibile sul fondo
-     scuro: torna il filetto d'ottone, che lo stacca comunque. */
-  .btn--primary{border-color:var(--detail);}
-}
+/* Fuori dallo schermo lo scorrimento si ferma. La classe la mette
+   `js/site.js` con un `IntersectionObserver`; il motivo per cui serve una
+   classe invece dello stile in linea sta scritto la'. */
+.btn--primary.metallo-fermo::before,
+.btn--primary.metallo-fermo::after{ animation-play-state:paused; }
+
+/* NIENTE RIPIEGO PER CHI NON HA `@property`, e stavolta non serve.
+
+   Con il gradiente conico il ripiego era togliere l'anello e rimettere il
+   filetto d'ottone, perche' senza animazione restava un bordo fermo. Con il
+   lineare il metallo disegnato lo dipingono tutti: si perde solo il
+   movimento.
+
+   E non si perde nemmeno male. Senza `@property` una custom property si
+   anima A SCATTI — il valore salta da 0 a `--periodo` a meta' strada. Ma
+   uno spostamento pari a un periodo intero dipinge la STESSA cosa: il salto
+   e' invisibile, e quello che resta e' un anello fermo, corretto.
+
+   UN BLOCCO `@supports` QUI SAREBBE STATO PEGGIO DEL NIENTE, ed era gia'
+   scritto prima di accorgersene. Il test naturale,
+   `@supports not (at-rule(@property))`, e' sostenuto solo da Chrome 133 in
+   poi: piu' indietro la condizione risulta IGNOTA, quindi falsa, quindi
+   `not` la ribalta a VERA — e il ripiego si sarebbe acceso esattamente nei
+   browser dove l'effetto funziona. */
 @media (prefers-reduced-motion:reduce){
+  /* Il giro continuo si ferma del tutto: e' un movimento che parte da solo,
+     dura per sempre e nessuno lo ha chiesto — esattamente la categoria che
+     `prefers-reduced-motion` deve spegnere. Resta il metallo disegnato, che
+     e' il novanta per cento dell'effetto. */
   .btn--primary::before,.btn--primary::after{
+    animation:none;
     transition:opacity var(--dur-fast) var(--ease-out);
   }
   .btn--primary:hover::before,.btn--primary:focus-visible::before,
-  .btn--primary:hover::after,.btn--primary:focus-visible::after{--anello:0deg;}
+  .btn--primary:hover::after,.btn--primary:focus-visible::after,
+  .btn--primary:active::before,.btn--primary:active::after{--spinta:0px;}
 }
 .btn--ghost{border-color:var(--rule-strong);color:var(--on-surface);}
 .btn--ghost:hover{border-color:var(--detail);color:var(--detail-text);}

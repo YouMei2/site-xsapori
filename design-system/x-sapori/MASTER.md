@@ -15,21 +15,28 @@ Tre conseguenze non negoziabili:
 1. **Il petrolio è il colore delle azioni**, non l'oro. L'oro nella sala vera è
    solo un filetto sui bordi dei tavoli: nel sito resta filetto.
 
-   > **Con un'eccezione, dal 25 agosto 2026: il pulsante principale.** È
-   > scuro — `--sala-70` in alto, `--sala-90` in basso — con un anello di
-   > metallo intorno. Il petrolio resta il colore dei link, dei bordi, degli
-   > stati e del pulsante fantasma: cambia solo l'azione principale.
+   > **Senza eccezioni — e per un giorno ce n'è stata una.** Il 25 agosto
+   > 2026 il pulsante principale è diventato scuro (`--sala-70` →
+   > `--sala-90`) per far risaltare l'anello di metallo. Guardato a schermo
+   > il giorno dopo, era un tassello grigio con un alone iridato addosso:
+   > **rimesso a petrolio**, `--petrolio-60` in alto e `--petrolio-80` in
+   > basso, con l'anello di metallo che resta.
    >
-   > **Il motivo è misurabile, non di gusto.** L'anello di metallo si vede
-   > come metallo soltanto se è la cosa più chiara del suo intorno. Sul
-   > petrolio acceso lo stesso anello leggeva come un bordino chiaro
-   > qualunque: confrontando fotogramma per fotogramma la versione col
-   > petrolio e quella di riferimento, la differenza non era l'anello — era
-   > il fondo sotto.
+   > **Perché il ragionamento di allora non reggeva.** Diceva: «il metallo si
+   > vede come metallo solo se è la cosa più chiara del suo intorno». Vero,
+   > ma l'intorno che conta è la cresta contro la faccia, non la faccia
+   > contro la pagina: la cresta `#fbfdff` sta a luminanza 0,98 e il
+   > petrolio a 0,18. Cinque volte. La cresta si stacca lo stesso, e il
+   > pulsante resta di questo sito.
    >
-   > L'etichetta è `#8B979D`, non il `#666666` del riferimento: quello dà
-   > 3,66:1 su nero e non passa la soglia. `#8B979D` è il grigio più vicino
-   > che regge, a 4,64:1 sul punto più chiaro della faccia.
+   > Con la faccia accesa due manopole sono tornate indietro: la frangia
+   > ambrata da `#d9a86a` a `#cdaa84` (l'arancio saturo contro il blu
+   > leggeva come arcobaleno) e l'alone da 16 % a 12 %.
+   >
+   > L'etichetta torna **bianca**: 4,59:1 sul punto più sfavorevole della
+   > faccia — `--petrolio-60`, in alto — e 9,32:1 in basso. Misurati sul
+   > rendering reale. (Il riferimento usava `#666666` su nero, 3,66:1: non
+   > sarebbe passato.)
 2. **Lo scuro è il registro base, il chiaro è il tavolo.** *(Rovesciato il
    21 agosto 2026, guardando la fotografia ad alta risoluzione della sala:
    pareti in marmo quasi nero, lamelle retroilluminate, buffet come pozza di
