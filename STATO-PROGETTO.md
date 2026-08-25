@@ -47,9 +47,9 @@ servizi — perché l'inoltro sposta la richiesta, non sostituisce il server. Se
 > quello lì. Se tocchi `api/` o `config.php`, **ricopiali**, altrimenti la
 > modifica «non fa effetto».
 
-**Se una modifica al CSS non si vede, alza `?v=`.** Oggi è a **26**, ed è
-arrivato lì perché è successo tre volte in due giorni di misurare il foglio
-di stile vecchio.
+**Se una modifica al CSS non si vede, alza `?v=`.** Oggi è a **42**, ed è
+arrivato lì perché è successo più volte di misurare il foglio di stile
+vecchio. Sono nove file HTML più la pagina inglese: alzalo dappertutto.
 
 ---
 
@@ -84,41 +84,69 @@ e `srcset` su tutte. La home è passata da 1446 a 808 KB di immagini.
 
 ---
 
-## ⚠️ La cosa aperta adesso: il pulsante di metallo
+## Il pulsante di metallo, chiuso il 25 agosto 2026
 
-**Non è finito, e l'ultima parola è dell'occhio, non della misura.**
+Era la cosa aperta della sessione precedente. **Adesso è finito e approvato
+guardandolo**, non misurandolo — ed è tutta la differenza, perché per due
+giorni le misure hanno detto che funzionava mentre non si muoveva affatto.
 
-Richiesta: riprodurre un pulsante «liquid metal» visto in un componente
-React con shader WebGL. Rifatto in CSS puro — `conic-gradient` ritagliato ad
-anello da una maschera, animato con `@property`.
+**Com'è fatto.** Faccia **petrolio** (`--petrolio-60` → `--petrolio-80`),
+etichetta bianca, e intorno un anello di 2 px di metallo attraversato da una
+fascia di luce che scorre. Cerca «ANELLO DI METALLO» in `styles.css`: sopra
+ogni numero c'è scritto perché è quel numero.
 
-**Dove sta adesso** (`styles.css`, cerca «ANELLO DI METALLO»):
-- faccia scura `--sala-70` → `--sala-90`, etichetta `#8B979D`
-- anello 1,5 px, quattro creste strette con valli quasi nere, `from 45deg`
-- alone: stesso gradiente mascherato ad anello, sfocatura 3 px al 16%
+**Le manopole sono quattro**, e sono tutte in cima al blocco:
 
-**Le tre correzioni già fatte, per non ripeterle:**
-1. Il petrolio acceso sotto uccideva l'effetto: il metallo si vede solo se è
-   la cosa più chiara dell'intorno. Per questo la faccia è scura.
-2. Otto creste mezze accese sembravano un filo di luce. Sono quattro, con
-   valli a `#151b20`.
-3. L'alone era una pillola **piena** sfocata: il chiaro si spandeva su tutto
-   il perimetro e sembrava un tubo al neon. Ora è un anello anche lui.
+| | |
+|---|---|
+| `--periodo` | 190 px, quanto è distante la sorgente di luce |
+| durata | 5 s l'anello, 7,5 s l'alone — il rapporto 3:2 li tiene fuori fase |
+| picco | `#AEBEC8`, 0,506 di luminanza |
+| spessore | 2 px, l'unico parametro scelto a occhio |
 
-**Cosa resta da giudicare:** l'ultimo screenshot mostrava ancora un anello
-troppo acceso. La correzione dell'alone è successiva e **non è stata
-verificata a occhio da nessuno**.
+**Il numero da non superare è 0,18**, la luminanza della faccia azzurra.
+Finché la mediana del perimetro resta sotto, l'anello è uno spigolo in ombra
+intorno a una superficie accesa; appena la supera diventa un contorno chiaro
+disegnato addosso al pulsante, che è il difetto della primissima versione.
+Oggi la mediana sta fra 0,077 e 0,132 in ogni fase del ciclo. **Guarda quel
+numero, non il picco.**
 
-> **Se serve regolarlo**, le manopole sono tre e stanno tutte in
-> `styles.css`: l'opacità e la sfocatura di `.btn--primary::after`, la
-> larghezza delle creste nel gradiente `--metallo`, e lo spessore
-> dell'anello (`inset` e `padding` di `.btn--primary::before`).
+### Quattro cose imparate qui che valgono per tutto il foglio
 
-**Questo cambio è costato una regola del sistema.** `MASTER.md` diceva «il
-petrolio è il colore delle azioni». Ora il petrolio resta il colore dei link,
-dei bordi, degli stati e del pulsante fantasma: cambia solo l'azione
-principale. È scritto lì con il motivo.
+**1. `var()` dentro una custom property si risolve dove la property è
+DICHIARATA.** `--metallo` stava su `:root`, e lì la posizione veniva
+risolta a zero: ai pseudo-elementi scendeva per eredità una stringa già
+finita. L'animazione girava davvero e nessuno la leggeva. **È il motivo per
+cui l'anello non si è mai mosso, nemmeno l'effetto hover scritto due giorni
+prima** — che era stato «verificato» misurando la proprietà invece del
+dipinto.
 
+**2. Lo shorthand `background` azzera `background-size` e
+`background-position`.** Stando più in basso vinceva in silenzio: la
+dimensione risultava `auto` e la posizione `0% 0%` a ogni istante. Quarto
+inciampo di questo tipo. La cura è `background-image`.
+
+**3. Un'`animation` vince sempre su una `transition` della stessa
+proprietà.** Per avere insieme lo scorrimento continuo e lo scatto al
+passaggio del mouse servono **due** proprietà che si sommano. E cambiare la
+*durata* all'hover non è un'alternativa: il browser rimappa il tempo già
+trascorso sulla durata nuova, e il motivo salta.
+
+**4. Quello che si vede muoversi è il contrasto NEL TEMPO, non nello
+spazio.** È l'errore che è costato di più. Misuravo quanto è chiara la
+cresta rispetto al resto dell'anello a un istante fermo, e i numeri erano
+ottimi. Ma con il ciclo a 14 secondi ogni fase restava ferma tre secondi e
+mezzo su una riga alta 2 px: è stato riferito come «non si muove più»
+mentre la misura diceva che andava tutto bene. **Se animi qualcosa, misura
+quanto cambia un punto fisso al secondo.**
+
+> **E una cosa da non rifare.** Avevo scritto
+> `@supports not (at-rule(@property))` come ripiego. È sostenuto solo da
+> Chrome 133 in poi: più indietro la condizione risulta ignota, quindi
+> falsa, quindi `not` la ribalta a **vera** — e il ripiego si sarebbe acceso
+> esattamente nei browser dove l'effetto funziona. Un `@supports` che testa
+> una feature con una sintassi più recente della feature stessa è una
+> trappola.
 ---
 
 ## Come guardare qualcosa, visto che il pannello non dipinge
@@ -140,9 +168,26 @@ Si può aggirare:
 - **misurare lo stato finale di un'animazione** iniettando
   `*{transition:none!important}` e rileggendo lo stile calcolato.
 
+- **rendersi da soli il componente fuori schermo** e aprirlo: ridisegnare in
+  un `OffscreenCanvas` quello che il CSS dovrebbe dipingere — il gradiente,
+  la maschera, la faccia sopra — a quattro istanti diversi del ciclo, e
+  guardare il PNG. È così che ho scoperto che c'era una fase in cui il
+  pulsante era completamente liscio: nessuna misura me l'aveva detto, e
+  bastava guardarlo;
+- **decodificare un GIF fotogramma per fotogramma** con `ImageDecoder`, che
+  è il modo di guardare una registrazione fatta dall'utente. È così che il
+  25 agosto ho confrontato il pulsante vero con il componente di
+  riferimento, e ho misurato la luminanza lungo il suo perimetro.
+
 **Quello che resta impossibile:** giudicare se una cosa è bella. Gli
 screenshot annotati dell'utente hanno trovato **nove difetti** che nessuna
-misura aveva visto.
+misura aveva visto — e il 25 agosto altri quattro, tutti sul pulsante.
+
+**E una cosa che credevo possibile e non lo è: dichiarare che un'animazione
+funziona.** Il pannello non compone fotogrammi, quindi `requestAnimationFrame`
+non scatta, gli screenshot vanno in timeout e **`IntersectionObserver` non
+consegna una sola callback** — provato, zero. Si può misurare che una
+proprietà avanza; che si veda muovere, no.
 
 ---
 
@@ -163,6 +208,10 @@ Tutto misurato nel browser sul rendering reale.
 - **File sensibili** in 403, provato **su Apache** e con i traversamenti.
 - **Responsive** a 360, 390, 1024, 1440, 1920: nessuno scroll orizzontale,
   nessun bersaglio sotto i 44 px.
+- **Il pulsante di metallo**, il 25 agosto: mediana del perimetro fra 0,077
+  e 0,132 su sei fasi del ciclo, sempre sotto la faccia; nessuna fase spenta;
+  bianco sull'azzurro a 4,59:1 nel punto peggiore. E, per la prima volta,
+  **guardato**: reso fuori schermo a quattro istanti e approvato a occhio.
 
 ---
 
@@ -182,6 +231,8 @@ Tutto misurato nel browser sul rendering reale.
 
 - rigenerare `ip_salt` e togliere le righe `localhost` da `allowed_origins`
 - alzare `?v=` un'ultima volta
+- ~~sistemare i testi inglesi che facevano ancora ordinare~~ **fatto il 25
+  agosto**: sei righe in `/en/`, che l'italiano non aveva
 - **tradurre i commenti russi**: restano **412 righe su tre file** —
   `api/notify.php` 171, `api/booking.php` 157, `schema.sql` 84.
   `config.example.php` è già fatto, valori segnaposto compresi.
