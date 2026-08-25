@@ -647,11 +647,22 @@ button,input,select,textarea{font:inherit;color:inherit;}
 /* L'ALONE. Nell'esempio la luce degli archi sborda un poco oltre il bordo:
    e' quello che fa sembrare il metallo illuminato invece che disegnato.
    E' lo stesso gradiente, piu' largo, sfocato e tenue, dietro all'anello. */
+/* L'ALONE E' UN ANELLO, NON UNA PILLOLA PIENA — e la prima versione lo
+   sbagliava. Era un rettangolo arrotondato pieno, riempito col gradiente e
+   sfocato: la sfocatura spandeva il chiaro lungo TUTTO il perimetro e il
+   pulsante sembrava un tubo al neon invece che un bordo di metallo.
+   Con la stessa maschera dell'anello, il chiarore resta dove c'e' la luce e
+   il resto del perimetro rimane scuro, come nel riferimento.
+   Piu' stretto e piu' tenue: 3px di sfocatura al 16%, non 5 al 28%. */
 .btn--primary::after{
-  content:"";position:absolute;inset:-5px;z-index:-2;
-  border-radius:inherit;
+  content:"";position:absolute;inset:-3px;z-index:-2;
+  border-radius:inherit;padding:3px;
   background:var(--metallo);
-  filter:blur(5px);opacity:.28;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+          mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+          mask-composite:exclude;
+  filter:blur(3px);opacity:.16;
   transition:--anello 1.6s var(--ease-soft),opacity var(--dur-fast) var(--ease-out);
   pointer-events:none;
 }
@@ -662,7 +673,7 @@ button,input,select,textarea{font:inherit;color:inherit;}
 .btn--primary:hover::before,
 .btn--primary:focus-visible::before{ --anello:90deg; }
 .btn--primary:hover::after,
-.btn--primary:focus-visible::after{ --anello:90deg; opacity:.5; }
+.btn--primary:focus-visible::after{ --anello:90deg; opacity:.26; }
 
 .btn--primary:hover{
   color:#C6D0D4;
@@ -684,7 +695,7 @@ button,input,select,textarea{font:inherit;color:inherit;}
              inset 0 1px 2px rgba(0,0,0,.30);
 }
 .btn--primary:active::before{opacity:.65;}
-.btn--primary:active::after{opacity:.18;}
+.btn--primary:active::after{opacity:.10;}
 
 /* Senza `@property` il gradiente non si puo' animare: l'anello resta fermo,
    che e' comunque il novanta per cento dell'effetto. */
